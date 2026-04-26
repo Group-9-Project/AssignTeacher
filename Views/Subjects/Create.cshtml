@@ -1,0 +1,259 @@
+@model SchoolTimetable.Models.Subject
+@{
+    ViewBag.Title = "Add Subject";
+    Layout = null; // Explicitly disabling layout
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Subject - School Timetable</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --navy-deep: #002147;
+            --navy-muted: #003366;
+            --white-bright: #ffffff;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-500: #64748b;
+            --error-red: #be123c;
+        }
+
+        body {
+            background-color: var(--slate-50);
+            font-family: 'Inter', sans-serif;
+            color: var(--navy-deep);
+            margin: 0;
+            padding: 0;
+        }
+
+        .subject-wrapper {
+            max-width: 650px;
+            margin: 4rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Strict Navy Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 4px solid var(--navy-deep);
+            padding-bottom: 1rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin: 0;
+            color: var(--navy-deep);
+        }
+
+        /* Form Architecture */
+        .form-card {
+            background: white;
+            border: 1px solid var(--slate-300);
+            border-radius: 4px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 140px;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--slate-500);
+            letter-spacing: 0.8px;
+        }
+
+        .form-control {
+            padding: 14px;
+            border: 2px solid var(--slate-200);
+            border-radius: 2px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            color: var(--navy-deep);
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: var(--navy-deep);
+                background: #fafafa;
+            }
+
+        /* Subject Color Picker System */
+        .color-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .color-option {
+            width: 36px;
+            height: 36px;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
+        }
+
+            .color-option:hover {
+                transform: translateY(-2px);
+            }
+
+            .color-option.selected {
+                border: 3px solid var(--navy-deep);
+                box-shadow: 0 0 0 2px white inset;
+            }
+
+        /* Validation UI */
+        .validation-summary-errors {
+            background: #fff1f2;
+            color: var(--error-red);
+            padding: 1rem;
+            border-left: 5px solid var(--error-red);
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+            .validation-summary-errors ul {
+                list-style: none;
+                padding: 0;
+                margin: 5px 0 0 0;
+            }
+
+        /* Action Buttons */
+        .btn {
+            padding: 12px 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            border: 2px solid var(--navy-deep);
+        }
+
+        .btn-primary {
+            background: var(--navy-deep);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: white;
+                color: var(--navy-deep);
+            }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--slate-300);
+            color: var(--slate-500);
+        }
+
+            .btn-outline:hover {
+                border-color: var(--navy-deep);
+                color: var(--navy-deep);
+                background: white;
+            }
+
+        .section-divider {
+            margin: 2rem 0 0 0;
+            border-top: 1px solid var(--slate-100);
+            padding-top: 1.5rem;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="subject-wrapper">
+
+        <div class="page-header">
+            <h1 class="page-title">Add Subject</h1>
+            <a href="@Url.Action("Index")" class="btn btn-outline">
+                <i class="fa-solid fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            if (!ViewData.ModelState.IsValid)
+            {
+                <div class="validation-summary-errors">
+                    <i class="fa-solid fa-circle-exclamation"></i> Action Required
+                    @Html.ValidationSummary(true, "")
+                </div>
+            }
+
+            <div class="form-card">
+                <div class="form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Name, "Full Subject Name", new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "e.g. Computer Science", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @style = "color:var(--error-red); font-size:11px; font-weight:700;" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Code, "Subject Code", new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Code, new { @class = "form-control", placeholder = "CS101", maxlength = "6" })
+                    </div>
+                </div>
+
+                <div class="section-divider">
+                    <a href="@Url.Action("Index")" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check"></i> Finalize Subject
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script>
+        function selectColor(hex, element) {
+            document.getElementById('selected-color').value = hex;
+            const options = document.querySelectorAll('.color-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+    </script>
+
+</body>
+</html>

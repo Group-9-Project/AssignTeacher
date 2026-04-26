@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Payment Cancelled";
+}
+
+<div class="container mt-5 text-center">
+    <div class="card border-0 shadow p-5">
+        <div class="mb-4">
+            <i class="fa fa-times-circle fa-5x text-warning"></i>
+        </div>
+        <h1 class="display-4 text-warning">Payment Cancelled</h1>
+        <p class="lead mt-3">The payment process was not completed, and no funds were deducted.</p>
+        <p>If you experienced a technical issue, please try again or contact the school administration.</p>
+        <div class="mt-4">
+            <a href="@Url.Action("MyApplications", "Parents")" class="btn btn-outline-primary">
+                Try Again
+            </a>
+        </div>
+    </div>
+</div>

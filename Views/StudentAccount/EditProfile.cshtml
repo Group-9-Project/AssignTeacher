@@ -1,0 +1,216 @@
+﻿@{
+    Layout = null;
+    // Compatibility fix for C# 5
+    var studentName = (Session["UserName"] != null) ? Session["UserName"].ToString() : "Student";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile | DGSS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --navy-primary: #002147;
+            --navy-light: #003366;
+            --pure-white: #ffffff;
+            --bg-light: #f4f7f9;
+            --border-color: #dee2e6;
+            --text-dark: #333333;
+            --text-muted: #6c757d;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
+        /* Navigation Bar */
+        .nav-header {
+            background-color: var(--navy-primary);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .brand-logo {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .back-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+            .back-link:hover {
+                color: #ffffff;
+                text-decoration: none;
+            }
+
+        /* Profile Card */
+        .profile-container {
+            background: var(--pure-white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 40px;
+            margin-top: 50px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .section-header {
+            border-bottom: 2px solid var(--navy-primary);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+            .section-header h2 {
+                color: var(--navy-primary);
+                font-weight: 700;
+                margin: 0;
+            }
+
+        /* Forms */
+        label {
+            font-weight: 600;
+            color: var(--navy-primary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            height: auto;
+            font-size: 0.95rem;
+        }
+
+            .form-control:focus {
+                border-color: var(--navy-primary);
+                box-shadow: none;
+            }
+
+        .security-header {
+            color: var(--navy-light);
+            font-weight: 700;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+            .security-header i {
+                margin-right: 10px;
+            }
+
+        /* Buttons */
+        .btn-update {
+            background-color: var(--navy-primary);
+            color: white;
+            font-weight: 700;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+            .btn-update:hover {
+                background-color: var(--navy-light);
+                color: white;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            }
+
+        hr {
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="nav-header">
+        <h3 class="brand-logo">DGSS <span style="opacity: 0.7;">Account</span></h3>
+        <a href="@Url.Action("Index", "StudentAccount")" class="back-link">
+            <i class="fas fa-arrow-left mr-2"></i> Dashboard
+        </a>
+    </header>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="profile-container">
+                    <div class="section-header">
+                        <h2>Edit Your Profile</h2>
+                        <p class="text-muted small mb-0">Update your personal details and security settings for @studentName</p>
+                    </div>
+
+                    @using (Html.BeginForm("UpdateProfile", "StudentAccount", FormMethod.Post))
+                    {
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>First Name</label>
+                                <input type="text" name="FirstName" class="form-control" placeholder="First Name" required />
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Last Name</label>
+                                <input type="text" name="LastName" class="form-control" placeholder="Last Name" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" name="Email" class="form-control" placeholder="example@school.com" required />
+                        </div>
+
+                        <div class="py-3">
+                            <hr>
+                            <h5 class="security-header"><i class="fas fa-shield-alt"></i> Security Update</h5>
+                            <p class="text-muted small">Only fill in the new password fields if you wish to change your current password.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input type="password" name="CurrentPassword" class="form-control" placeholder="Confirm current password to save" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>New Password</label>
+                                <input type="password" name="NewPassword" class="form-control" placeholder="New Password" />
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Confirm New Password</label>
+                                <input type="password" name="ConfirmPassword" class="form-control" placeholder="Confirm New Password" />
+                            </div>
+                        </div>
+
+                        <div class="text-right mt-4">
+                            <button type="submit" class="btn btn-update shadow-sm text-uppercase">Save Changes</button>
+                        </div>
+                    }
+                </div>
+
+                <p class="text-center text-muted small mt-4">
+                    &copy; @DateTime.Now.Year - Durban Girls Secondary School
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

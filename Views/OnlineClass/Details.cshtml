@@ -1,0 +1,384 @@
+@model SchoolTimetable.ViewModels.ClassDetailsViewModel
+@{
+    Layout = null; // Layout independent
+    ViewBag.Title = Model.Class.Title;
+    var cls = Model.Class;
+    var statusClass = cls.IsCompleted ? "done" : (cls.IsActive ? "live" : "upcoming");
+    var statusLabel = cls.IsCompleted ? "Ended" : (cls.IsActive ? "Live Now" : "Upcoming");
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@cls.Title - Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1a1a2e;
+            --accent: #3b82f6;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning-bg: #fffbeb;
+            --warning-text: #92400e;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text-main);
+        }
+
+        .oc-detail-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .back-nav {
+            margin-bottom: 25px;
+        }
+
+            .back-nav a {
+                color: var(--text-muted);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+        .oc-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .oc-card-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: var(--navy);
+            color: var(--white);
+        }
+
+        .oc-subject {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+        }
+
+        .oc-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .oc-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-live {
+            background: #dcfce7;
+            color: #166534;
+            animation: pulse 2s infinite;
+        }
+
+        .badge-upcoming {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-done {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        @@keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .oc-card-body {
+            padding: 30px;
+        }
+
+        .oc-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .oc-info-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .oc-info-lbl {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .oc-info-val {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .oc-warn {
+            background: var(--warning-bg);
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 13px;
+            color: var(--warning-text);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-main {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-ghost {
+            background: var(--white);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        /* Attendee List */
+        .oc-attendee {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--bg);
+        }
+
+        .oc-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="oc-detail-wrap">
+        <div class="back-nav">
+            <a href="@Url.Action("Index", "OnlineClass")"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div style="background:#fee2e2; color:#b91c1c; padding:15px; border-radius:8px; margin-bottom:20px; font-size:14px;">
+                <i class="fa fa-exclamation-triangle"></i> @TempData["Error"]
+            </div>
+        }
+
+        <div class="oc-card">
+            <div class="oc-card-header">
+                <div>
+                    <div class="oc-subject">@cls.Subject</div>
+                    <h1 class="oc-title">@cls.Title</h1>
+                </div>
+                <span class="oc-badge badge-@statusClass">
+                    @if (cls.IsActive)
+                    {<i class="fa fa-circle" style="font-size:8px"></i>}
+                    @statusLabel
+                </span>
+            </div>
+            <div class="oc-card-body">
+                @if (!string.IsNullOrEmpty(cls.Description))
+                {
+                    <p style="color:var(--text-muted); margin-bottom:25px; line-height:1.6; font-size:15px;">@cls.Description</p>
+                }
+
+                <div class="oc-info-grid">
+                    <div class="oc-info-item">
+                        <div class="oc-info-lbl">Instructor</div>
+                        <div class="oc-info-val">@cls.Teacher.FullName</div>
+                    </div>
+                    <div class="oc-info-item">
+                        <div class="oc-info-lbl">Date & Time</div>
+                        <div class="oc-info-val">@cls.ScheduledAt.ToString("MMM d, h:mm tt")</div>
+                    </div>
+                    <div class="oc-info-item">
+                        <div class="oc-info-lbl">Duration</div>
+                        <div class="oc-info-val">@cls.DurationMinutes Mins</div>
+                    </div>
+                    <div class="oc-info-item">
+                        <div class="oc-info-lbl">Enrollment</div>
+                        <div class="oc-info-val">@cls.Attendances.Count / @cls.MaxStudents</div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(cls.JoinPassword))
+                {
+                    <div class="oc-warn"><i class="fa fa-lock"></i> Secure Session: This class requires a password to join.</div>
+                }
+
+                <div class="btn-group">
+                    @if (Model.IsTeacher)
+                    {
+                        if (!cls.IsCompleted)
+                        {
+                            if (!cls.IsActive)
+                            {
+                                using (Html.BeginForm("StartClass", "OnlineClass", new { id = cls.Id }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-main btn-success"><i class="fa fa-play"></i> Start Class</button>
+                                }
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Meeting", "OnlineClass", new { id = cls.Id })" class="btn-main btn-success"><i class="fa fa-video-camera"></i> Enter Meeting</a>
+                                using (Html.BeginForm("EndClass", "OnlineClass", new { id = cls.Id }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-main btn-danger" onclick="return confirm('Finalise attendance and end the session?')"><i class="fa fa-stop"></i> End Class</button>
+                                }
+                            }
+                        }
+                        <a href="@Url.Action("Attendance", "OnlineClass", new { id = cls.Id })" class="btn-main btn-ghost"><i class="fa fa-file-text-o"></i> Attendance Report</a>
+                    }
+                    else
+                    {
+                        if (!cls.IsCompleted)
+                        {
+                            if (Model.HasJoined)
+                            {
+                                <a href="@Url.Action("Meeting", "OnlineClass", new { id = cls.Id })" class="btn-main btn-success"><i class="fa fa-video-camera"></i> @(cls.IsActive ? "Join Now" : "Enter Waiting Room")</a>
+                            }
+                            else
+                            {
+                                using (Html.BeginForm("Join", "OnlineClass", new { id = cls.Id }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    if (!string.IsNullOrEmpty(cls.JoinPassword))
+                                    {
+                                        <input type="password" name="password" placeholder="Enter Password" style="padding:11px; border-radius:8px; border:1px solid var(--border); margin-right:10px;" required />
+                                    }
+                                    <button type="submit" class="btn-main btn-primary"><i class="fa fa-user-plus"></i> Enroll in Class</button>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <div style="color:var(--text-muted); font-weight:600;"><i class="fa fa-info-circle"></i> This session has concluded.</div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (Model.IsTeacher && Model.Attendances.Any())
+        {
+            <div class="oc-card">
+                <div style="padding:20px 30px; border-bottom:1px solid var(--border); font-weight:700; color:var(--navy); font-size:14px;">
+                    <i class="fa fa-users" style="color:var(--accent); margin-right:10px;"></i> Enrolled Students (@Model.Attendances.Count)
+                </div>
+                @foreach (var att in Model.Attendances)
+                {
+                    <div class="oc-attendee">
+                        <div class="oc-avatar">@att.Student.FullName.Substring(0, 1).ToUpper()</div>
+                        <div style="flex:1">
+                            <div style="font-weight:700; font-size:14px; color:var(--navy)">@att.Student.FullName</div>
+                            <div style="font-size:12px; color:var(--text-muted)">@att.Student.Email</div>
+                        </div>
+                        @if (att.LeftAt == null)
+                        {
+                            <span class="oc-badge badge-live" style="font-size:10px">Online</span>
+                        }
+                        else
+                        {
+                            <span class="oc-badge badge-done" style="font-size:10px">Left Room</span>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,301 @@
+﻿@model List<SchoolTimetable.Models.AppUser>
+@{
+    Layout = null;
+    ViewBag.Title = "Student Registry";
+    int? filterGrade = ViewBag.Grade as int?;
+    bool? filterBlocked = ViewBag.Blocked as bool?;
+    string currentSearch = ViewBag.Search as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+    <style>
+        :root {
+            --navy: #002147;
+            --white: #ffffff;
+            --black: #000000; /* Pure black for text clarity */
+            --off-white: #f8f9fa;
+            --light-gray: #e1e8ef;
+            --slate: #4a5568;
+            --error: #cc0000;
+            --border: 2px solid var(--navy);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--white);
+            color: var(--black); /* Default text to black */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header Section */
+        .header-main {
+            border-bottom: 4px solid var(--navy);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .btn-back {
+            text-decoration: none;
+            color: var(--navy);
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid var(--navy);
+            padding: 8px 15px;
+            transition: all 0.2s;
+        }
+
+            .btn-back:hover {
+                background: var(--navy);
+                color: var(--white);
+            }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-text h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 0;
+            color: var(--navy);
+            letter-spacing: 1px;
+        }
+
+        .header-text p {
+            margin: 5px 0 0 0;
+            color: var(--black);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        /* Filter Section */
+        .filter-box {
+            border: var(--border);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            background: var(--white);
+        }
+
+        .filter-grid {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+            .input-group label {
+                font-size: 0.75rem;
+                font-weight: 900;
+                text-transform: uppercase;
+                color: var(--navy);
+            }
+
+        .input-field {
+            padding: 12px;
+            border: 1px solid var(--navy);
+            color: var(--black);
+            font-weight: 600;
+            min-width: 220px;
+        }
+
+        .btn-navy {
+            background: var(--navy);
+            color: var(--white);
+            border: none;
+            padding: 13px 30px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        /* Table Design */
+        .table-container {
+            border: var(--border);
+        }
+
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+        }
+
+            .main-table th {
+                background: var(--navy);
+                color: var(--white);
+                text-transform: uppercase;
+                font-size: 0.75rem;
+                letter-spacing: 1px;
+                padding: 18px 15px;
+                text-align: left;
+            }
+
+            .main-table td {
+                padding: 18px 15px;
+                border-bottom: 1px solid var(--light-gray);
+                font-size: 0.95rem;
+                color: var(--black); /* Explicit black for data */
+            }
+
+        /* UI Elements */
+        .status-badge {
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border: 1px solid var(--navy);
+            text-transform: uppercase;
+        }
+
+        .action-link {
+            border: 2px solid var(--navy);
+            color: var(--navy);
+            padding: 8px 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-size: 0.75rem;
+        }
+
+            .action-link:hover {
+                background: var(--navy);
+                color: var(--white);
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header-main">
+            <div class="header-top">
+                <a href="@Url.Action("LibrarianDashboard", "Librarian")" class="btn-back">
+                    <span>&#10229;</span> Back to Dashboard
+                </a>
+            </div>
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>Member Registry</h1>
+                    <p>Durban Girls Secondary School — Library Division</p>
+                </div>
+                <div class="status-badge" style="color: var(--navy);">
+                    Total Records: <strong>@Model.Count</strong>
+                </div>
+            </div>
+        </header>
+
+        <section class="filter-box">
+            @using (Html.BeginForm("Members", "Librarian", FormMethod.Get, new { @class = "filter-grid" }))
+            {
+                <div class="input-group">
+                    <label>Search Directory</label>
+                    <input type="text" name="search" value="@currentSearch" class="input-field" placeholder="Search name or email..." />
+                </div>
+
+                <div class="input-group">
+                    <label>Grade Level</label>
+                    <select name="grade" class="input-field" style="min-width: 140px;">
+                        <option value="">All Grades</option>
+                        @for (int i = 8; i <= 12; i++)
+                        {
+                            <option value="@i" @(filterGrade == i ? "selected" : "")>Grade @i</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Account Status</label>
+                    <select name="blocked" class="input-field" style="min-width: 160px;">
+                        <option value="">All Statuses</option>
+                        <option value="false" @(filterBlocked == false ? "selected" : "")>Active</option>
+                        <option value="true" @(filterBlocked == true ? "selected" : "")>Suspended</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-navy">Filter Results</button>
+                <a href="@Url.Action("Members")" style="text-decoration:none; color: var(--black); font-weight: 800; font-size: 0.8rem; text-transform: uppercase; margin-left: 10px;">Reset</a>
+            }
+        </section>
+
+        <div class="table-container">
+            <table class="main-table">
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Grade</th>
+                        <th>Institutional Email</th>
+                        <th>Library Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var s in Model)
+                        {
+                            <tr>
+                                <td style="font-weight: 800; color: var(--black);">
+                                    @s.FullName.ToUpper()
+                                </td>
+                                <td>Grade @s.Grade</td>
+                                <td style="font-family: monospace; font-weight: 600;">@s.Email</td>
+                                <td>
+                                    @if (s.IsBlocked)
+                                    {
+                                        <span style="color: var(--error); font-weight: 800; font-size: 0.75rem;">● SUSPENDED</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: var(--navy); font-weight: 800; font-size: 0.75rem;">● ACTIVE</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Details", new { id = s.Id })" class="action-link">View Profile</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 5rem; color: var(--black); font-weight: 600;">
+                                No students match the current filter criteria.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,262 @@
+@model SchoolTimetable.ViewModels.CreateClassViewModel
+@{
+    Layout = null; // Layout independent
+    ViewBag.Title = "Create New Class";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1a1a2e;
+            --accent: #3b82f6;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --error: #ef4444;
+            --info-bg: #eff6ff;
+            --info-border: #bfdbfe;
+            --info-text: #1e40af;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text-main);
+        }
+
+        .oc-form-wrap {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .back-nav {
+            margin-bottom: 25px;
+        }
+
+            .back-nav a {
+                color: var(--text-muted);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+        .oc-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .oc-card-header {
+            padding: 24px 30px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--navy);
+            color: var(--white);
+        }
+
+        .oc-card-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .oc-card-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                font-size: 13px;
+                color: var(--text-main);
+                margin-bottom: 8px;
+            }
+
+        .form-control {
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            padding: 11px 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+            }
+
+        .oc-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .text-danger {
+            color: var(--error);
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .btn-oc-primary {
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .btn-oc-primary:hover {
+                background: #2563eb;
+            }
+
+        .btn-oc-ghost {
+            background: var(--white);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .jitsi-info {
+            background: var(--info-bg);
+            border: 1px solid var(--info-border);
+            border-radius: 10px;
+            padding: 18px;
+            margin: 10px 0 25px 0;
+            font-size: 13px;
+            color: var(--info-text);
+            line-height: 1.6;
+        }
+
+        @@media(max-width:600px) {
+            .oc-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="oc-form-wrap">
+        <div class="back-nav">
+            <a href="@Url.Action("Index", "OnlineClass")">
+                <i class="fa fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="oc-card">
+            <div class="oc-card-header">
+                <i class="fa fa-plus-circle" style="font-size:20px"></i>
+                <span class="oc-card-title">Schedule New Online Class</span>
+            </div>
+            <div class="oc-card-body">
+                @using (Html.BeginForm("Create", "OnlineClass", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Title)
+                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "e.g. Grade 11 IT – SQL Database Integration" })
+                        @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="oc-row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Subject)
+                            @Html.DropDownListFor(m => m.Subject,
+                                Model.SubjectList,
+                                "-- Select Subject --",
+                                new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Subject, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.MaxStudents, "Target Class Section")
+                            @Html.DropDownListFor(m => m.MaxStudents,
+                                (IEnumerable<SelectListItem>)ViewBag.GradeList,
+                                "-- Select Specific Class (e.g. 11A) --",
+                                new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.MaxStudents, "", new { @class = "text-danger" })
+                        
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Description)
+                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = "3", placeholder = "Briefly describe what this lesson will cover..." })
+                    </div>
+
+                    <div class="oc-row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ScheduledAt)
+                            @Html.TextBoxFor(m => m.ScheduledAt, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
+                            @Html.ValidationMessageFor(m => m.ScheduledAt, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DurationMinutes)
+                            @Html.TextBoxFor(m => m.DurationMinutes, new { @class = "form-control", type = "number", min = "15", max = "480" })
+                            @Html.ValidationMessageFor(m => m.DurationMinutes, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.JoinPassword)
+                        @Html.TextBoxFor(m => m.JoinPassword, new { @class = "form-control", placeholder = "Leave empty for public access" })
+                        <p style="margin:8px 0 0; font-size:12px; color:var(--text-muted)">
+                            <i class="fa fa-info-circle"></i> Optional. If set, students must enter this to join the video session.
+                        </p>
+                    </div>
+
+                    <div style="display:flex; gap:15px; margin-top:10px;">
+                        <button type="submit" class="btn-oc-primary">
+                            <i class="fa fa-check"></i> Create & Schedule
+                        </button>
+                        <a href="@Url.Action("Index", "OnlineClass")" class="btn-oc-ghost">Cancel</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+</body>
+</html>

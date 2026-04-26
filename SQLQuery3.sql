@@ -1,0 +1,1 @@
+﻿UPDATE Entrancetests SET StudentNumber = '2026STUOO7' WHERE TestId = 1;

@@ -1,0 +1,371 @@
+﻿@model SchoolTimetable.ViewModels.StudentDashboardViewModel
+@{
+    Layout = null;
+    ViewBag.Title = "My Dashboard";
+    var sessionUser = SchoolTimetable.Models.SessionHelper.GetUser(Session);
+
+    var reservedBorrows = Model.MyBorrowings.Where(b => b.Status == SchoolTimetable.Models.BorrowStatus.Reserved).ToList();
+    var activeBorrows = Model.MyBorrowings.Where(b => b.Status == SchoolTimetable.Models.BorrowStatus.Active).ToList();
+    var overdueBorrows = Model.MyBorrowings.Where(b => b.Status == SchoolTimetable.Models.BorrowStatus.Overdue).ToList();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard | DGSS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --navy-primary: #002147;
+            --navy-light: #003366;
+            --pure-white: #ffffff;
+            --bg-light: #f4f7f9;
+            --border-color: #dee2e6;
+            --text-dark: #333333;
+            --text-muted: #6c757d;
+            --critical-red: #d9534f;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
+        /* Navigation Bar */
+        .nav-container {
+            background: var(--navy-primary);
+            padding: 0 2rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+            .nav-links li {
+                height: 100%;
+                display: flex;
+                align-items: center;
+            }
+
+                .nav-links li a {
+                    color: rgba(255, 255, 255, 0.85);
+                    text-decoration: none;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    transition: 0.2s;
+                    padding: 0 10px;
+                }
+
+                    .nav-links li a:hover {
+                        color: var(--pure-white);
+                    }
+
+        /* Header */
+        .dashboard-wrapper {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            background: var(--pure-white);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            color: var(--navy-primary);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--pure-white);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .stat-num {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--navy-primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card.urgent {
+            border-top: 4px solid var(--critical-red);
+        }
+
+            .stat-card.urgent .stat-num {
+                color: var(--critical-red);
+            }
+
+        /* Tables */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy-primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .data-table-container {
+            background: var(--pure-white);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+        .dg-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .dg-table th {
+                background: #f8f9fa;
+                color: var(--navy-primary);
+                text-align: left;
+                padding: 15px;
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                border-bottom: 2px solid var(--border-color);
+            }
+
+            .dg-table td {
+                padding: 15px;
+                border-bottom: 1px solid var(--border-color);
+                font-size: 0.9rem;
+            }
+
+        .btn-view {
+            background: var(--navy-primary);
+            color: var(--pure-white);
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+            .btn-view:hover {
+                background: var(--navy-light);
+                color: var(--pure-white);
+                text-decoration: none;
+            }
+
+        .badge-custom {
+            background: #e9ecef;
+            color: var(--navy-primary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    @if (sessionUser != null)
+    {
+        <nav class="nav-container">
+            <a href="@Url.Action("Index","StudentAccount")" style="color: white; font-weight: 800; font-size: 1.2rem; text-decoration: none;">DGSS PORTAL</a>
+            <ul class="nav-links">
+                <li><a href="@Url.Action("Index","StudentAccount")"><i class="fas fa-home mr-1"></i> Dashboard</a></li>
+                <li><a href="@Url.Action("Index","Books")">Catalogue</a></li>
+                @if (sessionUser.IsLibrarian)
+                {
+                    <li><a href="@Url.Action("Index","Borrowings")">Borrowings</a></li>
+                    <li><a href="@Url.Action("Index","Students")">Registry</a></li>
+                }
+                else
+                {
+                    <li><a href="@Url.Action("Mine","Borrowings")">My Fines</a></li>
+                }
+                <li><a href="@Url.Action("Logout", "Teachers")" style="border: 1px solid white; padding: 5px 15px; border-radius: 4px;">Logout</a></li>
+            </ul>
+        </nav>
+    }
+
+    <div class="dashboard-wrapper">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Library Dashboard</h1>
+                <p class="page-subtitle">
+                    <strong>@Model.StudentName</strong> | ID: @Model.StudentNumber
+                    @if (sessionUser != null)
+                    {<span> | Grade @sessionUser.Grade</span>}
+                </p>
+                <a href="@Url.Action("Index","StudentAccount")" style="font-size: 0.8rem; color: var(--navy-light); text-decoration: none; font-weight: 600;">
+                    <i class="fas fa-chevron-left mr-1"></i> Return to Main Account
+                </a>
+            </div>
+            <a href="@Url.Action("Index","Books")" class="btn-view">Browse Catalogue &rarr;</a>
+        </div>
+
+        @if (Model.IsBlocked)
+        {
+            <div class="alert alert-danger shadow-sm">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <strong>Account Restricted:</strong> @(string.IsNullOrEmpty(Model.BlockReason) ? "Access suspended. Please visit the library office." : Model.BlockReason)
+            </div>
+        }
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-num">@reservedBorrows.Count</span>
+                <span class="stat-label">Reservations</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num">@activeBorrows.Count</span>
+                <span class="stat-label">Active Loans</span>
+            </div>
+            <div class="stat-card @(overdueBorrows.Any() ? "urgent" : "")">
+                <span class="stat-num">@overdueBorrows.Count</span>
+                <span class="stat-label">Overdue Items</span>
+            </div>
+            <div class="stat-card @(Model.OutstandingFines > 0 ? "urgent" : "")">
+                <span class="stat-num">R @Model.OutstandingFines.ToString("0.00")</span>
+                <span class="stat-label">Total Balance</span>
+            </div>
+        </div>
+
+        @if (reservedBorrows.Any() || activeBorrows.Any() || overdueBorrows.Any())
+        {
+            <div class="section-title">Current Borrowing Records</div>
+            <div class="data-table-container shadow-sm">
+                <table class="dg-table">
+                    <thead>
+                        <tr>
+                            <th>Book Details</th>
+                            <th>Issued Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Fines</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var b in reservedBorrows.Concat(activeBorrows).Concat(overdueBorrows))
+                        {
+                            var isOvd = b.Status == SchoolTimetable.Models.BorrowStatus.Overdue;
+                            <tr>
+                                <td>
+                                    <strong>@b.Book.Title</strong><br />
+                                    <small class="text-muted">@b.Book.Author</small>
+                                </td>
+                                <td>@b.BorrowedDate.ToString("dd MMM yyyy")</td>
+                                <td style="@(isOvd ? "color:var(--critical-red); font-weight:700;" : "")">
+                                    @b.DueDate.ToString("dd MMM yyyy")
+                                </td>
+                                <td>
+                                    <span class="badge @(isOvd ? "badge-danger" : "badge-info") text-uppercase" style="font-size: 0.7rem;">
+                                        @b.Status
+                                    </span>
+                                </td>
+                                <td style="font-weight:bold; color:@(b.FineAmount > 0 ? "var(--critical-red)" : "inherit")">
+                                    @(b.FineAmount > 0 ? "R " + b.FineAmount.ToString("0.00") : "—")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <div class="catalogue-section">
+            <div class="section-title">Recommended for You</div>
+            <div class="book-grid">
+                @foreach (var book in Model.RecentBooks)
+                {
+                    <div class="book-card shadow-sm">
+                        <div>
+                            <div class="book-title">@book.Title</div>
+                            <div class="book-author">By @book.Author</div>
+                            <div class="mb-3">
+                                @if (!string.IsNullOrEmpty(book.Genre))
+                                {<span class="badge-custom">@book.Genre</span>}
+                                @if (book.MinGrade.HasValue)
+                                {<span class="badge-custom">Grade @book.MinGrade+</span>}
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span style="font-size:0.7rem; font-weight:700; text-transform: uppercase; color:@(book.AvailableCopies > 0 ? "#28a745" : "#dc3545")">
+                                @(book.AvailableCopies > 0 ? "Available" : "Checked Out")
+                            </span>
+                            <a href="@Url.Action("Details","Books",new{id=book.Id})" class="btn-view">Details</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <footer class="text-center mt-5 py-4 border-top">
+            <p class="small text-muted">&copy; @DateTime.Now.Year - Durban Girls Secondary School Management System</p>
+        </footer>
+    </div>
+</body>
+</html>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StudentDashboard</title>
+</head>
+<body>
+    <div>
+    </div>
+</body>
+</html>

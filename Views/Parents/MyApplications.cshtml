@@ -1,0 +1,265 @@
+﻿@model IEnumerable<SchoolTimetable.Models.Application>
+@{
+    Layout = null;
+    ViewBag.Title = "My Applications | DGSS";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy-deep: #0a192f;
+            --navy-muted: #112240;
+            --navy-accent: #233554;
+            --white-bright: #ffffff;
+            --white-muted: #ccd6f6;
+            --gold-accent: #c5a059;
+            --status-green: #64ffda;
+            --status-pending: #ffab00;
+        }
+
+        body {
+            background-color: var(--navy-deep);
+            color: var(--white-muted);
+            font-family: 'Barlow', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            background-color: var(--navy-muted);
+            padding: 15px 2rem;
+            display: flex;
+            justify-content: flex-end;
+            border-bottom: 1px solid var(--navy-accent);
+        }
+
+        .logout-link {
+            color: var(--white-bright);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding: 8px 16px;
+            border: 1px solid var(--gold-accent);
+            transition: all 0.3s ease;
+        }
+
+            .logout-link:hover {
+                background-color: var(--gold-accent);
+                color: var(--navy-deep);
+            }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .header-section {
+            border-bottom: 1px solid var(--navy-accent);
+            padding-bottom: 25px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        h2 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 3rem;
+            text-transform: uppercase;
+            color: var(--white-bright);
+            margin: 5px 0 0 0;
+            line-height: 1;
+        }
+
+        .btn-back {
+            color: var(--gold-accent);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            display: inline-block;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+            .btn-back:hover {
+                color: var(--white-bright);
+                transform: translateX(-5px);
+            }
+
+        .btn-new {
+            background: var(--gold-accent);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            transition: 0.3s;
+        }
+
+            .btn-new:hover {
+                background: var(--white-bright);
+                color: var(--navy-deep);
+            }
+
+        /* Application Cards */
+        .app-card {
+            background: var(--navy-muted);
+            border: 1px solid var(--navy-accent);
+            padding: 35px;
+            margin-bottom: 25px;
+            border-radius: 2px;
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+            .app-card:hover {
+                border-color: var(--gold-accent);
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
+            }
+
+        .student-info h3 {
+            margin: 0 0 15px 0;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2.2rem;
+            color: var(--white-bright);
+            text-transform: uppercase;
+        }
+
+        .student-info p {
+            margin: 8px 0;
+            font-size: 1rem;
+            color: var(--white-muted);
+        }
+
+        .student-info strong {
+            color: var(--gold-accent);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-right: 5px;
+        }
+
+        /* Status Styling */
+        .status-container {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .status-badge {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            border-radius: 0;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(255, 171, 0, 0.1);
+            color: var(--status-pending);
+            border: 1px solid var(--status-pending);
+        }
+
+        .status-processed {
+            background: rgba(100, 255, 218, 0.1);
+            color: var(--status-green);
+            border: 1px solid var(--status-green);
+        }
+
+        .submission-date {
+            font-size: 0.75rem;
+            margin-top: 15px;
+            color: var(--navy-accent);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            background: var(--navy-muted);
+            border: 1px dashed var(--navy-accent);
+        }
+
+            .empty-state p {
+                font-size: 1.2rem;
+                margin-bottom: 20px;
+            }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <a href="@Url.Action("Logout", "Parents")" class="logout-link">Log Out</a>
+    </nav>
+
+    <div class="container">
+        <div class="header-section">
+            <div>
+                <a href="@Url.Action("Index", "Parents")" class="btn-back">← Return to Dashboard</a>
+                <h2>My Applications</h2>
+            </div>
+            <a href="@Url.Action("Create", "Applications")" class="btn-new">
+                + New Application
+            </a>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="empty-state">
+                <p>No student applications have been submitted yet.</p>
+                <a href="@Url.Action("Create", "Applications")" style="color: var(--gold-accent); text-transform: uppercase; font-weight: 800; text-decoration: none; border-bottom: 2px solid var(--gold-accent);">
+                    Start Application Process
+                </a>
+            </div>
+        }
+        else
+        {
+            foreach (var app in Model)
+            {
+                <div class="app-card">
+                    <div class="student-info">
+                        <h3>@app.FirstName @app.LastName</h3>
+                        <p><strong>Grade Level:</strong> @(string.IsNullOrEmpty(app.GradeApplyingFor) ? "N/A" : app.GradeApplyingFor)</p>
+                        <p><strong>Previous Institution:</strong> @app.PreviousSchoolName</p>
+                    </div>
+                    <div class="status-container">
+                        @if (app.IsProcessed)
+                        {
+                            <span class="status-badge status-processed">Application Processed</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge status-pending">Under Review</span>
+                        }
+                        <span class="submission-date">Logged: @app.SubmissionDate.ToString("dd MMMM yyyy")</span>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+</body>
+</html>

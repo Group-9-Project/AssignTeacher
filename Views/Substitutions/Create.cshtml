@@ -1,0 +1,325 @@
+@model SchoolTimetable.ViewModels.SubstitutionFormViewModel
+@{
+    Layout = null;
+    ViewBag.Title = "New Substitution";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <style>
+        :root {
+            --navy-deep: #002147;
+            --navy-primary: #003366;
+            --white: #ffffff;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-500: #64748b;
+            --error-red: #b91c1c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--slate-100);
+            color: var(--navy-deep);
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 750px;
+        }
+
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 4px solid var(--navy-deep);
+            padding-bottom: 1.2rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border: 1px solid var(--slate-300);
+            border-radius: 4px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--slate-100);
+            padding-bottom: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--navy-primary);
+            letter-spacing: 0.5px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--slate-500);
+        }
+
+        .form-control {
+            padding: 12px;
+            border: 1px solid var(--slate-300);
+            border-radius: 2px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--navy-deep);
+            width: 100%;
+            box-sizing: border-box;
+            background: var(--white);
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: var(--navy-deep);
+                box-shadow: 0 0 0 2px rgba(0, 33, 71, 0.05);
+            }
+
+        /* Slot Details Preview */
+        .details-grid {
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-left: 5px solid var(--navy-deep);
+            padding: 18px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            border-radius: 2px;
+        }
+
+        .detail-item .label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--slate-500);
+            margin-bottom: 4px;
+        }
+
+        .detail-item .value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--navy-deep);
+        }
+
+        /* Notifications Banner */
+        .info-banner {
+            background: var(--navy-deep);
+            color: var(--white);
+            padding: 15px;
+            border-radius: 2px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+            border: 2px solid var(--navy-deep);
+        }
+
+        .btn-primary {
+            background: var(--navy-deep);
+            color: var(--white);
+        }
+
+            .btn-primary:hover {
+                background: var(--white);
+                color: var(--navy-deep);
+            }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--navy-deep);
+        }
+
+            .btn-outline:hover {
+                background: var(--navy-deep);
+                color: var(--white);
+            }
+
+        .validation-summary-errors {
+            background: #fef2f2;
+            color: var(--error-red);
+            padding: 1rem;
+            border: 1px solid var(--error-red);
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        i, .fas {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="page-header">
+            <h1 class="page-title">New Substitution</h1>
+            <a href="@Url.Action("Index")" class="btn btn-outline">Exit</a>
+        </div>
+
+        @using (Html.BeginForm("Create", "Substitutions", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "validation-summary-errors" })
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">1. Original Session Identification</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Select Timetable Slot</label>
+                    <select name="TimetableSlotId" id="slotSelect" class="form-control" onchange="loadSlotDetails(this.value)">
+                        <option value="">- Select a slot from the database -</option>
+                        @foreach (var slot in Model.AllSlots)
+                        {
+                            bool isSel = slot.Id == Model.TimetableSlotId;
+                            <option value="@slot.Id" @(isSel ? "selected" : "")>
+                                @(slot.Teacher != null ? slot.Teacher.FullName : "Unknown") | @(slot.Subject != null ? slot.Subject.Name : "N/A") | @(slot.Class != null ? slot.Class.Name : "N/A")
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div id="slotDetail" style="display:@(Model.Slot != null ? "block" : "none")">
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="label">Original Teacher</div>
+                            <div class="value" id="d-teacher">@(Model.Slot != null && Model.Slot.Teacher != null ? Model.Slot.Teacher.FullName : "—")</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Subject Area</div>
+                            <div class="value" id="d-subject">@(Model.Slot != null && Model.Slot.Subject != null ? Model.Slot.Subject.Name : "—")</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Assigned Class</div>
+                            <div class="value" id="d-class">@(Model.Slot != null && Model.Slot.Class != null ? Model.Slot.Class.Name : "—")</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Time Allocation</div>
+                            <div class="value" id="d-time">@(Model.Slot != null ? Model.Slot.DayName + " | Period " + Model.Slot.Period : "—")</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="origTeacherId" value="@(Model.Slot != null ? Model.Slot.TeacherId.ToString() : "")" />
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">2. Substitution Assignment</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Assign Substitute Teacher</label>
+                    <select name="SubstituteTeacherId" id="subTeacherSel" class="form-control">
+                        <option value="">- Choose covering staff member -</option>
+                        @foreach (var t in Model.AvailableTeachers)
+                        {
+                            <option value="@t.Id" @(t.Id == Model.SubstituteTeacherId ? "selected" : "")>@t.FullName</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Effective Date</label>
+                    <input type="date" name="SubstitutionDate" class="form-control" value="@Model.SubstitutionDate.ToString("yyyy-MM-dd")" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Absence Justification (Optional)</label>
+                    @Html.TextAreaFor(m => m.Reason, new { @class = "form-control", rows = "3", placeholder = "Provide brief reasoning for official records..." })
+                </div>
+
+                <div class="info-banner">
+                    Automated email notifications will be dispatched to both staff members upon creation.
+                </div>
+
+                <div style="display:flex; gap:12px; justify-content: flex-end;">
+                    <a href="@Url.Action("Index")" class="btn btn-outline">Discard</a>
+                    <button type="submit" class="btn btn-primary">Authorize Substitution</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script>
+    function loadSlotDetails(slotId) {
+        var panel = document.getElementById('slotDetail');
+        if (!slotId) { panel.style.display = 'none'; return; }
+        $.getJSON('@Url.Action("GetSlotDetails","Substitutions")', { slotId: slotId }, function (d) {
+            document.getElementById('d-teacher').textContent = d.teacherName;
+            document.getElementById('d-subject').textContent = d.subjectName;
+            document.getElementById('d-class').textContent = d.className;
+            document.getElementById('d-time').textContent = d.day + ' | Period ' + d.period;
+            document.getElementById('origTeacherId').value = d.originalTeacherId;
+
+            var sel = document.getElementById('subTeacherSel');
+            for (var i = 0; i < sel.options.length; i++) {
+                sel.options[i].disabled = (sel.options[i].value == d.originalTeacherId);
+                if (sel.options[i].disabled && sel.options[i].selected) sel.value = '';
+            }
+            panel.style.display = 'block';
+        }).fail(function () { panel.style.display = 'none'; });
+    }
+
+    $(document).ready(function() {
+        var ps = document.getElementById('slotSelect').value;
+        if (ps) loadSlotDetails(ps);
+    });
+    </script>
+
+</body>
+</html>

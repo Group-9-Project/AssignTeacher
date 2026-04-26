@@ -1,0 +1,360 @@
+@model SchoolTimetable.ViewModels.BookListViewModel
+@{
+    Layout = null; // Explicitly disabling any layout
+    ViewBag.Title = "Book Catalogue";
+    var sessionUser = SchoolTimetable.Models.SessionHelper.GetUser(Session);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Library</title>
+    <style>
+        :root {
+            --navy: #002147;
+            --navy-light: #003366;
+            --white: #ffffff;
+            --ghost-white: #f8fafc;
+            --border: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --danger: #be123c;
+            --gold: #b08d48; /* Added for consistency with your details page */
+        }
+
+        body {
+            background-color: var(--ghost-white);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .catalogue-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* --- Header Section --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 4px solid var(--navy);
+            padding-bottom: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .page-title {
+            color: var(--navy);
+            font-size: 2.2rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            margin: 5px 0 0;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* --- Search & Filters --- */
+        .search-section {
+            background: var(--white);
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .search-flex-wrapper {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .input-main {
+            flex: 3;
+            min-width: 250px;
+        }
+
+        .input-dropdown {
+            flex: 1;
+            min-width: 150px;
+            background-color: var(--white);
+        }
+
+        /* --- Buttons --- */
+        .btn-dg {
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s ease;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-dg-primary {
+            background: var(--navy);
+            color: var(--white);
+        }
+
+            .btn-dg-primary:hover {
+                background: var(--navy-light);
+            }
+
+        .btn-dg-outline {
+            background: transparent;
+            color: var(--navy);
+            border: 2px solid var(--navy);
+            padding: 10px 18px;
+        }
+
+            .btn-dg-outline:hover {
+                background: #f1f5f9;
+            }
+
+        .btn-back {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 11px 18px;
+        }
+
+            .btn-back:hover {
+                background: var(--white);
+                color: var(--navy);
+                border-color: var(--navy);
+            }
+
+        /* --- Grid --- */
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .book-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .book-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+
+        .status-indicator {
+            height: 6px;
+            width: 100%;
+        }
+
+        .status-available {
+            background: var(--navy);
+        }
+
+        .status-empty {
+            background: var(--danger);
+        }
+
+        .card-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .genre-tag {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--navy);
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .stock-alert {
+            color: var(--danger);
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .book-name {
+            font-size: 1.4rem;
+            color: var(--navy);
+            margin: 15px 0 5px;
+            line-height: 1.2;
+        }
+
+        .author-name {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0 0 20px 0;
+        }
+
+        .availability-info {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .count-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .text-danger {
+            color: var(--danger);
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        .flex-grow {
+            flex-grow: 1;
+            margin: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--white);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="catalogue-container">
+        <div class="page-header">
+            <div class="header-text">
+                <h1 class="page-title">Library Catalogue</h1>
+                <p class="page-subtitle">Inventory Management: @Model.Books.Count titles found</p>
+            </div>
+
+            <div class="header-actions">
+                @if (sessionUser != null)
+                {
+                    if (sessionUser.IsLibrarian)
+                    {
+                        <a href="@Url.Action("Librarian", "Librarian")" class="btn-dg btn-back">Dashboard</a>
+                        <a href="@Url.Action("Create")" class="btn-dg btn-dg-primary">Add New Book</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("StudentDashboard", "StudentAccount")" class="btn-dg btn-back">My Dashboard</a>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="search-section">
+            @using (Html.BeginForm("Index", "Books", FormMethod.Get))
+            {
+                <div class="search-flex-wrapper">
+                    @Html.TextBoxFor(m => m.Search, new { @class = "search-input input-main", placeholder = "Search by Title or Author..." })
+
+                    @Html.DropDownListFor(m => m.Genre, new SelectList(Model.Genres), "All Categories", new { @class = "search-input input-dropdown" })
+
+                    <button type="submit" class="btn-dg btn-dg-primary">Apply Filters</button>
+                    <a href="@Url.Action("Index")" class="btn-dg btn-dg-outline">Reset</a>
+                </div>
+            }
+        </div>
+
+        <div class="book-grid">
+            @foreach (var book in Model.Books)
+            {
+                bool isOutOfStock = book.AvailableCopies == 0;
+                <div class="book-card">
+                    <div class="status-indicator @(isOutOfStock ? "status-empty" : "status-available")"></div>
+                    <div class="card-content">
+                        <div style="display:flex; justify-content: space-between; align-items: center;">
+                            <span class="genre-tag">@book.Genre</span>
+                            @if (isOutOfStock)
+                            {
+                                <span class="stock-alert">Out of Stock</span>
+                            }
+                        </div>
+
+                        <h3 class="book-name">@book.Title</h3>
+                        <p class="author-name">by @book.Author</p>
+
+                        <div class="availability-info">
+                            <span class="count-text @(isOutOfStock ? "text-danger" : "")">
+                                Copies: @book.AvailableCopies / @book.TotalCopies
+                            </span>
+                        </div>
+
+                        <div class="card-actions">
+                            <a href="@Url.Action("Details", new { id = book.Id })" class="btn-dg btn-dg-outline">View Details</a>
+
+                            @if (sessionUser != null && !sessionUser.IsLibrarian && !isOutOfStock)
+                            {
+                                using (Html.BeginForm("Reserve", "Books", new { id = book.Id }, FormMethod.Post, new { @class = "flex-grow" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-dg btn-dg-primary full-width">Reserve</button>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (!Model.Books.Any())
+        {
+            <div class="empty-state">
+                <h2 style="color: var(--navy)">No results found</h2>
+                <p>Try adjusting your search terms or filters.</p>
+                <a href="@Url.Action("Index")" style="color: var(--navy); font-weight: bold;">Show all books</a>
+            </div>
+        }
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,288 @@
+@model SchoolTimetable.ViewModels.TimetableViewModel
+@{
+    ViewBag.Title = Model.Class.Name + " Timetable";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Model.Class.Name :: Schedule - Timetable System</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy-deep: #002147;
+            --navy-accent: #003366;
+            --gold-accent: #c5a059;
+            --white-bright: #ffffff;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-600: #475569;
+        }
+
+        body {
+            background-color: var(--slate-50);
+            font-family: 'Inter', sans-serif;
+            color: var(--navy-deep);
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Institutional Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 4px solid var(--navy-deep);
+            padding-bottom: 1rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin: 0;
+        }
+
+        /* Timetable Grid */
+        .card {
+            background: var(--white-bright);
+            border: 1px solid var(--slate-300);
+            border-radius: 4px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+        }
+
+        .timetable-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .timetable {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 4px;
+        }
+
+            .timetable th {
+                background: var(--navy-deep);
+                color: white;
+                padding: 14px;
+                text-transform: uppercase;
+                font-size: 0.7rem;
+                font-weight: 800;
+                letter-spacing: 1px;
+                border-radius: 2px;
+                min-width: 120px;
+            }
+
+        /* Period Sidebar */
+        .period-label {
+            background: var(--slate-100);
+            color: var(--navy-deep);
+            text-align: center;
+            border-radius: 2px;
+            padding: 15px 10px;
+            border: 1px solid var(--slate-200);
+            min-width: 100px;
+        }
+
+        .period-num {
+            font-size: 1.2rem;
+            font-weight: 900;
+            display: block;
+        }
+
+        .period-time {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        /* Subject Slots */
+        .slot-cell {
+            padding: 12px;
+            border-radius: 2px;
+            min-height: 90px;
+            position: relative;
+            border-left: 5px solid transparent;
+            background: var(--slate-50);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+            .slot-cell:hover {
+                filter: brightness(0.95);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
+
+        .slot-code {
+            font-weight: 900;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .slot-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            line-height: 1.2;
+            color: var(--navy-deep);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .slot-teacher {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--slate-600);
+            margin-top: 8px;
+            text-transform: uppercase;
+        }
+
+        .empty-slot {
+            background: repeating-linear-gradient( 45deg, #ffffff, #ffffff 10px, #fcfcfc 10px, #fcfcfc 20px );
+            border: 1px dashed var(--slate-200);
+            border-radius: 2px;
+            height: 90px;
+        }
+
+        /* Actions */
+        .slot-actions {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .slot-cell:hover .slot-actions {
+            opacity: 1;
+        }
+
+        .btn-action {
+            padding: 4px 8px;
+            background: var(--navy-deep);
+            color: white;
+            border: none;
+            border-radius: 2px;
+            text-decoration: none;
+            font-size: 0.6rem;
+            font-weight: 800;
+        }
+
+        /* Navigation */
+        .btn-nav {
+            padding: 10px 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            letter-spacing: 0.8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.2s;
+            border: 2px solid var(--navy-deep);
+            background: transparent;
+            color: var(--navy-deep);
+        }
+
+            .btn-nav:hover {
+                background: var(--navy-deep);
+                color: white;
+            }
+
+        /* Hidden elements per user instructions */
+        i, .fas, .fa {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h1 class="page-title">@Model.Class.Name :: Schedule</h1>
+            <a href="@Url.Action("Index")" class="btn-nav">
+                Back to Registry
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="timetable-wrap">
+                <table class="timetable">
+                    <thead>
+                        <tr>
+                            <th style="width:110px">Period</th>
+                            @foreach (var d in Model.Days)
+                            {
+                                <th>@Model.DayNames[d]</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Periods)
+                        {
+                            <tr>
+                                <td class="period-label">
+                                    <span class="period-num">@p</span>
+                                    <span class="period-time">@Model.PeriodTime(p)</span>
+                                </td>
+                                @foreach (var d in Model.Days)
+                                {
+                                    var slot = Model.GetSlot(d, p);
+                                    <td>
+                                        @if (slot != null)
+                                        {
+                                            <div class="slot-cell" style="border-left-color: @slot.Subject.Color; background-color: @(slot.Subject.Color)08;">
+                                                <div class="slot-content">
+                                                    <div class="slot-code" style="color:@slot.Subject.Color">@slot.Subject.Code</div>
+                                                    <div class="slot-name">@slot.Subject.Name</div>
+                                                </div>
+                                                <div class="slot-teacher">
+                                                    @slot.Teacher.LastName
+                                                </div>
+                                                <div class="slot-actions">
+                                                    <a href="@Url.Action("Edit","Timetable",new{id=slot.Id})" class="btn-action">
+                                                        EDIT
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="empty-slot"></div>
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

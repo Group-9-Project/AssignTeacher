@@ -1,0 +1,329 @@
+@model List<SchoolTimetable.Models.Borrowing>
+@{
+    Layout = null; // Standalone mode
+    ViewBag.Title = "My Borrowed Books";
+
+    var isBlocked = (ViewBag.IsBlocked as bool?) ?? false;
+    var blockReason = ViewBag.BlockReason as string ?? "Account restricted.";
+
+    var reservedBorrows = Model.Where(b => b.Status == SchoolTimetable.Models.BorrowStatus.Reserved).ToList();
+    var activeBorrows = Model.Where(b => b.Status == SchoolTimetable.Models.BorrowStatus.Active).ToList();
+    var overdueBorrows = Model.Where(b => b.Status == SchoolTimetable.Models.BorrowStatus.Overdue).ToList();
+
+    var history = Model.Where(b => b.Status == SchoolTimetable.Models.BorrowStatus.Returned ||
+                                   b.Status == SchoolTimetable.Models.BorrowStatus.Lost)
+                       .OrderByDescending(b => b.ReturnedDate).ToList();
+
+    var totalFines = Model.Where(b => !b.FinePaid).Sum(b => b.FineAmount);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Student Dashboard</title>
+
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Barlow:wght@400;500;600;700&display=swap');
+
+        :root {
+            --navy-deep: #0a192f;
+            --navy-accent: #112240;
+            --white-bright: #ffffff;
+            --white-muted: #f8fafc;
+            --text-main: #1a202c;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --danger-red: #ef4444;
+        }
+
+        body {
+            background-color: var(--white-muted);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            font-family: 'Barlow', sans-serif;
+        }
+
+        .student-dashboard {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.5rem;
+            border-bottom: 4px solid var(--navy-deep);
+            padding-bottom: 1.5rem;
+        }
+
+        .page-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 3rem;
+            text-transform: uppercase;
+            color: var(--navy-deep);
+            margin: 0;
+            letter-spacing: 1px;
+            line-height: 0.9;
+        }
+
+        .blocked-banner {
+            background: #fef2f2;
+            border: 2px solid var(--danger-red);
+            border-radius: 4px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--white-bright);
+            padding: 2rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-num {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--navy-deep);
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-top: 8px;
+            display: block;
+        }
+
+        /* Highlight variants */
+        .stat-card.warn {
+            border-top: 5px solid var(--danger-red);
+        }
+
+            .stat-card.warn .stat-num {
+                color: var(--danger-red);
+            }
+
+        .stat-card.danger {
+            background: var(--navy-deep);
+            border: none;
+        }
+
+            .stat-card.danger .stat-num, .stat-card.danger .stat-label {
+                color: var(--white-bright);
+            }
+
+        /* Tables */
+        .section-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            color: var(--navy-deep);
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dg-card {
+            background: var(--white-bright);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .dg-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .dg-table th {
+                background: var(--navy-deep);
+                color: var(--white-bright);
+                font-family: 'Barlow Condensed', sans-serif;
+                padding: 15px;
+                text-align: left;
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .dg-table td {
+                padding: 18px 15px;
+                border-bottom: 1px solid var(--border-light);
+                font-size: 1rem;
+            }
+
+            .dg-table tr:last-child td {
+                border-bottom: none;
+            }
+
+        .btn-gold {
+            background: var(--navy-deep);
+            color: var(--white-bright);
+            padding: 12px 25px;
+            text-decoration: none;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+            .btn-gold:hover {
+                background: var(--navy-accent);
+                transform: translateY(-2px);
+            }
+
+        @@media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="student-dashboard">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Personal Archive</h1>
+                <p style="color: var(--text-muted); font-weight: 500; margin-top: 8px; font-size: 1.1rem;">Managed Portfolio: Active Loans & History</p>
+            </div>
+            <a href="@Url.Action("Index","Books")" class="btn-gold">Browse Collection</a>
+        </div>
+
+        @if (isBlocked)
+        {
+            <div class="blocked-banner">
+                <span style="font-size: 1.5rem;">&#9888;</span>
+                <div>
+                    <strong style="color:var(--danger-red); font-family: 'Barlow Condensed'; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase;">Account Access Restricted</strong>
+                    <div style="color: var(--text-main); font-weight: 500;">@blockReason</div>
+                </div>
+            </div>
+        }
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-num">@reservedBorrows.Count</span>
+                <span class="stat-label">On Reserve</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num">@activeBorrows.Count</span>
+                <span class="stat-label">In-Circulation</span>
+            </div>
+            <div class="stat-card @(overdueBorrows.Any() ? "warn" : "")">
+                <span class="stat-num">@overdueBorrows.Count</span>
+                <span class="stat-label">Overdue Items</span>
+            </div>
+            <div class="stat-card @(totalFines > 0 ? "danger" : "")">
+                <span class="stat-num">R @totalFines.ToString("0.00")</span>
+                <span class="stat-label">Pending Fines</span>
+            </div>
+        </div>
+
+        @if (activeBorrows.Any() || overdueBorrows.Any())
+        {
+            <h3 class="section-title">Current Asset Loans</h3>
+            <div class="dg-card">
+                <table class="dg-table">
+                    <thead>
+                        <tr>
+                            <th>Asset Details</th>
+                            <th>Issued On</th>
+                            <th>Deadline</th>
+                            <th>Assessments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var b in activeBorrows.Concat(overdueBorrows))
+                        {
+                            var isOvd = b.Status == SchoolTimetable.Models.BorrowStatus.Overdue;
+                            <tr>
+                                <td>
+                                    <strong style="color: var(--navy-deep); font-size: 1.1rem;">@b.Book.Title</strong><br />
+                                    <small style="color: var(--text-muted); font-weight: 600;">Ref: @b.Book.Author</small>
+                                </td>
+                                <td style="color: var(--text-main); font-weight: 500;">@b.BorrowedDate.ToString("dd MMM yyyy")</td>
+                                <td style="@(isOvd ? "color:var(--danger-red); font-weight:bold" : "color: var(--navy-deep); font-weight: 600;")">
+                                    @b.DueDate.ToString("dd MMM yyyy")
+                                    @(isOvd ? " [EXPIRED]" : "")
+                                </td>
+                                <td style="color:@(b.FineAmount > 0 ? "var(--danger-red)" : "var(--text-muted)"); font-weight: 700;">
+                                    @(b.FineAmount > 0 ? "R " + b.FineAmount.ToString("0.00") : "—")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @if (history.Any())
+        {
+            <h3 class="section-title">Historical Log</h3>
+            <div class="dg-card">
+                <table class="dg-table">
+                    <thead>
+                        <tr>
+                            <th>Asset Title</th>
+                            <th>Archived Date</th>
+                            <th>Resolution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var b in history)
+                        {
+                            <tr>
+                                <td style="color: var(--navy-deep); font-weight: 600;">@b.Book.Title</td>
+                                <td style="color: var(--text-muted);">@(b.ReturnedDate.HasValue ? b.ReturnedDate.Value.ToString("dd MMM yyyy") : "N/A")</td>
+                                <td>
+                                    <span style="font-family: 'Barlow Condensed'; font-weight: 800; text-transform: uppercase; font-size: 0.85rem; padding: 4px 10px; border-radius: 4px; background: @(b.Status == SchoolTimetable.Models.BorrowStatus.Lost ? "#fee2e2" : "#f1f5f9"); color: @(b.Status == SchoolTimetable.Models.BorrowStatus.Lost ? "var(--danger-red)" : "var(--navy-deep)")">
+                                        @b.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+</body>
+</html>

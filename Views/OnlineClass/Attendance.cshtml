@@ -1,0 +1,283 @@
+@model SchoolTimetable.Models.OnlineClass
+@{
+    Layout = null;
+    ViewBag.Title = "Attendance Report";
+    var attendances = Model.Attendances.OrderBy(a => a.JoinedAt).ToList();
+    var presentCount = attendances.Count(a => a.IsPresent);
+    double avgDur = attendances.Where(a => a.DurationMinutes.HasValue)
+        .Select(a => (double)a.DurationMinutes.Value)
+        .DefaultIfEmpty(0).Average();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Attendance - @Model.Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1a1a2e;
+            --accent: #3b82f6;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 30px;
+            color: var(--text-main);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: var(--navy);
+            padding: 25px 35px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--white);
+        }
+
+        .header-info h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .header-info p {
+            margin: 5px 0 0;
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        .btn-csv {
+            background: var(--white);
+            color: var(--navy);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-bar {
+            background: #252545;
+            padding: 20px 35px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            color: var(--white);
+            border-bottom: 5px solid var(--accent);
+        }
+
+        .stat-item .val {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-item .lbl {
+            font-size: 11px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .content-body {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .att-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .att-table th {
+                text-align: left;
+                padding: 15px;
+                background: #f1f5f9;
+                color: var(--text-muted);
+                font-size: 12px;
+                text-transform: uppercase;
+            }
+
+            .att-table td {
+                padding: 15px;
+                border-bottom: 1px solid var(--border);
+                font-size: 14px;
+            }
+
+        .student-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-circle {
+            width: 35px;
+            height: 35px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-present {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-absent {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .back-nav {
+            margin-bottom: 15px;
+        }
+
+            .back-nav a {
+                color: var(--text-muted);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 600;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="back-nav">
+            <a href="@Url.Action("Index", "OnlineClass")"><i class="fa fa-chevron-left"></i> Return to Dashboard</a>
+        </div>
+
+        <div class="page-header">
+            <div class="header-info">
+                <h1>Attendance Report</h1>
+                <p>@Model.Title — @Model.Subject</p>
+            </div>
+            <button onclick="exportCSV()" class="btn-csv">
+                <i class="fa fa-file-excel-o"></i> Export Data
+            </button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="val">@presentCount</span>
+                <span class="lbl">Students Present</span>
+            </div>
+            <div class="stat-item">
+                <span class="val">@Model.DurationMinutes min</span>
+                <span class="lbl">Class Length</span>
+            </div>
+            <div class="stat-item">
+                <span class="val">@Math.Round(avgDur) min</span>
+                <span class="lbl">Average Stay</span>
+            </div>
+            <div class="stat-item">
+                <span class="val">@Model.ScheduledAt.ToString("dd MMM")</span>
+                <span class="lbl">Session Date</span>
+            </div>
+        </div>
+
+        <div class="content-body">
+            @if (attendances.Any())
+            {
+                <table class="att-table" id="attTable">
+                    <thead>
+                        <tr>
+                            <th>Student Details</th>
+                            <th>Joined At</th>
+                            <th>Left At</th>
+                            <th>Stay Duration</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var att in attendances)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar-circle">@att.Student.FullName.Substring(0, 1)</div>
+                                        <div>
+                                            <div class="student-name" style="font-weight:700; color:var(--navy)">@att.Student.FullName</div>
+                                            <div class="student-email" style="font-size:11px; color:var(--text-muted)">@att.Student.Email</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@att.JoinedAt.ToString("h:mm tt")</td>
+                                <td>@(att.LeftAt.HasValue ? att.LeftAt.Value.ToString("h:mm tt") : "--")</td>
+                                <td>@(att.DurationMinutes.HasValue ? att.DurationMinutes.Value.ToString() + " min" : "Live")</td>
+                                <td>
+                                    <span class="badge @(att.IsPresent ? "badge-present" : "badge-absent")">
+                                        @(att.IsPresent ? "Present" : "Absent")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <script>
+        function exportCSV() {
+            var rows = [['Student Name', 'Email', 'Joined At', 'Left At', 'Duration', 'Status']];
+
+            document.querySelectorAll('#attTable tbody tr').forEach(function (tr) {
+                var cells = tr.querySelectorAll('td');
+                var name = tr.querySelector('.student-name').textContent.trim();
+                var email = tr.querySelector('.student-email').textContent.trim();
+                var joined = cells[1].textContent.trim();
+                var left = cells[2].textContent.trim();
+                var duration = cells[3].textContent.trim();
+                var status = cells[4].textContent.trim();
+
+                rows.push([name, email, joined, left, duration, status]);
+            });
+
+            var csvContent = rows.map(r => r.map(v => '"' + v.replace(/"/g, '""') + '"').join(',')).join('\n');
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+
+            var link = document.createElement("a");
+            link.setAttribute("href", url);
+            // Fixed: Using standard JS string concatenation to avoid C# parsing error
+            link.setAttribute("download", "Attendance_Report_" + new Date().getTime() + ".csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+
+</body>
+</html>

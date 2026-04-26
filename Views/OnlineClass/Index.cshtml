@@ -1,0 +1,446 @@
+@model SchoolTimetable.ViewModels.OnlineClassDashboardViewModel
+@{
+    Layout = null; // Layout independent
+    ViewBag.Title = "Online Classes Dashboard";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1a1a2e;
+            --accent: #3b82f6;
+            --live: #22c55e;
+            --upcoming: #3b82f6;
+            --done: #9ca3af;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --text-main: #1e293b;
+            --text-muted: #6b7280;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text-main);
+        }
+
+        .oc-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .oc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+            .oc-header h2 {
+                margin: 0;
+                font-size: 26px;
+                font-weight: 800;
+                color: var(--navy);
+            }
+
+            .oc-header p {
+                margin: 5px 0 0;
+                color: var(--text-muted);
+                font-size: 14px;
+            }
+
+        /* Stats Grid */
+        .oc-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .oc-stat {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .oc-stat-val {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--navy);
+            display: block;
+        }
+
+        .oc-stat-lbl {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Section Styling */
+        .oc-section-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--navy);
+            margin: 30px 0 15px;
+        }
+
+        .oc-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot-live {
+            background: var(--live);
+            box-shadow: 0 0 0 4px rgba(34,197,94,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        .dot-upcoming {
+            background: var(--upcoming);
+        }
+
+        @@keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Grid & Cards */
+        .oc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .oc-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+            .oc-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+            }
+
+            .oc-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                border-radius: 14px 14px 0 0;
+            }
+
+            .oc-card.live::before {
+                background: var(--live);
+            }
+
+            .oc-card.upcoming::before {
+                background: var(--upcoming);
+            }
+
+        .oc-subject {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .oc-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .oc-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .oc-meta i {
+                color: var(--accent);
+                width: 16px;
+                text-align: center;
+            }
+
+        /* Buttons */
+        .btn-oc {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--live);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-ghost {
+            background: #f1f5f9;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Table */
+        .oc-table-container {
+            background: var(--white);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .oc-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .oc-table th {
+                background: #f8fafc;
+                padding: 15px;
+                text-align: left;
+                font-size: 11px;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .oc-table td {
+                padding: 15px;
+                border-bottom: 1px solid #f1f5f9;
+                font-size: 14px;
+            }
+
+        .oc-empty {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-muted);
+        }
+
+            .oc-empty i {
+                font-size: 50px;
+                opacity: 0.2;
+                margin-bottom: 15px;
+            }
+
+        @@media (max-width: 600px) {
+            .oc-header {
+                text-align: center;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="oc-container">
+        <div class="oc-header">
+            <div>
+                <h2>Online Classroom</h2>
+                <p>Signed in as <strong>@Model.CurrentUser.FullName</strong> (@(Model.IsTeacher ? "Instructor" : "Student"))</p>
+            </div>
+            <a href="@Url.Action("Dashboard", "Teachers")" class="btn-oc btn-ghost">
+                <i class="fa fa-arrow-left"></i> Back to Homepage
+            </a>
+            <div>
+                @if (Model.IsTeacher)
+                {
+                    <a href="@Url.Action("Create", "OnlineClass")" class="btn-oc btn-primary">
+                        <i class="fa fa-plus"></i> Create New Class
+                    </a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Browse", "OnlineClass")" class="btn-oc btn-primary">
+                        <i class="fa fa-search"></i> Browse All Classes
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="oc-stats">
+            <div class="oc-stat">
+                <span class="oc-stat-lbl">Active & Upcoming</span>
+                <span class="oc-stat-val">@(Model.LiveClasses.Count + Model.UpcomingClasses.Count)</span>
+            </div>
+            <div class="oc-stat">
+                <span class="oc-stat-lbl" style="color:var(--live)">Live Now</span>
+                <span class="oc-stat-val">@Model.LiveClasses.Count</span>
+            </div>
+            <div class="oc-stat">
+                <span class="oc-stat-lbl">Completed Sessions</span>
+                <span class="oc-stat-val">@Model.CompletedClasses.Count</span>
+            </div>
+            @if (Model.IsTeacher)
+            {
+                <div class="oc-stat">
+                    <span class="oc-stat-lbl">Total Enrollments</span>
+                    <span class="oc-stat-val">@Model.TotalAttendees</span>
+                </div>
+            }
+        </div>
+
+        @if (Model.LiveClasses.Any())
+        {
+            <div class="oc-section-head"><span class="oc-dot dot-live"></span> Happening Now</div>
+            <div class="oc-grid">
+                @foreach (var cls in Model.LiveClasses)
+                {
+                    <div class="oc-card live">
+                        <span class="oc-subject">@cls.Subject</span>
+                        <div class="oc-title">@cls.Title</div>
+                        <div class="oc-meta"><i class="fa fa-user-circle"></i> @cls.Teacher.FullName</div>
+                        <div class="oc-meta"><i class="fa fa-users"></i> @cls.Attendances.Count Students Joined</div>
+                        <div style="margin-top:20px; display:flex; gap:10px;">
+                            <a href="@Url.Action("Details", "OnlineClass", new { id = cls.Id })" class="btn-oc btn-success btn-sm">
+                                <i class="fa fa-video-camera"></i> Join Session
+                            </a>
+                            @if (Model.IsTeacher)
+                            {
+                                <a href="@Url.Action("Attendance", "OnlineClass", new { id = cls.Id })" class="btn-oc btn-ghost btn-sm">Report</a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.UpcomingClasses.Any())
+        {
+            <div class="oc-section-head"><span class="oc-dot dot-upcoming"></span> Scheduled Classes</div>
+            <div class="oc-grid">
+                @foreach (var cls in Model.UpcomingClasses)
+                {
+                    <div class="oc-card upcoming">
+                        <span class="oc-subject">@cls.Subject</span>
+                        <div class="oc-title">@cls.Title</div>
+                        <div class="oc-meta"><i class="fa fa-calendar"></i> @cls.ScheduledAt.ToString("ddd, MMM dd - h:mm tt")</div>
+                        <div class="oc-meta"><i class="fa fa-clock-o"></i> @cls.DurationMinutes Minutes</div>
+                        <div style="margin-top:20px; display:flex; gap:10px;">
+                            <a href="@Url.Action("Details", "OnlineClass", new { id = cls.Id })" class="btn-oc btn-ghost btn-sm">View Details</a>
+                            @if (Model.IsTeacher)
+                            {
+                                using (Html.BeginForm("StartClass", "OnlineClass", new { id = cls.Id }, FormMethod.Post, new { style = "display:inline" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-oc btn-success btn-sm"><i class="fa fa-play"></i> Start</button>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.CompletedClasses.Any())
+        {
+            <div class="oc-section-head"><i class="fa fa-history"></i> Recent History</div>
+            <div class="oc-table-container">
+                <table class="oc-table">
+                    <thead>
+                        <tr>
+                            <th>Class Session</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Attendance</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cls in Model.CompletedClasses)
+                        {
+                            <tr>
+                                <td style="font-weight:700">@cls.Title</td>
+                                <td>@cls.Subject</td>
+                                <td>@cls.ScheduledAt.ToString("MMM dd, yyyy")</td>
+                                <td>@cls.Attendances.Count Students</td>
+                                <td style="text-align:right">
+                                    @if (Model.IsTeacher)
+                                    {
+                                        <a href="@Url.Action("Attendance", "OnlineClass", new { id = cls.Id })" class="btn-oc btn-ghost btn-sm">View Report</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @if (!Model.LiveClasses.Any() && !Model.UpcomingClasses.Any() && !Model.CompletedClasses.Any())
+        {
+            <div class="oc-empty">
+                <i class="fa fa-folder-open-o"></i>
+                <h3>No classes found</h3>
+                <p>There are currently no scheduled or active online classes.</p>
+            </div>
+        }
+    </div>
+
+</body>
+</html>

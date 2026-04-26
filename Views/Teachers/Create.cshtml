@@ -1,0 +1,249 @@
+@model SchoolTimetable.Models.Teacher
+@{
+    Layout = null;
+    ViewBag.Title = "Add Teacher";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --white-card: #ffffff;
+            --navy-primary: #0a192f;
+            --navy-muted: #1e2d42;
+            --gold-divider: #c5a059;
+            --border-light: #e2e8f0;
+            --text-main: #1a202c;
+            --text-muted: #64748b;
+            --error-red: #b91c1c;
+        }
+
+        body {
+            margin: 0;
+            padding: 60px 40px;
+            background-color: var(--bg-body);
+            font-family: 'Barlow', sans-serif;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 650px;
+        }
+
+        /* Header Section */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--navy-primary);
+            padding-bottom: 15px;
+        }
+
+        .page-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0;
+            color: var(--navy-primary);
+            letter-spacing: -0.5px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--white-card);
+            border: 1px solid var(--border-light);
+            padding: 40px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Form Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--navy-primary);
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            padding: 14px;
+            border: 1px solid var(--border-light);
+            border-radius: 0; /* Sharp edges for professional look */
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--navy-primary);
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #fafbfc;
+            transition: all 0.2s;
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: var(--navy-primary);
+                background-color: var(--white-card);
+                box-shadow: 4px 4px 0px rgba(10, 25, 47, 0.05);
+            }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 10px;
+            padding-top: 20px;
+            border-top: 1px solid var(--bg-body);
+        }
+
+        .btn {
+            padding: 12px 28px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--navy-primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--navy-muted);
+                transform: translateY(-2px);
+            }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--navy-primary);
+            color: var(--navy-primary);
+        }
+
+            .btn-outline:hover {
+                background: var(--navy-primary);
+                color: white;
+            }
+
+        /* Validation */
+        .validation-summary-errors {
+            background: #fff5f5;
+            color: var(--error-red);
+            padding: 15px;
+            border-left: 4px solid var(--error-red);
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            list-style: none;
+        }
+
+        .field-validation-error {
+            color: var(--error-red);
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Placeholder */
+        ::placeholder {
+            color: #cbd5e1;
+            opacity: 1;
+        }
+
+        @@media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="page-header">
+            <h1 class="page-title">Add Teacher</h1>
+            <a href="@Url.Action("Index")" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.75rem;">Staff List</a>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            if (!ViewData.ModelState.IsValid)
+            {
+                @Html.ValidationSummary(false, "Please correct the following errors:", new { @class = "validation-summary-errors" })
+            }
+
+            <div class="card">
+                <div class="form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "e.g. Sarah" })
+                        @Html.ValidationMessageFor(m => m.FirstName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName, "Last Name", new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "e.g. Johnson" })
+                        @Html.ValidationMessageFor(m => m.LastName)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, "Email Address", new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "s.johnson@school.edu", type = "email" })
+                    @Html.ValidationMessageFor(m => m.Email)
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Phone, "Phone Number", new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "+27 82 000 0000" })
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <a href="@Url.Action("Index")" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Register Teacher</button>
+                </div>
+            </div>
+        }
+    </div>
+
+</body>
+</html>

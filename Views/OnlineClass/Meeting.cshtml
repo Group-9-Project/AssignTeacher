@@ -1,0 +1,313 @@
+@model SchoolTimetable.Models.OnlineClass
+@{
+    ViewBag.Title = "Meeting: " + Model.Title;
+    Layout = null;
+    bool isTeacher = ViewBag.IsTeacher != null && (bool)ViewBag.IsTeacher;
+    string jitsiConfig = (string)ViewBag.JitsiConfig;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@Model.Title – Classroom</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --panel-bg: #1e293b;
+            --border-color: #334155;
+            --accent-blue: #3b82f6;
+            --text-light: #e2e8f0;
+            --text-dim: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .mtopbar {
+            height: 60px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .minfo { display: flex; align-items: center; gap: 16px; }
+        .mbrand { font-weight: 800; font-size: 18px; color: #fff; letter-spacing: -0.5px; }
+        .msep { width: 1px; height: 24px; background: var(--border-color); }
+        .mtitle { font-size: 15px; font-weight: 700; color: var(--text-light); }
+        .msubject { font-size: 12px; color: var(--text-dim); }
+
+        .live-pill {
+            background: rgba(34,197,94,0.1);
+            border: 1px solid rgba(34,197,94,0.2);
+            color: #22c55e;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .btn-end {
+            background: #ef4444; color: #fff; border: none;
+            padding: 8px 16px; border-radius: 8px;
+            font-size: 13px; font-weight: 700; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-end:hover { background: #dc2626; transform: scale(1.02); }
+
+        .mbody { flex: 1; display: flex; overflow: hidden; }
+        .jitsi-wrap { flex: 1; position: relative; background: #000; }
+        #jitsi-meet { height: 100%; width: 100%; }
+
+        .jitsi-loading {
+            position: absolute; inset: 0;
+            background: var(--bg-dark);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 16px; z-index: 50;
+        }
+
+        .loader {
+            width: 40px; height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @@keyframes spin { to { transform: rotate(360deg); } }
+
+        .side-panel {
+            width: 300px; flex-shrink: 0;
+            background: var(--panel-bg);
+            border-left: 1px solid var(--border-color);
+            display: flex; flex-direction: column;
+        }
+
+        .panel-head {
+            padding: 18px; border-bottom: 1px solid var(--border-color);
+            font-weight: 700; font-size: 14px;
+            display: flex; justify-content: space-between;
+        }
+
+        .attendee-list { flex: 1; overflow-y: auto; padding: 12px; }
+
+        .att-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px; border-radius: 10px; margin-bottom: 6px;
+            background: rgba(15,23,42,0.3);
+        }
+
+        .att-av {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: var(--accent-blue);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #fff;
+        }
+
+        .att-name { font-size: 13px; font-weight: 600; }
+        .att-time { font-size: 11px; color: var(--text-dim); }
+
+        .panel-foot {
+            padding: 20px; border-top: 1px solid var(--border-color);
+            background: rgba(15,23,42,0.2);
+        }
+
+        .btn-report {
+            width: 100%; padding: 10px; background: transparent;
+            border: 1px solid var(--border-color); border-radius: 8px;
+            color: var(--text-light); font-size: 13px; font-weight: 600;
+            text-align: center; text-decoration: none; display: block;
+        }
+        .btn-report:hover { background: var(--border-color); }
+
+        @@media(max-width: 900px) { .side-panel { display: none; } }
+    </style>
+</head>
+<body>
+
+    <div class="mtopbar">
+        <div class="minfo">
+            <span class="mbrand">DGSS Online</span>
+            <span class="msep"></span>
+            <div>
+                <div class="mtitle">@Model.Title</div>
+                <div class="msubject">@Model.Subject</div>
+            </div>
+            <div class="live-pill"><span class="live-dot"></span> LIVE</div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:20px;">
+            <span id="timer" style="font-family:monospace; font-size:16px; color:var(--text-dim)">00:00</span>
+
+            @if (isTeacher)
+            {
+                using (Html.BeginForm("EndClass", "OnlineClass", new { id = Model.Id }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-end" onclick="return confirm('End class for all students?')">
+                        <i class="fa fa-power-off"></i> End Class
+                    </button>
+                }
+            }
+            else
+            {
+                using (Html.BeginForm("Leave", "OnlineClass", new { id = Model.Id }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-end" onclick="return confirm('Leave the meeting?')">
+                        <i class="fa fa-sign-out"></i> Leave
+                    </button>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="mbody">
+        <div class="jitsi-wrap">
+            <div class="jitsi-loading" id="loader">
+                <div class="loader"></div>
+                <p style="color:var(--text-dim)">Preparing secure classroom...</p>
+            </div>
+            <div id="jitsi-meet"></div>
+        </div>
+
+        <div class="side-panel">
+            <div class="panel-head">
+                <span>Participants</span>
+                <span id="pcount" style="color:var(--accent-blue)">1</span>
+            </div>
+
+            <div class="attendee-list" id="studentList">
+                <div class="att-item">
+                    <div class="att-av" style="background:#f59e0b">@(string.IsNullOrEmpty(Model.Teacher.FullName) ? "T" : Model.Teacher.FullName.Substring(0, 1).ToUpper())</div>
+                    <div>
+                        <div class="att-name">@Model.Teacher.FullName</div>
+                        <div class="att-time">Host / Teacher</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-foot">
+                @if (isTeacher)
+                {
+                    <a href="@Url.Action("Attendance", "OnlineClass", new { id = Model.Id })" target="_blank" class="btn-report">
+                        <i class="fa fa-file-text-o"></i> View Attendance Report
+                    </a>
+                }
+                else
+                {
+                    <div style="text-align:center; font-size:12px; color:var(--text-dim)">
+                        <i class="fa fa-check-circle" style="color:#22c55e"></i> Attendance auto-verified
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <script>
+    const cfg = @Html.Raw(jitsiConfig);
+    const isTeacher = @(isTeacher ? "true" : "false");
+
+    // Stopwatch logic
+    let seconds = 0;
+    setInterval(() => {
+        seconds++;
+        let m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        let s = (seconds % 60).toString().padStart(2, '0');
+        document.getElementById('timer').innerText = `${m}:${s}`;
+    }, 1000);
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const domain = cfg.domain || "meet.jit.si";
+        const options = {
+            roomName: cfg.roomName,
+            width: '100%',
+            height: '100%',
+            parentNode: document.querySelector('#jitsi-meet'),
+            userInfo: { displayName: cfg.displayName },
+            configOverwrite: cfg.configOverwrite,
+            interfaceConfigOverwrite: cfg.interfaceConfigOverwrite
+        };
+
+        const api = new JitsiMeetExternalAPI(domain, options);
+
+       
+        const hideLoader = () => {
+            const loader = document.getElementById('loader');
+            if(loader) loader.style.display = 'none';
+        };
+
+    
+        api.addEventListener('videoConferenceJoined', hideLoader);
+        setTimeout(hideLoader, 6000);
+
+        api.addEventListener('participantJoined', () => updateCount());
+        api.addEventListener('participantLeft', () => updateCount());
+
+        function updateCount() {
+            const pcount = document.getElementById('pcount');
+            if(pcount) pcount.innerText = api.getNumberOfParticipants();
+        }
+
+        if (isTeacher) {
+            async function fetchAttendance() {
+                try {
+                    const response = await fetch('@Url.Action("AttendanceJson", "OnlineClass", new { id = Model.Id })');
+                    const students = await response.json();
+                    const list = document.getElementById('studentList');
+
+                    if(!list) return;
+
+                    const hostHtml = list.firstElementChild.outerHTML;
+                    let html = hostHtml;
+
+                    students.forEach(s => {
+                        const initial = s.Name ? s.Name.charAt(0) : '?';
+                        html += `
+                            <div class="att-item">
+                                <div class="att-av">${initial}</div>
+                                <div>
+                                    <div class="att-name">${s.Name}</div>
+                                    <div class="att-time">Joined ${s.JoinedAt}</div>
+                                </div>
+                            </div>`;
+                    });
+                    list.innerHTML = html;
+                } catch (e) { console.error("Attendance Sync Failed", e); }
+            }
+            setInterval(fetchAttendance, 20000);
+            fetchAttendance();
+        }
+    });
+    </script>
+</body>
+</html>

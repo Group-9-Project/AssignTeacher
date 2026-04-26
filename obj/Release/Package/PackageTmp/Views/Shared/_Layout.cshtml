@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Durban Girls Secondary School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    @Styles.Render("~/Content/css")
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    @{
+        var userRole = Session["UserRole"] != null ? Session["UserRole"].ToString() : "";
+        var userName = Session["UserName"] != null ? Session["UserName"].ToString() : "Guest";
+        var userId = Session["UserId"] != null ? Session["UserId"].ToString() : "0";
+        var currentController = ViewContext.RouteData.Values["controller"].ToString();
+        var currentAction = ViewContext.RouteData.Values["action"].ToString();
+    }
+
+    <div class="app-shell">
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <ul class="nav-list">
+                    @* --- ADMIN SECTION --- *@
+                    @if (userRole == "Admin")
+                    {
+                        <li class="@(currentController == "Admin" ? "active" : "")">
+                            <a href="@Url.Action("Dashboard", "Admin")"><i class="fas fa-th-large"></i> <span>Dashboard</span></a>
+                        </li>
+                        <li class="@(currentController == "Teachers" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Teachers")"><i class="fas fa-user-tie"></i> <span>Teachers</span></a>
+                        </li>
+                        <li class="@(currentController == "Subjects" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Subjects")"><i class="fas fa-book"></i> <span>Subjects</span></a>
+                        </li>
+                    }
+
+                    @* --- LIBRARIAN SECTION --- *@
+                    @if (userRole == "Librarian")
+                    {
+                        <li class="@(currentController == "Librarian" ? "active" : "")">
+                            <a href="@Url.Action("LibrarianDashboard", "Librarian")"><i class="fas fa-chart-line"></i> <span>Library Dash</span></a>
+                        </li>
+                        <li class="@(currentController == "Books" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Books")"><i class="fas fa-layer-group"></i> <span>Catalogue</span></a>
+                        </li>
+                        <li class="@(currentController == "Students" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Students")"><i class="fas fa-users-viewfinder"></i> <span>Student Registry</span></a>
+                        </li>
+                    }
+
+                    @* --- PARENT SECTION (New) --- *@
+                    @if (userRole == "Parent")
+                    {
+                        <li class="@(currentController == "Parents" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Parents", new { id = userId })"><i class="fas fa-columns"></i> <span>My Dashboard</span></a>
+                        </li>
+                        <li class="@(currentController == "Applications" && currentAction == "Create" ? "active" : "")">
+                            <a href="@Url.Action("Create", "Applications")"><i class="fas fa-file-signature"></i> <span>New Application</span></a>
+                        </li>
+                    }
+
+                    @* --- SHARED / LOGOUT --- *@
+                    <li class="nav-divider"></li>
+                    <li>
+                        @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <a href="javascript:document.getElementById('logoutForm').submit()" class="logout-link">
+                                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                            </a>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="main-container">
+            <header class="top-bar">
+                <div class="user-profile">
+                    @* Safe substring handling for avatar *@
+                    <div class="avatar">@(string.IsNullOrEmpty(userName) ? "U" : userName.Substring(0, 1).ToUpper())</div>
+                    <div class="user-info">
+                        <span class="user-name">@userName</span>
+                        <span class="user-role">@userRole</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    @if (userRole == "Admin")
+                    {
+                        <a href="@Url.Action("Create", "Timetable")" class="btn btn-primary btn-sm">Add Slot</a>
+                    }
+                    else if (userRole == "Teacher")
+                    {
+                        <a href="@Url.Action("CreateAnnouncement", "Teachers")" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Post Announcement</a>
+                    }
+                    else if (userRole == "Parent")
+                    {
+                        <a href="@Url.Action("Create", "Applications")" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Apply Now</a>
+                    }
+                </div>
+            </header>
+
+            <main class="content-area">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success" id="success-alert">
+                        <i class="fas fa-check-circle"></i> @TempData["Success"]
+                        <button class="alert-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger" id="error-alert">
+                        <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+                        <button class="alert-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+                    </div>
+                }
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+
+        // Auto-hide alerts logic
+        setTimeout(function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function (a) {
+                a.style.transition = 'opacity 0.6s ease';
+                a.style.opacity = '0';
+                setTimeout(() => a.remove(), 600);
+            });
+        }, 4000);
+    </script>
+
+    @* Only load Stripe on the Payment page to prevent global NetworkErrors *@
+    @if (currentController == "Parents" && (currentAction == "Payment" || currentAction == "RegistrationPayment"))
+    {
+        <script src="https://js.stripe.com/v3/"></script>
+    }
+
+</body>
+</html>

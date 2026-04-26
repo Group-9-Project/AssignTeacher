@@ -1,0 +1,249 @@
+@model SchoolTimetable.ViewModels.TeacherAssignmentViewModel
+@{
+    Layout = null;
+    ViewBag.Title = "Assign Subjects";
+
+    var teacherId = 0;
+    var fullName = "STAFF MEMBER";
+    var ini = "??";
+
+    if (Model != null && Model.Teacher != null)
+    {
+        teacherId = Model.Teacher.Id;
+        fullName = Model.Teacher.FullName.ToUpper();
+
+        string first = !string.IsNullOrWhiteSpace(Model.Teacher.FirstName) ? Model.Teacher.FirstName.Substring(0, 1) : "";
+        string last = !string.IsNullOrWhiteSpace(Model.Teacher.LastName) ? Model.Teacher.LastName.Substring(0, 1) : "";
+        ini = (first + last).ToUpper();
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #ffffff;
+            --navy-primary: #0a192f;
+            --navy-light: #1e2d42;
+            --border-navy: #0a192f;
+            --text-main: #0a192f;
+            --text-muted: #475569;
+            --white: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 50px 20px;
+            background-color: var(--bg-body);
+            font-family: 'Barlow', sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* Header */
+        .page-header {
+            border-bottom: 4px solid var(--navy-primary);
+            padding-bottom: 10px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        /* Teacher Identifier */
+        .staff-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            background: var(--navy-primary);
+            color: var(--white);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .staff-name {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Selection Grid */
+        .section-label {
+            display: block;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--navy-primary);
+            padding-left: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .item {
+            border: 1px solid var(--navy-primary);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            .item:hover {
+                background-color: #f1f5f9;
+            }
+
+            .item input[type="checkbox"] {
+                width: 18px;
+                height: 18px;
+                accent-color: var(--navy-primary);
+                cursor: pointer;
+            }
+
+        .subject-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+
+        /* Buttons */
+        .actions {
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-save {
+            background: var(--navy-primary);
+            color: var(--white);
+            border: none;
+        }
+
+            .btn-save:hover {
+                background: var(--navy-light);
+            }
+
+        .btn-back {
+            background: var(--white);
+            color: var(--navy-primary);
+            border: 2px solid var(--navy-primary);
+        }
+
+            .btn-back:hover {
+                background: #f8fafc;
+            }
+
+        @@media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="page-header">
+            <h1 class="page-title">Assign Subjects</h1>
+        </header>
+
+        <div class="staff-info">
+            <div class="avatar">@ini</div>
+            <div class="staff-name">@fullName</div>
+        </div>
+
+        @using (Html.BeginForm("AssignSubjects", "Teachers", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @* CRITICAL FIX: This hidden field provides the 'TeacherId' parameter
+                that your controller is currently missing during POST.
+            *@
+            @Html.Hidden("TeacherId", teacherId)
+
+            <span class="section-label">Select Subject Qualifications</span>
+
+            <div class="grid">
+                @if (Model.AllSubjects != null)
+                {
+                    foreach (var s in Model.AllSubjects)
+                    {
+                        <label class="item">
+                            @* Ensure name="subjectIds" matches your controller's
+                                array parameter name.
+                            *@
+                            <input type="checkbox" name="subjectIds" value="@s.Id"
+                                   @(Model.AssignedSubjectIds != null && Model.AssignedSubjectIds.Contains(s.Id) ? "checked" : "") />
+                            <span class="subject-name">@s.Name</span>
+                        </label>
+                    }
+                }
+            </div>
+
+            <div class="actions">
+                <a href="@Url.Action("Index")" class="btn btn-back">Return to List</a>
+                <button type="submit" class="btn btn-save">Confirm Allocations</button>
+            </div>
+        }
+    </div>
+
+</body>
+</html>

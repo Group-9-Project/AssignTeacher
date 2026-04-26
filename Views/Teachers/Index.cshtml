@@ -1,0 +1,314 @@
+@model IEnumerable<SchoolTimetable.Models.Teacher>
+@{
+    Layout = null;
+    ViewBag.Title = "Teachers";
+    // Institutional Navy/Slate palette
+    var avc = new[] { "#0a192f", "#112240", "#1e293b", "#002147" };
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --white-pure: #ffffff;
+            --navy-primary: #0a192f;
+            --navy-muted: #1e2d42;
+            --gold-accent: #c5a059;
+            --border-light: #e2e8f0;
+            --text-main: #1a202c;
+            --text-muted: #64748b;
+            --success-green: #15803d;
+            --danger-red: #b91c1c;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: var(--bg-body);
+            font-family: 'Barlow', sans-serif;
+            color: var(--text-main);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 5px;
+            border-bottom: 3px solid var(--navy-primary);
+            padding-bottom: 15px;
+        }
+
+        .page-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0;
+            color: var(--navy-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .page-sub {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--gold-accent);
+            margin-bottom: 30px;
+            letter-spacing: 1.5px;
+        }
+
+        .card {
+            background: var(--white-pure);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+
+        /* Table Styling */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .data-table thead th {
+                background: var(--navy-primary);
+                color: white;
+                text-transform: uppercase;
+                font-family: 'Barlow Condensed', sans-serif;
+                font-size: 0.8rem;
+                font-weight: 700;
+                letter-spacing: 1px;
+                padding: 15px 20px;
+                text-align: left;
+            }
+
+            .data-table tbody td {
+                padding: 15px 20px;
+                border-bottom: 1px solid var(--bg-body);
+                font-size: 0.9rem;
+                vertical-align: middle;
+            }
+
+        .teacher-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+        }
+
+        .badge-green {
+            background: #f0fdf4;
+            color: var(--success-green);
+            border-color: #bbf7d0;
+        }
+
+        .badge-red {
+            background: #fef2f2;
+            color: var(--danger-red);
+            border-color: #fecaca;
+        }
+
+        .badge-purple {
+            background: var(--bg-body);
+            color: var(--navy-primary);
+            border-color: var(--border-light);
+        }
+
+        .badge-gray {
+            background: #f1f5f9;
+            color: var(--text-muted);
+        }
+
+        .subj-chip {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-right: 4px;
+            border: 1px solid;
+            font-family: 'Barlow Condensed', sans-serif;
+        }
+
+        /* Action Links */
+        .flex-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .action-link {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--navy-primary);
+            transition: 0.2s;
+        }
+
+            .action-link:hover {
+                color: var(--gold-accent);
+            }
+
+        .btn-danger-text {
+            background: none;
+            border: none;
+            padding: 0;
+            color: var(--danger-red);
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            padding: 12px 25px;
+            background: var(--navy-primary);
+            color: white;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.2s;
+        }
+
+            .btn-primary:hover {
+                background: var(--navy-muted);
+                transform: translateY(-2px);
+            }
+
+        .empty-state {
+            padding: 60px;
+            text-align: center;
+            color: var(--text-muted);
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+        }
+
+        /* Strict removal of icons */
+        i, .fas {
+            display: none !important;
+        }
+
+        @@media (max-width: 1000px) {
+            body {
+                padding: 20px;
+            }
+
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1 class="page-title">Teachers</h1>
+        <a href="@Url.Action("Create")" class="btn btn-primary">Enroll New Faculty</a>
+    </div>
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <a href="@Url.Action("ManageTeacherDashboard","Admin")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Dashboard
+        </a>
+    </div>
+    <p class="page-sub">Academic Staff Registry and Subject Assignments</p>
+
+    <div class="card">
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Educator Profile</th>
+                        <th>Email Contact</th>
+                        <th>Qualified Subjects</th>
+                        <th>Load</th>
+                        <th>Registry Status</th>
+                        <th>Administrative Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model)
+                    {
+                        var col = avc[t.Id % avc.Length];
+                        var ini = t.FirstName.Substring(0, 1) + t.LastName.Substring(0, 1);
+                        <tr>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:12px">
+                                    <div class="teacher-avatar" style="width:40px;height:40px;font-size:14px;background:@col">@ini</div>
+                                    <div>
+                                        <div style="font-family:'Barlow Condensed'; font-weight:700; color:var(--navy-primary); text-transform:uppercase; font-size:1.1rem; line-height:1;">@t.FullName</div>
+                                        <div style="font-size:10px; color:var(--gold-accent); font-weight:800; letter-spacing:0.5px;">EMP_ID: #@t.Id</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="font-weight:600; color:var(--text-muted);">@t.Email</td>
+                            <td>
+                                @foreach (var ts in t.TeacherSubjects.Take(3))
+                                {
+                                    <span class="subj-chip" style="background:@(ts.Subject.Color)08; color:@ts.Subject.Color; border-color:@ts.Subject.Color">
+                                        @ts.Subject.Code
+                                    </span>
+                                }
+                                @if (t.TeacherSubjects.Count > 3)
+                                {
+                                    <span class="badge badge-gray">+@(t.TeacherSubjects.Count - 3)</span>
+                                }
+                            </td>
+                            <td><span class="badge badge-purple">@t.TimetableSlots.Count(s => s.IsActive) Periods</span></td>
+                            <td><span class="badge @(t.IsActive ? "badge-green" : "badge-red")">@(t.IsActive ? "Active" : "Inactive")</span></td>
+                            <td>
+                                <div class="flex-actions">
+                                    <a href="@Url.Action("Details", new { id = t.Id })" class="action-link">Profile</a>
+                                    <a href="@Url.Action("Edit", new { id = t.Id })" class="action-link">Edit</a>
+                                    <a href="@Url.Action("AssignSubjects", new { id = t.Id })" class="action-link">Subjects</a>
+                                    <a href="@Url.Action("TeacherView", "Timetable", new { teacherId = t.Id })" class="action-link">Schedule</a>
+
+                                    @using (Html.BeginForm("Delete", "Teachers", new { id = t.Id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to de-enroll this educator from the active registry?')", style = "margin:0" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-danger-text">Deactivate</button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <p>No academic staff records identified.</p>
+                <a href="@Url.Action("Create")" style="color:var(--gold-accent); text-decoration:none;">Initialize Staff Record</a>
+            </div>
+        }
+    </div>
+
+</body>
+</html>

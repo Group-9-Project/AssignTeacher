@@ -1,0 +1,305 @@
+@model List<SchoolTimetable.Models.OnlineClass>
+@{
+    Layout = null; // Layout independent
+    ViewBag.Title = "Browse Classes";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1a1a2e;
+            --accent: #3b82f6;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #22c55e;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 30px;
+            color: var(--text-main);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Search Section */
+        .oc-search-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 28px;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+            .oc-search-bar input {
+                flex: 1;
+                min-width: 200px;
+                padding: 11px 15px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                font-size: 14px;
+            }
+
+        .btn-oc-primary {
+            background: var(--navy);
+            color: var(--white);
+            border: none;
+            padding: 11px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-oc-ghost {
+            background: var(--bg);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 11px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* Grid & Cards */
+        .oc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .oc-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+            .oc-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            }
+
+            .oc-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                border-radius: 12px 12px 0 0;
+            }
+
+            .oc-card.live::before {
+                background: var(--success);
+            }
+
+            .oc-card.upcoming::before {
+                background: var(--accent);
+            }
+
+        .oc-subject {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .oc-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .oc-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .oc-meta i {
+                color: var(--accent);
+                width: 16px;
+            }
+
+        .oc-actions {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-live {
+            background: #dcfce7;
+            color: #166534;
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .oc-section-head {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-join {
+            background: var(--success);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-details {
+            background: var(--navy);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            flex: 1;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div style="margin-bottom:30px">
+            <h1 style="color:var(--navy); margin:0;">Browse Classes</h1>
+            <p style="color:var(--text-muted); margin-top:5px;">Explore scheduled and live learning sessions.</p>
+        </div>
+
+        @using (Html.BeginForm("Browse", "OnlineClass", FormMethod.Get))
+        {
+            <div class="oc-search-bar">
+                <input type="text" name="search" value="@ViewBag.Search" placeholder="Search by subject, title or teacher..." />
+                <button type="submit" class="btn-oc-primary"><i class="fa fa-search"></i> Search</button>
+                @if (!string.IsNullOrEmpty(ViewBag.Search as string))
+                {
+                    <a href="@Url.Action("Browse", "OnlineClass")" class="btn-oc-ghost">Clear</a>
+                }
+            </div>
+        }
+
+        @if (Model.Any())
+        {
+            var live = Model.Where(c => c.IsActive).ToList();
+            var upcoming = Model.Where(c => !c.IsActive).ToList();
+
+            if (live.Any())
+            {
+                <div class="oc-section-head"><i class="fa fa-dot-circle-o" style="color:var(--success)"></i> LIVE SESSIONS</div>
+                <div class="oc-grid">
+                    @foreach (var cls in live)
+                    {
+                        <div class="oc-card live">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span class="oc-subject">@cls.Subject</span>
+                                <span class="badge badge-live">Live</span>
+                            </div>
+                            <div class="oc-title">@cls.Title</div>
+                            <div class="oc-meta"><i class="fa fa-user-circle"></i> @cls.Teacher.FullName</div>
+                            <div class="oc-meta"><i class="fa fa-users"></i> @cls.Attendances.Count / @cls.MaxStudents Enrolled</div>
+                            <div class="oc-actions">
+                                <a href="@Url.Action("Details", "OnlineClass", new { id = cls.Id })" class="btn-join">Join Now</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            if (upcoming.Any())
+            {
+                <div class="oc-section-head"><i class="fa fa-calendar-check-o" style="color:var(--accent)"></i> UPCOMING CLASSES</div>
+                <div class="oc-grid">
+                    @foreach (var cls in upcoming)
+                    {
+                        <div class="oc-card upcoming">
+                            <span class="oc-subject">@cls.Subject</span>
+                            <div class="oc-title">@cls.Title</div>
+                            <div class="oc-meta"><i class="fa fa-user-circle"></i> @cls.Teacher.FullName</div>
+                            <div class="oc-meta"><i class="fa fa-clock-o"></i> @cls.ScheduledAt.ToString("ddd, dd MMM - HH:mm")</div>
+                            <div class="oc-meta"><i class="fa fa-hourglass-end"></i> @cls.DurationMinutes Mins</div>
+                            <div class="oc-actions">
+                                <a href="@Url.Action("Details", "OnlineClass", new { id = cls.Id })" class="btn-details">View Details</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div style="text-align:center; padding:100px 20px; background:white; border-radius:12px; border:1px solid var(--border)">
+                <i class="fa fa-search" style="font-size:48px; color:var(--border); margin-bottom:20px;"></i>
+                <h3 style="color:var(--navy)">No Classes Found</h3>
+                <p style="color:var(--text-muted)">Try adjusting your search or check back later for new sessions.</p>
+            </div>
+        }
+    </div>
+
+</body>
+</html>

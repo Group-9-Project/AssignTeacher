@@ -1,0 +1,167 @@
+﻿@model SchoolTimetable.Models.Entrance_test
+@{
+    Layout = null;
+    var percentage = Model.TotalScore;
+    // Determine color based on performance
+    var statusColor = percentage >= 50 ? "#28a745" : "#d9534f";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Examination Results | DGSS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --navy-primary: #002147;
+            --navy-light: #003366;
+            --pure-white: #ffffff;
+            --bg-light: #f4f7f9;
+            --border-color: #dee2e6;
+            --text-dark: #333333;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .result-container {
+            background: var(--pure-white);
+            max-width: 500px;
+            width: 90%;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 5px solid var(--navy-primary);
+        }
+
+        .school-logo {
+            color: var(--navy-primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            color: var(--navy-primary);
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border: 8px solid #f0f2f5;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            background: #fff;
+        }
+
+        .percentage-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1;
+            color: @statusColor;
+        }
+
+        .raw-score {
+            font-size: 1rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .btn-dashboard {
+            background-color: var(--navy-primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            border: none;
+            margin-top: 1rem;
+        }
+
+        .btn-dashboard:hover {
+            background-color: var(--navy-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,33,71,0.3);
+            text-decoration: none;
+        }
+
+        .alert-info {
+            background-color: #e7f3ff;
+            border: none;
+            color: var(--navy-light);
+            font-weight: 600;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .footer-text {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #adb5bd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="result-container">
+        <div class="school-logo">DGSS Portal</div>
+
+        @if (TempData["Info"] != null)
+        {
+            <div class="alert alert-info shadow-sm">
+                <i class="fas fa-info-circle mr-2"></i> @TempData["Info"]
+            </div>
+        }
+
+        <h1>Examination Results</h1>
+
+        <div class="score-circle">
+            <span class="percentage-text">@Model.TotalScore%</span>
+            <span class="raw-score">@Model.counter / 5</span>
+        </div>
+
+        <div class="mb-4">
+            <p class="text-muted">
+                Your results have been recorded in the system.
+                Keep up the hard work!
+            </p>
+        </div>
+
+        <a href="@Url.Action("Index", "StudentAccount")" class="btn-dashboard">
+            <i class="fas fa-th-large mr-2"></i> Return to Dashboard
+        </a>
+
+        <p class="footer-text">
+            &copy; @DateTime.Now.Year Durban Girls Secondary School
+        </p>
+    </div>
+
+</body>
+</html>

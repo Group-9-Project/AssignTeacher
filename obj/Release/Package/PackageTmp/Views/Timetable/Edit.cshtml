@@ -1,0 +1,261 @@
+@model SchoolTimetable.ViewModels.TimetableSlotFormViewModel
+@{
+    Layout = null;
+    ViewBag.Title = "Edit Timetable Slot";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <style>
+        :root {
+            --navy-primary: #0a192f;
+            --navy-muted: #1e2d42;
+            --gold-accent: #c5a059;
+            --white-pure: #ffffff;
+            --bg-body: #f8fafc;
+            --border-light: #e2e8f0;
+            --text-main: #1a202c;
+            --error-red: #b91c1c;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: var(--bg-body);
+            font-family: 'Barlow', sans-serif;
+            color: var(--text-main);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--navy-primary);
+            padding-bottom: 15px;
+        }
+
+        .page-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0;
+            color: var(--navy-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .form-container {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--white-pure);
+            border: 1px solid var(--border-light);
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--navy-primary);
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border: 1px solid var(--border-light);
+            background-color: var(--white-pure);
+            font-family: 'Barlow', sans-serif;
+            font-size: 0.95rem;
+            color: var(--navy-primary);
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: var(--gold-accent);
+            }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--navy-primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--navy-muted);
+            }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--navy-primary);
+            color: var(--navy-primary);
+        }
+
+            .btn-outline:hover {
+                background: var(--navy-primary);
+                color: white;
+            }
+
+        .validation-summary-errors {
+            background: #fff5f5;
+            color: var(--error-red);
+            padding: 15px;
+            border-left: 4px solid var(--error-red);
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Strict removal of icons */
+        i, .fas {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1 class="page-title">Edit Assignment</h1>
+        <a href="@Url.Action("TeacherView", new { teacherId = Model.TeacherId })" class="btn btn-outline">Back to Schedule</a>
+    </div>
+
+    <div class="form-container">
+        @using (Html.BeginForm("Edit", "Timetable", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+
+            if (!ViewData.ModelState.IsValid)
+            {
+                @Html.ValidationSummary(true, "", new { @class = "validation-summary-errors" })
+            }
+
+            <div class="card">
+                <div class="form-group">
+                    <label class="form-label">Assigned Educator</label>
+                    @Html.DropDownListFor(m => m.TeacherId,
+                        new SelectList(Model.Teachers, "Id", "FullName", Model.TeacherId),
+                        "- Select Teacher -", new { @class = "form-control", id = "teacherSelect" })
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Subject Module</label>
+                    <select name="SubjectId" id="subjectSelect" class="form-control">
+                        @foreach (var s in Model.Subjects)
+                        {
+                            <option value="@s.Id" @(s.Id == Model.SubjectId ? "selected" : "")>@s.Name (@s.Code)</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Academic Class</label>
+                    @Html.DropDownListFor(m => m.ClassId,
+                        new SelectList(Model.Classes, "Id", "Name", Model.ClassId),
+                        "Select Class", new { @class = "form-control" })
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Weekday</label>
+                        @Html.DropDownListFor(m => m.DayOfWeek,
+                            new SelectList(new[] {
+                                new { Value = 1, Text = "Monday" },
+                                new { Value = 2, Text = "Tuesday" },
+                                new { Value = 3, Text = "Wednesday" },
+                                new { Value = 4, Text = "Thursday" },
+                                new { Value = 5, Text = "Friday" }
+                            }, "Value", "Text", Model.DayOfWeek),
+                            "Select Day", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Time Period</label>
+                        @Html.DropDownListFor(m => m.Period,
+                            new SelectList(new[] {
+                               new { Value = 1, Text = "P1: 08:00-08:40" },
+                               new { Value = 2, Text = "P2: 08:40-10:20" },
+                               new { Value = 3, Text = "P3: 09:20-10:00" },
+                               new { Value = 4, Text = "P4: 10:25-11:05" },
+                               new { Value = 5, Text = "P5: 11:05-11:45" },
+                               new { Value = 6, Text = "P6: 12:10-12:50" },
+                               new { Value = 7, Text = "P7: 12:50-13:40" },
+                               new { Value = 8, Text = "P8: 13:40-14:30" }
+                            }, "Value", "Text", Model.Period),
+                            "Select Period", new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Venue / Room</label>
+                        @Html.TextBoxFor(m => m.Room, new { @class = "form-control", placeholder = "e.g. Lab 1" })
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Internal Notes</label>
+                        @Html.TextBoxFor(m => m.Notes, new { @class = "form-control", placeholder = "Optional details" })
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px; border-top: 1px solid var(--border-light); padding-top: 25px;">
+                    <a href="@Url.Action("TeacherView", new { teacherId = Model.TeacherId })" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update Assignment</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script>
+    document.getElementById('teacherSelect').addEventListener('change', function () {
+        var tid = this.value, sel = document.getElementById('subjectSelect'), cur = sel.value;
+        if (!tid) return;
+        $.getJSON('@Url.Action("GetTeacherSubjects","Timetable")', { teacherId: tid }, function (data) {
+            sel.innerHTML = '<option value="">- Select Subject -</option>';
+            $.each(data, function (i, s) {
+                sel.innerHTML += '<option value="' + s.id + '"' + (s.id == cur ? ' selected' : '') + '>' + s.name + ' (' + s.code + ')</option>';
+            });
+        });
+    });
+    </script>
+
+</body>
+</html>

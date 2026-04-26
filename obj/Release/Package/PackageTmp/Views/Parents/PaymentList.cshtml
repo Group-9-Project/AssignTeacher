@@ -1,0 +1,232 @@
+﻿@model IEnumerable<SchoolTimetable.Models.Application>
+@{
+    Layout = null;
+    ViewBag.Title = "Outstanding Registrations | DGSS";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy-deep: #0a192f;
+            --navy-muted: #112240;
+            --navy-accent: #233554;
+            --white-bright: #ffffff;
+            --white-muted: #ccd6f6;
+            --gold-accent: #c5a059;
+        }
+
+        body {
+            background-color: var(--navy-deep);
+            color: var(--white-muted);
+            font-family: 'Barlow', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            background-color: var(--navy-muted);
+            padding: 15px 2rem;
+            display: flex;
+            justify-content: flex-end;
+            border-bottom: 1px solid var(--navy-accent);
+        }
+
+        .logout-link {
+            color: var(--white-bright);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding: 8px 16px;
+            border: 1px solid var(--gold-accent);
+            transition: all 0.3s ease;
+        }
+
+            .logout-link:hover {
+                background-color: var(--gold-accent);
+                color: var(--navy-deep);
+            }
+
+        .parent-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .header-section {
+            border-bottom: 1px solid var(--navy-accent);
+            padding-bottom: 25px;
+            margin-bottom: 40px;
+        }
+
+        .btn-back {
+            color: var(--gold-accent);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            display: inline-block;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+            .btn-back:hover {
+                color: var(--white-bright);
+                transform: translateX(-5px);
+            }
+
+        h2 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 3rem;
+            text-transform: uppercase;
+            color: var(--white-bright);
+            margin: 5px 0 0 0;
+            line-height: 1;
+        }
+
+        .subtitle {
+            color: var(--gold-accent);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* Grid System */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .action-card {
+            background: var(--navy-muted);
+            border: 1px solid var(--navy-accent);
+            padding: 35px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+            .action-card:hover {
+                border-color: var(--gold-accent);
+                transform: translateY(-5px);
+            }
+
+        .tag {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            background: var(--gold-accent);
+            color: var(--navy-deep);
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .action-card h3 {
+            margin: 0 0 10px 0;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2rem;
+            color: var(--white-bright);
+            text-transform: uppercase;
+        }
+
+        .action-card p {
+            margin: 0 0 25px 0;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        .payment-btn {
+            background: var(--gold-accent);
+            border: none;
+            color: white;
+            padding: 14px 20px;
+            font-weight: 800;
+            font-family: 'Barlow Condensed', sans-serif;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+            .payment-btn:hover {
+                background: var(--white-bright);
+                color: var(--navy-deep);
+            }
+
+        /* Empty State */
+        .activity-panel {
+            background: var(--navy-muted);
+            padding: 60px;
+            text-align: center;
+            border: 1px dashed var(--navy-accent);
+        }
+
+            .activity-panel p {
+                font-size: 1.2rem;
+                margin-bottom: 25px;
+            }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <a href="@Url.Action("Logout", "Parents")" class="logout-link">Log Out</a>
+    </nav>
+
+    <div class="parent-wrapper">
+        <div class="header-section">
+            <a href="@Url.Action("Index", "Parents")" class="btn-back">← Back to Dashboard</a>
+            <h2>Outstanding Registrations</h2>
+            <p class="subtitle">Select an application to proceed to secure payment.</p>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="activity-panel">
+                <p>No outstanding registration fees found at this time.</p>
+                <a href="@Url.Action("Index", "Parents")" style="color: var(--gold-accent); text-transform: uppercase; font-weight: 800; text-decoration: none; border-bottom: 2px solid var(--gold-accent);">
+                    Return to Dashboard
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="actions-grid">
+                @foreach (var app in Model)
+                {
+                    <div class="action-card">
+                        <span class="tag">R1,000.00 DUE</span>
+                        <h3>@app.FirstName @app.LastName</h3>
+                        <p>Status: @app.Status</p>
+
+                        @using (Html.BeginForm("CreateCheckoutSession", "Parents", new { applicationId = app.Id }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="payment-btn">
+                                Pay via Stripe →
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+</body>
+</html>

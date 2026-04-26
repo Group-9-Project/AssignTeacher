@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolTimetable", "SchoolTimetable.csproj", "{9102781C-A99A-4B6C-9616-B728F56D4740}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9102781C-A99A-4B6C-9616-B728F56D4740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9102781C-A99A-4B6C-9616-B728F56D4740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9102781C-A99A-4B6C-9616-B728F56D4740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9102781C-A99A-4B6C-9616-B728F56D4740}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F6F492D6-FC92-417B-A41A-C313CE8ACEF6}
+	EndGlobalSection
+EndGlobal

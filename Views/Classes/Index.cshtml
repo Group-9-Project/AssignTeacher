@@ -1,0 +1,315 @@
+@model IEnumerable<SchoolTimetable.Models.SchoolClass>
+@{
+    ViewBag.Title = "Class Registry";
+    Layout = null; // Explicitly disabling layout
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classes</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --navy-deep: #002147;
+            --white-bright: #ffffff;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-600: #475569;
+            --success-green: #166534;
+            --error-red: #be123c;
+            --info-blue: #0369a1;
+        }
+
+        body {
+            background-color: var(--slate-50);
+            font-family: 'Inter', sans-serif;
+            color: var(--navy-deep);
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Institutional Navy Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Adjusted for centered alignment with multiple buttons */
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin: 0;
+            color: var(--navy-deep);
+        }
+
+        .page-sub {
+            color: var(--slate-600);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 4px solid var(--navy-deep);
+            padding-bottom: 1rem;
+        }
+
+        /* Registry Table Card */
+        .card {
+            background: var(--white-bright);
+            border: 1px solid var(--slate-300);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+            .data-table th {
+                background: var(--navy-deep);
+                color: white;
+                text-transform: uppercase;
+                font-size: 0.7rem;
+                font-weight: 800;
+                letter-spacing: 1px;
+                padding: 18px 16px;
+            }
+
+            .data-table td {
+                padding: 16px;
+                font-size: 0.9rem;
+                border-bottom: 1px solid var(--slate-100);
+                color: var(--navy-deep);
+                vertical-align: middle;
+            }
+
+            .data-table tbody tr:hover {
+                background: var(--slate-50);
+            }
+
+        /* Semantic Badges */
+        .badge {
+            font-size: 0.65rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 2px;
+            border: 1px solid currentColor;
+            display: inline-block;
+        }
+
+        .badge-level {
+            color: var(--info-blue);
+            background: #f0f9ff;
+        }
+
+        .badge-slots {
+            color: #6d28d9;
+            background: #f5f3ff;
+        }
+
+        .badge-operational {
+            color: var(--success-green);
+            background: #f0fdf4;
+        }
+
+        .badge-deactivated {
+            color: var(--error-red);
+            background: #fff1f2;
+        }
+
+        /* Action UI */
+        .flex-actions {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            letter-spacing: 0.8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            border: 2px solid var(--navy-deep);
+        }
+
+        .btn-primary {
+            background: var(--navy-deep);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: white;
+                color: var(--navy-deep);
+            }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--navy-deep);
+        }
+
+            .btn-secondary:hover {
+                background: var(--navy-deep);
+                color: white;
+            }
+
+        .btn-action {
+            background: transparent;
+            border-color: var(--slate-300);
+            color: var(--slate-600);
+            padding: 8px 12px;
+        }
+
+            .btn-action:hover {
+                border-color: var(--navy-deep);
+                color: var(--navy-deep);
+            }
+
+        .btn-danger {
+            background: transparent;
+            color: var(--error-red);
+            border-color: #fecaca;
+            padding: 8px 12px;
+        }
+
+            .btn-danger:hover {
+                background: var(--error-red);
+                color: white;
+                border-color: var(--error-red);
+            }
+
+        .empty-state {
+            padding: 5rem 2rem;
+            text-align: center;
+            color: var(--slate-300);
+        }
+
+            .empty-state i {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+                display: block;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        <div class="page-header">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="@Url.Action("ManageTeacherDashboard","Admin") " class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Dashboard
+                </a>
+            </div>
+            <a href="@Url.Action("Create")" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Enroll Class
+            </a>
+        </div>
+        <p class="page-sub">Operational management of academic groups and allocated timetable assets</p>
+
+        <div class="card">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Class Designation</th>
+                                <th>Academic Level</th>
+                                <th>Venue/Room</th>
+                                <th>Enrollment</th>
+                                <th>Allocated Slots</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Management</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <span style="font-weight: 800; font-size: 1rem;">@c.Name</span>
+                                    </td>
+                                    <td><span class="badge badge-level">Grade @c.Grade</span></td>
+                                    <td>
+                                        <span style="font-family: monospace; font-weight: 600; color: var(--slate-600);">
+                                            @(string.IsNullOrEmpty(c.Room) ? "UNASSIGNED" : c.Room)
+                                        </span>
+                                    </td>
+                                    <td><span style="font-weight: 700;">@(c.StudentCount ?? 0)</span></td>
+                                    <td>
+                                        <span class="badge badge-slots">
+                                            @c.TimetableSlots.Count(s => s.IsActive) Sessions
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @(c.IsActive ? "badge-operational" : "badge-deactivated")">
+                                            @(c.IsActive ? "Operational" : "Deactivated")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="flex-actions">
+                                            <a href="@Url.Action("Timetable", new { id = c.Id })" class="btn btn-action" title="Schedule">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </a>
+                                            <a href="@Url.Action("Edit", new { id = c.Id })" class="btn btn-action" title="Modify">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
+                                            @using (Html.BeginForm("Delete", "Classes", new { id = c.Id }, FormMethod.Post, new { onsubmit = "return confirm('Archive this class record?')" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-danger" title="Archive">
+                                                    <i class="fas fa-archive"></i>
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <div style="font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">No Institutional Records Found</div>
+                </div>
+            }
+        </div>
+    </div>
+
+</body>
+</html>

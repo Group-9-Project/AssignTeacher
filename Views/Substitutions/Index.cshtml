@@ -1,0 +1,302 @@
+@model IEnumerable<SchoolTimetable.Models.Substitution>
+@{
+    ViewBag.Title = "Substitutions";
+    Layout = null; /* Standalone page - No Layout used */
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Substitutions :: Management</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy-dark: #001a33;
+            --navy-primary: #002b5c;
+            --navy-light: #003d82;
+            --white: #ffffff;
+            --off-white: #f4f7f9;
+            --border-color: #002b5c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--navy-dark);
+            background-color: var(--off-white);
+            margin: 0;
+            padding: 40px;
+        }
+
+        /* Header Section */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 4px solid var(--navy-primary);
+            padding-bottom: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0;
+            color: var(--navy-primary);
+            letter-spacing: -1px;
+        }
+
+        .page-sub {
+            font-size: 0.9rem;
+            color: var(--navy-light);
+            margin: -1rem 0 2rem 0;
+            font-weight: 600;
+            border-left: 4px solid var(--navy-primary);
+            padding-left: 12px;
+        }
+
+        /* Card & Table */
+        .card {
+            background: var(--white);
+            border: 2px solid var(--navy-primary);
+            border-radius: 0;
+            box-shadow: 6px 6px 0px rgba(0, 43, 92, 0.1);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+            .data-table thead th {
+                background: var(--navy-primary);
+                color: var(--white);
+                text-transform: uppercase;
+                font-size: 0.75rem;
+                font-weight: 800;
+                letter-spacing: 1px;
+                padding: 20px 16px;
+            }
+
+            .data-table td {
+                padding: 16px;
+                font-size: 0.85rem;
+                border-bottom: 1px solid var(--navy-primary);
+                color: var(--navy-dark);
+            }
+
+            .data-table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .data-table tr:hover {
+                background-color: #ebf2f8;
+            }
+
+        /* Status Badges - Strict Navy/White Logic */
+        .badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border: 1.5px solid var(--navy-primary);
+            display: inline-block;
+        }
+
+        .status-filled {
+            background: var(--navy-primary);
+            color: var(--white);
+        }
+
+        .status-outline {
+            background: var(--white);
+            color: var(--navy-primary);
+        }
+
+        /* Navigation & Buttons */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: 0.7rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.2s;
+            border: 2px solid var(--navy-primary);
+        }
+
+        .btn-primary {
+            background: var(--navy-primary);
+            color: var(--white);
+        }
+
+            .btn-primary:hover {
+                background: var(--navy-dark);
+                color: var(--white);
+            }
+
+        .btn-outline {
+            background: var(--white);
+            color: var(--navy-primary);
+        }
+
+            .btn-outline:hover {
+                background: var(--navy-primary);
+                color: var(--white);
+            }
+
+        .btn-filter {
+            background: var(--white);
+            color: var(--navy-primary);
+        }
+
+            .btn-filter.active {
+                background: var(--navy-primary);
+                color: var(--white);
+            }
+
+        .btn-xs {
+            padding: 5px 10px;
+            font-size: 0.6rem;
+        }
+
+        .empty-state {
+            padding: 5rem;
+            text-align: center;
+            color: var(--navy-primary);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <div class="header-left">
+            <h1 class="page-title">Substitutions</h1>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <a href="@Url.Action("ManageTeacherDashboard", "Admin")" class="btn btn-outline">
+                Back
+            </a>
+            <a href="@Url.Action("Create")" class="btn btn-primary">
+                New Substitution
+            </a>
+        </div>
+    </div>
+
+    <p class="page-sub">Teacher substitution management interface. View and manage all schedule changes.</p>
+
+    <div class="btn-group">
+        <button class="btn btn-filter active" onclick="filterSubs('all', this)">View All</button>
+        <button class="btn btn-filter" onclick="filterSubs('Pending', this)">Pending</button>
+        <button class="btn btn-filter" onclick="filterSubs('Confirmed', this)">Confirmed</button>
+        <button class="btn btn-filter" onclick="filterSubs('Cancelled', this)">Cancelled</button>
+    </div>
+
+    <div class="card">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Original Teacher</th>
+                    <th>Subject / Class</th>
+                    <th>Period</th>
+                    <th>Substitute</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th style="text-align:right">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="subsTbody">
+                @foreach (var sub in Model)
+                {
+                    <tr data-status="@sub.Status">
+                        <td>
+                            <div style="font-weight:800;">@sub.SubstitutionDate.ToString("dd MMM yyyy")</div>
+                            <div style="font-size:10px; text-transform:uppercase; opacity: 0.8;">@sub.SubstitutionDate.DayOfWeek</div>
+                        </td>
+                        <td style="font-weight:600">
+                            @(sub.OriginalTeacher != null ? sub.OriginalTeacher.FullName : "-")
+                        </td>
+                        <td>
+                            <div style="display:flex; flex-direction:column;">
+                                @if (sub.TimetableSlot != null && sub.TimetableSlot.Subject != null)
+                                {
+                                    <span style="font-weight:800;">@sub.TimetableSlot.Subject.Code</span>
+                                }
+                                <span style="font-size:11px; font-weight:600; opacity: 0.7;">@(sub.TimetableSlot != null && sub.TimetableSlot.Class != null ? sub.TimetableSlot.Class.Name : "-")</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge status-outline">P@(sub.TimetableSlot != null ? sub.TimetableSlot.Period.ToString() : "-")</span>
+                        </td>
+                        <td style="font-weight:700">
+                            @(sub.SubstituteTeacher != null ? sub.SubstituteTeacher.FullName : "-")
+                        </td>
+                        <td style="font-size:11px; max-width:200px;">
+                            @(string.IsNullOrEmpty(sub.Reason) ? "-" : sub.Reason)
+                        </td>
+                        <td>
+                            <span class="badge @(sub.Status == SubstitutionStatus.Confirmed ? "status-filled" : "status-outline")">
+                                @sub.Status
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display:flex; gap:5px; justify-content:flex-end">
+                                @if (sub.Status != SubstitutionStatus.Confirmed)
+                                {
+                                    using (Html.BeginForm("Confirm", "Substitutions", new { id = sub.Id }, FormMethod.Post, new { style = "display:inline" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-primary btn-xs">CONFIRM</button>
+                                    }
+                                }
+                                @if (sub.Status != SubstitutionStatus.Cancelled)
+                                {
+                                    using (Html.BeginForm("Cancel", "Substitutions", new { id = sub.Id }, FormMethod.Post, new { onsubmit = "return confirm('Cancel this substitution?')", style = "display:inline" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline btn-xs">CANCEL</button>
+                                    }
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (!Model.Any())
+        {
+            <div class="empty-state">No substitutions records found.</div>
+        }
+    </div>
+
+    <script>
+        function filterSubs(status, btn) {
+            document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            var rows = document.querySelectorAll('#subsTbody tr');
+            rows.forEach(row => {
+                var rowStatus = row.getAttribute('data-status');
+                row.style.display = (status === 'all' || rowStatus === status) ? '' : 'none';
+            });
+        }
+    </script>
+
+</body>
+</html>

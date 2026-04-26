@@ -1,0 +1,340 @@
+@model List<SchoolTimetable.Models.AppUser>
+@{
+    ViewBag.Title = "Student Registry";
+    int? filterGrade = ViewBag.Grade as int?;
+    bool? filterBlocked = ViewBag.Blocked as bool?;
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --navy-deep: #0a192f;
+        --navy-muted: #112240;
+        --navy-accent: #233554;
+        --gold-accent: #c5a059;
+        --white-bright: #ffffff;
+        --white-muted: #a8b2d1;
+        --status-red: #ff4d4d;
+        --status-green: #64ffda;
+    }
+
+    .registry-wrapper {
+        max-width: 1250px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+        font-family: 'Inter', sans-serif;
+        background-color: transparent;
+    }
+
+    /* Page Header */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        border-left: 5px solid var(--gold-accent);
+        padding-left: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        margin: 0;
+        color: var(--navy-deep);
+    }
+
+    .page-subtitle {
+        color: var(--navy-accent);
+        font-weight: 600;
+        opacity: 0.7;
+        margin: 2px 0 0 0;
+    }
+
+    /* Grade Quick-Filter Stats */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .grade-card {
+        background: var(--white-bright);
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem 0.5rem;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: block;
+        text-decoration: none;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+        .grade-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            border-color: var(--gold-accent);
+        }
+
+        .grade-card.active {
+            background: var(--navy-deep);
+            color: white;
+            border-color: var(--navy-deep);
+        }
+
+        .grade-card.has-blocked {
+            border-bottom: 3px solid var(--status-red);
+        }
+
+    .grade-num {
+        font-size: 2rem;
+        font-weight: 800;
+        display: block;
+        line-height: 1;
+        margin-bottom: 5px;
+    }
+
+    .grade-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: inherit;
+        opacity: 0.8;
+    }
+
+    /* Filter Bar Area */
+    .filter-section {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 8px;
+    }
+
+    .filter-flex {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-end;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .form-label {
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--navy-accent);
+        letter-spacing: 0.5px;
+    }
+
+    .form-select {
+        padding: 10px;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        font-family: inherit;
+        background: white;
+        min-width: 200px;
+    }
+
+    /* Table System */
+    .registry-card {
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+    }
+
+    .dg-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .dg-table th {
+            background: var(--navy-deep);
+            color: var(--gold-accent);
+            text-align: left;
+            padding: 16px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .dg-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.95rem;
+        }
+
+    .row-blocked {
+        background: rgba(255, 77, 77, 0.03);
+    }
+
+    /* Buttons & Badges */
+    .btn-apply {
+        background: var(--navy-deep);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+    .btn-reset {
+        background: transparent;
+        border: 1px solid #cbd5e1;
+        color: var(--navy-accent);
+        padding: 11px 20px;
+        font-weight: 700;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-size: 0.8rem;
+        border-radius: 4px;
+    }
+
+    .badge-status {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .badge-active {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .badge-blocked {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+</style>
+
+<div class="registry-wrapper">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Student Registry</h1>
+            <p class="page-subtitle">Academic Records Archive | @Model.Count Total Enrolled</p>
+        </div>
+        <div style="text-align: right; color: var(--gold-accent); font-weight: 800; font-size: 0.8rem; letter-spacing: 1px;">
+            SECURE ACCESS ONLY
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        @for (int g = 8; g <= 12; g++)
+        {
+            int localG = g;
+            var count = Model.Count(s => s.Grade == localG);
+            var blocked = Model.Count(s => s.Grade == localG && s.IsBlocked);
+            bool isCurrent = filterGrade == localG;
+
+            <a href="@Url.Action("Index", new { grade = localG })" class="grade-card @(isCurrent ? "active" : "") @(blocked > 0 && !isCurrent ? "has-blocked" : "")">
+                <span class="grade-num">@count</span>
+                <span class="grade-label">Grade @localG</span>
+                @if (blocked > 0)
+                {
+                    <div style="font-size: 10px; font-weight: 800; margin-top: 6px; color: @(isCurrent ? "#ff9b9b" : "var(--status-red)")">
+                        @blocked RESTRICTED
+                    </div>
+                }
+            </a>
+        }
+    </div>
+
+    <div class="filter-section">
+        @using (Html.BeginForm("Index", "Students", FormMethod.Get))
+        {
+            <div class="filter-flex">
+                <div class="form-group" style="flex: 1;">
+                    <label class="form-label">Academic Tier</label>
+                    <select name="grade" class="form-select">
+                        <option value="">All Grade Levels</option>
+                        @for (int g = 8; g <= 12; g++)
+                        {
+                            <option value="@g" @(filterGrade == g ? "selected" : "")>Grade @g</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label class="form-label">Enrollment Status</label>
+                    <select name="blocked" class="form-select">
+                        <option value="">All Standings</option>
+                        <option value="false" @(filterBlocked == false ? "selected" : "")>In Good Standing</option>
+                        <option value="true" @(filterBlocked == true ? "selected" : "")>Account Suspended</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn-apply">Search Registry</button>
+                    <a href="@Url.Action("Index")" class="btn-reset">Reset</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="registry-card">
+        <table class="dg-table">
+            <thead>
+                <tr>
+                    <th>Official Name</th>
+                    <th>Tier</th>
+                    <th>Institutional Email</th>
+                    <th>Account Status</th>
+                    <th>Records</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var s in Model)
+                    {
+                        <tr class="@(s.IsBlocked ? "row-blocked" : "")">
+                            <td style="font-weight:700; color: var(--navy-deep);">
+                                @s.FullName.ToUpper()
+                            </td>
+                            <td>
+                                <span style="font-weight:600; color: var(--navy-accent)">G@(s.Grade)</span>
+                            </td>
+                            <td style="color: var(--navy-accent); font-family: 'Courier New', Courier, monospace; font-size: 0.85rem;">@s.Email</td>
+                            <td>
+                                @if (s.IsBlocked)
+                                {
+                                    <span class="badge-status badge-blocked">? Restricted</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-status badge-active">? Active</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Details", new { id = s.Id })" style="color: var(--gold-accent); font-weight: 800; text-decoration: none; font-size: 0.75rem; text-transform: uppercase;">View Dossier ?</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding:5rem; color: #94a3b8;">
+                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">???</div>
+                            <div style="font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">No records found for specified parameters</div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

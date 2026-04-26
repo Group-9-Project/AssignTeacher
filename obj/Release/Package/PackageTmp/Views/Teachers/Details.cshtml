@@ -1,0 +1,232 @@
+@model SchoolTimetable.Models.Teacher
+@{
+    Layout = null;
+    ViewBag.Title = "Teacher Profile";
+
+    // High-contrast Navy color logic
+    var avc = new[] { "#001a33", "#002b5c", "#003d82", "#001021" };
+    var col = avc[Model.Id % avc.Length];
+    var ini = Model.FirstName.Substring(0, 1) + Model.LastName.Substring(0, 1);
+
+    // Strictly using the session value as is
+    var userRole = Session["UserRole"];
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy-dark: #001a33;
+            --navy-primary: #002b5c;
+            --navy-light: #003d82;
+            --white: #ffffff;
+            --off-white: #f4f7f9;
+        }
+
+        body {
+            margin: 0;
+            padding: 50px;
+            background-color: var(--off-white);
+            font-family: 'Inter', sans-serif;
+            color: var(--navy-dark);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 4px solid var(--navy-primary);
+            padding-bottom: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0;
+            color: var(--navy-primary);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--white);
+            border: 2px solid var(--navy-primary);
+            padding: 30px;
+            box-shadow: 8px 8px 0px rgba(0, 43, 92, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--navy-primary);
+            padding-bottom: 12px;
+        }
+
+        .card-title {
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            color: var(--navy-primary);
+        }
+
+        .teacher-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: 3px solid var(--navy-dark);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .badge-active {
+            background: var(--navy-primary);
+            color: var(--white);
+        }
+
+        .badge-outline {
+            border: 2px solid var(--navy-primary);
+            color: var(--navy-primary);
+        }
+
+        .detail-grid {
+            display: grid;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #e6ecf2;
+            padding-bottom: 8px;
+        }
+
+        .detail-key {
+            font-weight: 800;
+            color: var(--navy-light);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .detail-val {
+            font-weight: 700;
+            color: var(--navy-dark);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            text-decoration: none;
+            display: inline-flex;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--navy-primary);
+            color: white;
+            border: 2px solid var(--navy-primary);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--navy-primary);
+            color: var(--navy-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--navy-dark);
+        }
+
+        .btn-outline:hover {
+            background: var(--navy-primary);
+            color: white;
+        }
+
+        i, .fas {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1 class="page-title">Personnel Profile</h1>
+        <div style="display:flex; gap:10px;">
+            <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-outline">Modify Profile</a>
+
+            @if (userRole != null && userRole.ToString() == "Admin")
+            {
+                <a href="@Url.Action("Index")" class="btn btn-outline">Staff List</a>
+            }
+            else
+            {
+                <a href="@Url.Action("Dashboard")" class="btn btn-primary">Dashboard</a>
+            }
+        </div>
+    </div>
+
+    <div class="two-col">
+        <div class="card">
+            <div style="text-align:center; padding-bottom:20px">
+                <div class="teacher-avatar" style="width:80px; height:80px; font-size:28px; background:@col; margin:0 auto 15px">@ini</div>
+                <h2 style="font-size:22px; font-weight:800; color:var(--navy-primary); text-transform:uppercase; margin:0;">@Model.FullName</h2>
+                <div style="margin-top:10px;">
+                    <span class="badge badge-active">Active Staff</span>
+                </div>
+            </div>
+
+            <div class="detail-grid">
+                <div class="detail-item"><span class="detail-key">Email Address</span><span class="detail-val">@Model.Email</span></div>
+                <div class="detail-item"><span class="detail-key">Contact</span><span class="detail-val">@Model.Phone</span></div>
+                <div class="detail-item"><span class="detail-key">Weekly Load</span><span class="detail-val">@Model.TimetableSlots.Count(s => s.IsActive) Periods</span></div>
+            </div>
+
+            <a href="@Url.Action("TeacherView", "Timetable", new { teacherId = Model.Id })" class="btn btn-outline" style="width:100%; box-sizing:border-box;">View Full Schedule</a>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:20px">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Assigned Specializations</span>
+                    <span class="badge badge-outline">@Model.TeacherSubjects.Count Count</span>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:10px">
+                    @foreach (var ts in Model.TeacherSubjects)
+                    {
+                        <span style="border: 2px solid var(--navy-primary); padding: 6px 12px; font-size: 11px; font-weight: 800; text-transform: uppercase;">
+                            @ts.Subject.Name
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,327 @@
+﻿@model SchoolTimetable.Models.Application
+
+@{
+    Layout = null;
+    int startStep = ViewBag.StartStep ?? 1;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Student Application | Durban Girls Secondary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-deep: #0a192f;
+            --navy-muted: #112240;
+            --navy-accent: #233554;
+            --white-bright: #ffffff;
+            --white-muted: #ccd6f6;
+            --gold-accent: #c5a059;
+            --error-red: #ff4d4d;
+        }
+
+        body {
+            background-color: var(--navy-deep);
+            color: var(--white-muted);
+            font-family: 'Barlow', sans-serif;
+            padding: 40px 20px;
+        }
+
+        .form-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--navy-muted);
+            padding: 40px;
+            border: 1px solid var(--navy-accent);
+            border-radius: 4px;
+        }
+
+        h2 {
+            font-family: 'Barlow Condensed', sans-serif;
+            color: var(--white-bright);
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--gold-accent);
+            padding-bottom: 10px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            color: var(--navy-accent);
+            border-bottom: 4px solid var(--navy-accent);
+            padding-bottom: 10px;
+        }
+
+            .step.active {
+                color: var(--gold-accent);
+                border-color: var(--gold-accent);
+            }
+
+        .form-section-title {
+            color: var(--gold-accent);
+            font-family: 'Barlow Condensed', sans-serif;
+            text-transform: uppercase;
+            margin: 20px 0 15px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+            .form-row .form-group {
+                flex: 1;
+                min-width: 200px;
+            }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--white-bright);
+            font-size: 0.85rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--navy-deep);
+            border: 1px solid var(--navy-accent);
+            color: var(--white-bright);
+            box-sizing: border-box;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-next, .btn-submit {
+            background: var(--gold-accent);
+            color: var(--white-bright);
+        }
+
+        .btn-back {
+            background: var(--navy-accent);
+            color: var(--white-muted);
+        }
+
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            color: var(--gold-accent);
+            padding: 10px;
+        }
+
+        .text-danger {
+            color: var(--error-red);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>New Student Application</h2>
+
+        <div class="step-indicator">
+            <div class="step" id="ind1">1. Student & Parent</div>
+            <div class="step" id="ind2">2. Academic History</div>
+            <div class="step" id="ind3">3. Address & Finalize</div>
+        </div>
+
+        @using (Html.BeginForm("Create", "Applications", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.ParentId)
+
+            if (!ViewData.ModelState.IsValid)
+            {
+                <div style="background: rgba(255,77,77,0.1); border: 1px solid var(--error-red); padding: 15px; margin-bottom: 20px;">
+                    @Html.ValidationSummary(false, "Submission Error:", new { @class = "text-danger" })
+                </div>
+            }
+
+            <div id="step1">
+                <div class="form-section-title">Student Details</div>
+                <div class="form-row">
+                    <div class="form-group"><label>First Name</label>@Html.TextBoxFor(m => m.FirstName)</div>
+                    <div class="form-group"><label>Last Name</label>@Html.TextBoxFor(m => m.LastName)</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Date of Birth</label>@Html.TextBoxFor(m => m.DateOfBirth, new { type = "date" })</div>
+                    <div class="form-group"><label>Gender</label>@Html.DropDownListFor(m => m.Gender, new SelectList(new[] { "Female", "Male", "Other" }), "Select")</div>
+                </div>
+
+                <div class="form-section-title">Parent / Guardian Details</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Full Name</label>@Html.TextBoxFor(m => m.ParentName)</div>
+                    <div class="form-group"><label>Relationship</label>@Html.TextBoxFor(m => m.Relationship)</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Phone Number</label>@Html.TextBoxFor(m => m.PhoneNumber)</div>
+                    <div class="form-group"><label>Email Address</label>@Html.TextBoxFor(m => m.Email, new { type = "email" })</div>
+                </div>
+
+                <div class="btn-row" style="justify-content: flex-end;">
+                    <button type="button" class="btn-next" onclick="goStep(2)">Next Step →</button>
+                </div>
+            </div>
+
+            <div id="step2" style="display:none;">
+                <div class="form-row">
+                    <div class="form-group"><label>Grade Applying For</label>@Html.DropDownListFor(m => m.GradeApplyingFor, new SelectList(new[] { "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12" }), "Select Grade")</div>
+                    <div class="form-group"><label>Previous School</label>@Html.TextBoxFor(m => m.PreviousSchoolName)</div>
+                </div>
+
+                <div class="form-section-title">Academic Results</div>
+                <table id="marksTable">
+                    <thead><tr><th>Subject</th><th>Mark (%)</th><th></th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>@Html.Raw(SubjectDropdown("subjectInputs", ""))</td>
+                            <td><input type="number" name="markInputs" placeholder="0" min="0" max="100" /></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn-back" onclick="addRow()">+ Add Subject</button>
+
+                <div class="btn-row">
+                    <button type="button" class="btn-back" onclick="goStep(1)">← Back</button>
+                    <button type="button" class="btn-next" onclick="goStep(3)">Next Step →</button>
+                </div>
+            </div>
+
+            <div id="step3" style="display:none;">
+                <div class="form-section-title">Residential Address</div>
+                <div class="form-group"><label>Street Address</label>@Html.TextBoxFor(m => m.HomeAddress)</div>
+                <div class="form-row">
+                    <div class="form-group"><label>City</label>@Html.TextBoxFor(m => m.City)</div>
+                    <div class="form-group"><label>Province</label>@Html.TextBoxFor(m => m.State)</div>
+                    <div class="form-group"><label>Postal Code</label>@Html.TextBoxFor(m => m.PostalCode)</div>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        @Html.CheckBoxFor(m => m.AgreedToCodeOfConduct) I agree to the Institutional Code of Conduct
+                    </label>
+                </div>
+
+                <div class="btn-row">
+                    <button type="button" class="btn-back" onclick="goStep(2)">← Back</button>
+                    <button type="submit" class="btn-submit">Submit Application</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script>
+        const subjectList = [
+            "Life Orientation",
+            "Mathematics",
+            "Mathematical Literacy",
+            "Technical Mathematics",
+            "English Home Language",
+            "English First Additional Language",
+            "IsiZulu Home Language",
+            "IsiZulu First Additional Language",
+            "Afrikaans Home Language",
+            "Physical Sciences",
+            "Life Sciences",
+            "Accounting",
+            "Business Studies",
+            "Economics",
+            "History",
+            "Geography",
+            "Tourism",
+            "Consumer Studies",
+            "Information Technology (IT)",
+            "Computer Applications Technology (CAT)",
+            "Engineering Graphics and Design (EGD)",
+            "Visual Arts",
+            "Music"
+        ];
+
+        function goStep(n) {
+            // Hide all sections
+            document.getElementById("step1").style.display = "none";
+            document.getElementById("step2").style.display = "none";
+            document.getElementById("step3").style.display = "none";
+
+            // Deactivate all indicators
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+
+            // Show active section and indicator
+            document.getElementById("step" + n).style.display = "block";
+            document.getElementById("ind" + n).classList.add('active');
+
+            window.scrollTo(0, 0);
+        }
+
+        function addRow() {
+            var table = document.getElementById("marksTable").getElementsByTagName('tbody')[0];
+            var row = table.insertRow();
+            let optionsHtml = '<option value="">Select</option>';
+            subjectList.forEach(s => { optionsHtml += `<option value="${s}">${s}</option>`; });
+
+            row.innerHTML = `<td><select name="subjectInputs">${optionsHtml}</select></td>
+                             <td><input type="number" name="markInputs" min="0" max="100" /></td>
+                             <td><button type="button" style="background:none; border:none; color:var(--error-red); cursor:pointer;" onclick="this.closest('tr').remove()">×</button></td>`;
+        }
+
+        // Initialize based on startStep from ViewBag
+        goStep(@startStep);
+    </script>
+</body>
+</html>
+
+@helper SubjectDropdown(string name, string selectedValue)
+{
+    var options = new List<string> {
+        "Life Orientation", "Mathematics", "Mathematical Literacy", "Technical Mathematics",
+        "English Home Language", "English First Additional Language", "IsiZulu Home Language",
+        "IsiZulu First Additional Language", "Afrikaans Home Language", "Physical Sciences",
+        "Life Sciences", "Accounting", "Business Studies", "Economics", "History",
+        "Geography", "Tourism", "Consumer Studies", "Information Technology (IT)",
+        "Computer Applications Technology (CAT)", "Engineering Graphics and Design (EGD)",
+        "Visual Arts", "Music"
+    };
+<select name="@name">
+    <option value="">Select</option>
+    @foreach (var opt in options)
+    {
+        <option value="@opt" @(opt == selectedValue ? "selected" : "")>@opt</option>
+    }
+</select>
+}

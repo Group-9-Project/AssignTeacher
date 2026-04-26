@@ -1,0 +1,1 @@
+﻿UPDATE Application SET Status = 0;

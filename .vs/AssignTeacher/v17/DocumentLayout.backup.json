@@ -1,0 +1,149 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|c:\\users\\minenhle xulu\\desktop\\2026project\\assignteacher\\controllers\\onlineclasscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|solutionrelative:controllers\\onlineclasscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|c:\\users\\minenhle xulu\\desktop\\2026project\\assignteacher\\app_start\\routeconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|solutionrelative:app_start\\routeconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|c:\\users\\minenhle xulu\\desktop\\2026project\\assignteacher\\views\\onlineclass\\meeting.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|solutionrelative:views\\onlineclass\\meeting.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|c:\\users\\minenhle xulu\\desktop\\2026project\\assignteacher\\models\\dashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|solutionrelative:models\\dashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|c:\\users\\minenhle xulu\\desktop\\2026project\\assignteacher\\models\\teacher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|solutionrelative:models\\teacher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|c:\\users\\minenhle xulu\\desktop\\2026project\\assignteacher\\views\\studentaccount\\writequiz.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|solutionrelative:views\\studentaccount\\writequiz.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|c:\\users\\minenhle xulu\\desktop\\2026project\\assignteacher\\controllers\\studentaccountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|solutionrelative:controllers\\studentaccountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Meeting.cshtml",
+              "DocumentMoniker": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Views\\OnlineClass\\Meeting.cshtml",
+              "RelativeDocumentMoniker": "Views\\OnlineClass\\Meeting.cshtml",
+              "ToolTip": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Views\\OnlineClass\\Meeting.cshtml",
+              "RelativeToolTip": "Views\\OnlineClass\\Meeting.cshtml",
+              "ViewState": "AgIAAB0BAAAAAAAAAAAAAAwBAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-26T14:12:48.461Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DashboardViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Models\\DashboardViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\DashboardViewModel.cs",
+              "ToolTip": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Models\\DashboardViewModel.cs",
+              "RelativeToolTip": "Models\\DashboardViewModel.cs",
+              "ViewState": "AgIAACMBAAAAAAAAAAA8wDsBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T13:36:35.016Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Teacher.cs",
+              "DocumentMoniker": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Models\\Teacher.cs",
+              "RelativeDocumentMoniker": "Models\\Teacher.cs",
+              "ToolTip": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Models\\Teacher.cs",
+              "RelativeToolTip": "Models\\Teacher.cs",
+              "ViewState": "AgIAANsBAAAAAAAAAAA1wPcBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T13:18:38.59Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "OnlineClassController.cs",
+              "DocumentMoniker": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Controllers\\OnlineClassController.cs",
+              "RelativeDocumentMoniker": "Controllers\\OnlineClassController.cs",
+              "ToolTip": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Controllers\\OnlineClassController.cs",
+              "RelativeToolTip": "Controllers\\OnlineClassController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T13:16:46.842Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RouteConfig.cs",
+              "DocumentMoniker": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\App_Start\\RouteConfig.cs",
+              "RelativeDocumentMoniker": "App_Start\\RouteConfig.cs",
+              "ToolTip": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\App_Start\\RouteConfig.cs",
+              "RelativeToolTip": "App_Start\\RouteConfig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T12:44:14.342Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "StudentAccountController.cs",
+              "DocumentMoniker": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Controllers\\StudentAccountController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StudentAccountController.cs",
+              "ToolTip": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Controllers\\StudentAccountController.cs",
+              "RelativeToolTip": "Controllers\\StudentAccountController.cs",
+              "ViewState": "AgIAAAQBAAAAAAAAAAAcwCgBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T12:56:22.173Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "WriteQuiz.cshtml",
+              "DocumentMoniker": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Views\\StudentAccount\\WriteQuiz.cshtml",
+              "RelativeDocumentMoniker": "Views\\StudentAccount\\WriteQuiz.cshtml",
+              "ToolTip": "C:\\Users\\Minenhle Xulu\\Desktop\\2026Project\\AssignTeacher\\Views\\StudentAccount\\WriteQuiz.cshtml",
+              "RelativeToolTip": "Views\\StudentAccount\\WriteQuiz.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-26T13:00:04.045Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
