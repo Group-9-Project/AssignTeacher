@@ -94,6 +94,8 @@ namespace SchoolTimetable.Models
             }
             if (overdueItems.Any()) db.SaveChanges();
         }
+
+        public System.Data.Entity.DbSet<Setup_Examination_timetable.Models.Setup_exam_time> Setup_exam_time { get; set; }
     }
 
     // ── INITIALIZER & SEED DATA ────────────────────────────────────────────
