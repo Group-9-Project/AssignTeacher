@@ -23,7 +23,7 @@
     <NameOfLastUsedPublishProfile>C:\Users\Minenhle Xulu\Desktop\2026Project\AssignTeacher\Properties\PublishProfiles\DurbanGirlsSecondarySchool - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
     <WebStackScaffolding_DbContextTypeFullName>SchoolTimetable.Models.ApplicationDbContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsViewGenerationSelected>True</WebStackScaffolding_IsViewGenerationSelected>
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
