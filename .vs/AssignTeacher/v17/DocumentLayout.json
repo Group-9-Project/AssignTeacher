@@ -1,0 +1,53 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Mlu\\Downloads\\gfg\\AssignTeacher\\AssignTeacher\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|c:\\users\\mlu\\downloads\\gfg\\assignteacher\\assignteacher\\views\\setup_exam_time\\timetable.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|solutionrelative:views\\setup_exam_time\\timetable.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Timetable.cshtml",
+              "DocumentMoniker": "C:\\Users\\Mlu\\Downloads\\gfg\\AssignTeacher\\AssignTeacher\\Views\\Setup_exam_time\\Timetable.cshtml",
+              "RelativeDocumentMoniker": "Views\\Setup_exam_time\\Timetable.cshtml",
+              "ToolTip": "C:\\Users\\Mlu\\Downloads\\gfg\\AssignTeacher\\AssignTeacher\\Views\\Setup_exam_time\\Timetable.cshtml",
+              "RelativeToolTip": "Views\\Setup_exam_time\\Timetable.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-28T22:25:54.365Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
