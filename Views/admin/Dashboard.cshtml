@@ -1,0 +1,255 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Administration - DGSS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            --dg-navy: #002147;
+            --dg-accent: #003366;
+            --dg-white: #ffffff;
+            --dg-smoke: #f8fafc;
+            --dg-border: #cbd5e1;
+            --dg-red: #be123c; /* For Logout Hover */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dg-smoke);
+            font-family: 'Inter', sans-serif;
+            color: var(--dg-navy);
+        }
+
+        /* Top Bar with Logout */
+        .admin-top-nav {
+            background: var(--dg-navy);
+            color: white;
+            padding: 0 60px;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .admin-brand {
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            height: 100%;
+        }
+
+        .session-info {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--dg-border);
+            border-right: 1px solid rgba(255,255,255,0.2);
+            padding-right: 25px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-logout {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+            .btn-logout:hover {
+                background: var(--dg-red);
+                color: white;
+            }
+
+        .container {
+            max-width: 1400px;
+            margin: 50px auto;
+            padding: 0 40px;
+        }
+
+        .welcome-header {
+            margin-bottom: 40px;
+        }
+
+            .welcome-header h1 {
+                font-size: 2.5rem;
+                font-weight: 800;
+                margin: 0;
+                color: var(--dg-navy);
+            }
+
+        .mgmt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .mgmt-card {
+            background: var(--dg-white);
+            border: 1px solid var(--dg-border);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: inherit;
+        }
+
+            .mgmt-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 20px 25px -5px rgba(0, 33, 71, 0.1);
+                border-color: var(--dg-navy);
+            }
+
+        .card-accent {
+            height: 6px;
+            background: var(--dg-navy);
+            width: 100%;
+        }
+
+        .card-body {
+            padding: 35px;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            color: var(--dg-navy);
+            margin-bottom: 20px;
+            background: var(--dg-smoke);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            padding: 20px 35px;
+            background: var(--dg-smoke);
+            border-top: 1px solid var(--dg-border);
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--dg-navy);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mgmt-card:hover .card-footer i {
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="admin-top-nav">
+        <div class="admin-brand">
+            <i class="fas fa-shield-halved"></i> DGSS Staff Portal
+        </div>
+
+        <div class="nav-right">
+            <div class="session-info">
+                ACADEMIC YEAR: 2026
+            </div>
+            <a href="@Url.Action("Login", "Teachers")" class="btn-logout">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-header">
+            <h1>System Administration</h1>
+            <p style="color: #64748b; font-weight: 500;">Select a management module to proceed.</p>
+        </div>
+
+        <div class="mgmt-grid">
+            <a href="@Url.Action("ManageStudentsDashboard", "Admin")" class="mgmt-card">
+                <div class="card-accent"></div>
+                <div class="card-body">
+                    <div class="card-icon"><i class="fas fa-user-plus"></i></div>
+                    <div class="card-title">Student Intake</div>
+                    <div class="card-desc">Process and verify new student applications, documents, and registration status.</div>
+                </div>
+                <div class="card-footer">Manage Admissions <i class="fas fa-arrow-right"></i></div>
+            </a>
+
+            <a href="@Url.Action("Index", "Entrance_test")" class="mgmt-card">
+                <div class="card-accent"></div>
+                <div class="card-body">
+                    <div class="card-icon"><i class="fas fa-file-signature"></i></div>
+                    <div class="card-title">Entrance Tests</div>
+                    <div class="card-desc">Configuration of entrance examinations, time limits, and question banks.</div>
+                </div>
+                <div class="card-footer">Configure Tests <i class="fas fa-arrow-right"></i></div>
+            </a>
+
+            <a href="@Url.Action("ManageTeacherDashboard", "Admin")" class="mgmt-card">
+                <div class="card-accent"></div>
+                <div class="card-body">
+                    <div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <div class="card-title">Faculty Portal</div>
+                    <div class="card-desc">Review teacher assignments, substitution requests, and academic timetables.</div>
+                </div>
+                <div class="card-footer">Manage Staff <i class="fas fa-arrow-right"></i></div>
+            </a>
+
+            <a href="@Url.Action("AllocateStudents", "Admin")" class="mgmt-card">
+                <div class="card-accent"></div>
+                <div class="card-body">
+                    <div class="card-icon"><i class="fas fa-sitemap"></i></div>
+                    <div class="card-title">Class Allocation</div>
+                    <div class="card-desc">Analyze test results and finalize student placement into designated classes.</div>
+                </div>
+                <div class="card-footer">Finalize Placement <i class="fas fa-arrow-right"></i></div>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
