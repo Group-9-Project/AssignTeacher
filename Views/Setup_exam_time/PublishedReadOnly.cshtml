@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Setup_Examination_timetable.Models.Setup_exam_time>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Published Timetable (Read Only)</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        th {
+            background: #eee;
+        }
+
+        .stack {
+            padding: 8px;
+            min-height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Published Timetable (Read Only)</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <p>No timetable entries published.</p>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    @{ var sessions = Model.GroupBy(m => new { m.Exam_date, m.Exam_Starttime, m.Exam_Endtime })
+                                             .OrderBy(g => g.Key.Exam_date).ThenBy(g => g.Key.Exam_Starttime).ToList(); }
+                    @foreach (var s in sessions)
+                    {
+                        <th>
+                            @s.Key.Exam_date.ToString("yyyy-MM-dd")<br />
+                            @s.Key.Exam_Starttime @(" - ") @s.Key.Exam_Endtime
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @foreach (var s in sessions)
+                    {
+                        <td>
+                            <div class="stack">
+                                @foreach (var item in s)
+                                {
+                                    <div><strong>Grade:</strong> @item.Grade</div>
+                                    <div><strong>Venue:</strong> @item.venue</div>
+                                    <div><strong>Exam:</strong> @item.Exam_name</div>
+                                    <hr />
+                                }
+                            </div>
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    }
+</body>
+</html>
