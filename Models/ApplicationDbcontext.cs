@@ -32,6 +32,7 @@ namespace SchoolTimetable.Models
         public DbSet<ApplicantMark> ApplicantMarks { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<StudentAccount> StudentAccounts { get; set; }
+        public DbSet<Consultation> consultations { get; set; }
 
         // ── 2. LIBRARY & IDENTITY DBSETS ───────────────────────────────────
         public DbSet<AppUser> AppUsers { get; set; }

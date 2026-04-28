@@ -1,0 +1,65 @@
+﻿@model IEnumerable<SchoolTimetable.Models.Consultation>
+
+@{
+    Layout = null;
+    ViewBag.Title = "Consultation Management";
+}
+
+<div class="container mt-4">
+    <h2>Consultation Requests</h2>
+    <hr />
+
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Parent/Student</th>
+                <th>Subject</th>
+                <th>Proposed Date/Time</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Class.Name</td>
+                    <td>@item.TeacherSubject.Subject.Name</td>
+                    <td>@item.date.ToShortDateString() at @item.time.ToShortTimeString()</td>
+                    <td><small>@item.reason</small></td>
+                    <td>
+                        @if (item.status == SchoolTimetable.Models.conStatus.Pending)
+                        {<span class="badge bg-warning">Pending</span> }
+                        else if (item.status == SchoolTimetable.Models.conStatus.Accepted)
+                        { <span class="badge bg-success">Accepted</span> }
+                        else
+                        { <span class="badge bg-danger">Rejected</span>}
+                    </td>
+                    <td>
+                        @if (item.status == SchoolTimetable.Models.conStatus.Pending)
+                        {
+                            using (Html.BeginForm("Respond", "Consultation", FormMethod.Post, new { @class = "d-inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.Id" />
+
+                                <div class="input-group input-group-sm mb-1">
+                                    <input type="date" name="confirmedDate" class="form-control" title="Confirm Date" />
+                                    <input type="time" name="confirmedTime" class="form-control" title="Confirm Time" />
+                                </div>
+
+                                <button type="submit" name="decision" value="Accept" class="btn btn-sm btn-success">Accept</button>
+                                <button type="submit" name="decision" value="Reject" class="btn btn-sm btn-outline-danger">Reject</button>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">Processed</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

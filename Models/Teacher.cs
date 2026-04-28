@@ -13,6 +13,13 @@ namespace SchoolTimetable.Models
         Reject
     }
 
+    public enum conStatus
+    {
+        Pending,
+        Accepted,
+        Rejected
+    }
+
     public static class BorrowStatus
     {
         public const string Active = "Active";
@@ -501,4 +508,30 @@ namespace SchoolTimetable.Models
             }
         }
     }
+
+    public class Consultation
+    {
+        [Key]
+        public int Id { get; set; }
+        public conStatus status { get; set; } = conStatus.Pending;
+        public DateTime date { get; set; }
+        public DateTime time { get; set; }
+        public string grade { get; set; }
+      
+        public string subject { get; set; }
+        
+        public int? ParentId { get; set; }
+        public string reason { get; set; }
+        public int TeacherSubjectId { get; set; }
+        public int ClassId { get; set; }
+
+        [ForeignKey("TeacherSubjectId")]
+        public virtual TeacherSubject TeacherSubject { get; set; }
+        [ForeignKey("ClassId")]
+        public virtual SchoolClass Class { get; set; }
+
+        [ForeignKey("ParentId")]
+        public virtual Parent Parent { get; set; }
+
+    } 
 }

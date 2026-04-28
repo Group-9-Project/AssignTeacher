@@ -173,6 +173,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\BorrowingsController.cs" />
+    <Compile Include="Controllers\ConsultationsController.cs" />
     <Compile Include="Controllers\Entrance_testController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LibrarianController.cs" />
@@ -351,6 +352,18 @@
     <Compile Include="Migrations\202604260041560_UpdateParentFields.Designer.cs">
       <DependentUpon>202604260041560_UpdateParentFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202604271256287_Consultation.cs" />
+    <Compile Include="Migrations\202604271256287_Consultation.Designer.cs">
+      <DependentUpon>202604271256287_Consultation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202604271425392_InitialConsultation.cs" />
+    <Compile Include="Migrations\202604271425392_InitialConsultation.Designer.cs">
+      <DependentUpon>202604271425392_InitialConsultation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202604271536248_InitialConsultation1.cs" />
+    <Compile Include="Migrations\202604271536248_InitialConsultation1.Designer.cs">
+      <DependentUpon>202604271536248_InitialConsultation1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbcontext.cs" />
     <Compile Include="Models\DashboardViewModel.cs" />
@@ -388,7 +401,6 @@
     <Content Include="Views\Teachers\Announcements.cshtml" />
     <Content Include="Views\Teachers\UploadMaterial.cshtml" />
     <Content Include="Views\Teachers\CreateAnnouncement.cshtml" />
-    <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\Parents\Register.cshtml" />
     <Content Include="Views\Parents\ResetPassword.cshtml" />
     <Content Include="Views\Parents\Index.cshtml" />
@@ -439,6 +451,10 @@
     <Content Include="Views\OnlineClass\Index.cshtml" />
     <Content Include="Views\OnlineClass\Meeting.cshtml" />
     <Content Include="Views\Parents\ForgotPassword.cshtml" />
+    <Content Include="Views\Consultation\RequestConsultation.cshtml" />
+    <Content Include="Views\Consultation\Manage.cshtml" />
+    <Content Include="Views\Consultation\MyRequests.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -575,6 +591,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202604260041560_UpdateParentFields.resx">
       <DependentUpon>202604260041560_UpdateParentFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202604271256287_Consultation.resx">
+      <DependentUpon>202604271256287_Consultation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202604271425392_InitialConsultation.resx">
+      <DependentUpon>202604271425392_InitialConsultation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202604271536248_InitialConsultation1.resx">
+      <DependentUpon>202604271536248_InitialConsultation1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

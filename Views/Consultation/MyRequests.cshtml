@@ -1,0 +1,81 @@
+﻿@model IEnumerable<SchoolTimetable.Models.Consultation>
+
+@{
+    Layout = null;
+    ViewBag.Title = "My Consultation Requests";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Consultation History</h2>
+        <a href="@Url.Action("RequestConsultation", "Consultation")" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> New Request
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Teacher & Subject</th>
+                        <th>Class</th>
+                        <th>Scheduled Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Reason for Visit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                You haven't requested any consultations yet.
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@item.TeacherSubject.Teacher.FullName</strong><br />
+                                <small class="text-muted">@item.TeacherSubject.Subject.Name</small>
+                            </td>
+                            <td>@item.Class.Name</td>
+                            <td>@item.date.ToLongDateString()</td>
+                            <td>@item.time.ToShortTimeString()</td>
+                            <td>
+                                @if (item.status == SchoolTimetable.Models.conStatus.Pending)
+                                {
+                                    <span class="badge rounded-pill bg-warning text-dark">Pending</span>
+                                }
+                                else if (item.status == SchoolTimetable.Models.conStatus.Accepted)
+                                {
+                                    <span class="badge rounded-pill bg-success">Accepted</span>
+                                }
+                                else
+                                {
+                                    <span class="badge rounded-pill bg-danger">Rejected</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="text-truncate d-inline-block" style="max-width: 200px;" title="@item.reason">
+                                    @item.reason
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
