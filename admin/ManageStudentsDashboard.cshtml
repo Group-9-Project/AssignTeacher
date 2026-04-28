@@ -1,0 +1,304 @@
+﻿@model IEnumerable<SchoolTimetable.Models.Application>
+
+@{
+    Layout = null;
+
+    // TAB 1: Everyone who is "New" and needs a decision (Accept/Reject)
+    var pendingFeedback = Model.Where(a => a.IsProcessed == false).ToList();
+
+    // TAB 2: Only those from the new list who have actually PAID the R1000
+    var paidOnly = Model.Where(a => a.IsPaid == true).ToList();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admissions Management | DGSS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            --dg-navy: #002147;
+            --dg-white: #ffffff;
+            --dg-smoke: #f8fafc;
+            --dg-border: #cbd5e1;
+            --dg-success: #15803d;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dg-smoke);
+            font-family: 'Inter', sans-serif;
+            color: var(--dg-navy);
+        }
+
+        /* Official Navy Header */
+        .admin-top-nav {
+            background: var(--dg-navy);
+            color: white;
+            padding: 0 60px;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+
+        .header-section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        /* Tabs Styling */
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tab-link {
+            padding: 15px 30px;
+            cursor: pointer;
+            background: var(--dg-white);
+            border: 1px solid var(--dg-border);
+            border-bottom: none;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            transition: 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+
+            .tab-link.active {
+                background: var(--dg-navy);
+                color: var(--dg-white);
+                border-color: var(--dg-navy);
+            }
+
+        .tab-content {
+            display: none;
+            background: var(--dg-white);
+            border: 1px solid var(--dg-border);
+            border-radius: 0 8px 8px 8px;
+            box-shadow: 0 10px 25px rgba(0,33,71,0.05);
+            overflow: hidden;
+        }
+
+            .tab-content.active {
+                display: block;
+            }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background-color: var(--dg-smoke);
+            border-bottom: 2px solid var(--dg-navy);
+        }
+
+        th {
+            padding: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: #475569;
+        }
+
+        td {
+            padding: 20px;
+            border-bottom: 1px solid var(--dg-border);
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* Component Styles */
+        .btn-action {
+            display: inline-block;
+            background: var(--dg-navy);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+            .btn-action:hover {
+                background: var(--dg-accent);
+            }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 800;
+            display: inline-block;
+        }
+
+        .paid {
+            background: #dcfce7;
+            color: var(--dg-success);
+            border: 1px solid #bbf7d0;
+        }
+
+        .mark-pill {
+            background: var(--dg-navy);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="admin-top-nav">
+        <a href="@Url.Action("Dashboard", "Admin")" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Exit to Dashboard
+        </a>
+        <div style="font-weight: 800; letter-spacing: 1px; font-size: 0.9rem;">
+            DGSS | ADMISSIONS 2026
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header-section">
+            <h2>Applications Portal</h2>
+            <p style="color: #64748b; margin-top: 5px; font-weight: 500;">Review registrations and monitor enrollment deposit status.</p>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="tab-link active" onclick="openTab(event, 'Pending')">
+                Awaiting Feedback (@pendingFeedback.Count)
+            </button>
+            <button class="tab-link" onclick="openTab(event, 'Paid')">
+                Confirmed Payments (@paidOnly.Count)
+            </button>
+        </div>
+
+        @* PENDING TAB *@
+        <div id="Pending" class="tab-content active">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Applicant Details</th>
+                        <th>Grade</th>
+                        <th>Payment</th>
+                        <th>Academic Average</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!pendingFeedback.Any())
+                    {
+                        <tr><td colspan="5" style="text-align:center; padding: 60px; color: #94a3b8;">No new applications found in the system.</td></tr>
+                    }
+                    @foreach (var item in pendingFeedback)
+                    {
+                        <tr>
+                            <td>
+                                <div style="font-weight: 800; font-size: 1rem;">@item.FirstName @item.LastName</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">Parent: @item.ParentName</div>
+                            </td>
+                            <td><span style="font-weight: 600;">Grade @item.GradeApplyingFor</span></td>
+                            <td><span class="mark-pill">@item.AverageMark%</span></td>
+                            <td style="text-align: right;">
+                                <a href="@Url.Action("ApplicationDetails", "Admin", new { id = item.Id })" class="btn-action">View Application</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* PAID TAB *@
+        <div id="Paid" class="tab-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Applicant Details</th>
+                        <th>Enrolment Fee</th>
+                        <th>Academic Average</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!paidOnly.Any())
+                    {
+                        <tr><td colspan="4" style="text-align:center; padding: 60px; color: #94a3b8;">No confirmed payments found.</td></tr>
+                    }
+                    @foreach (var item in paidOnly)
+                    {
+                        <tr>
+                            <td>
+                                <div style="font-weight: 800; font-size: 1rem;">@item.FirstName @item.LastName</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">@item.Email</div>
+                            </td>
+                            <td><span class="status-badge paid"><i class="fas fa-check-circle"></i> R1,000 RECEIVED</span></td>
+                            <td><span class="mark-pill">@item.AverageMark%</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
