@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<parameters>
-  <parameter name="SchoolTimetableContext-Web.config Connection String" description="SchoolTimetableContext Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:dgss.database.windows.net,1433;Initial Catalog=DurbanGirls;Persist Security Info=False;User ID=admin_2026;Password=Durban@30;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" tags="SqlConnectionString">
-    <parameterEntry kind="XmlFile" scope="C:\\Users\\Minenhle\ Xulu\\Desktop\\2026Project\\AssignTeacher\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='SchoolTimetableContext']/@connectionString" />
-  </parameter>
-</parameters>
