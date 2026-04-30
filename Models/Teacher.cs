@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
@@ -517,9 +518,9 @@ namespace SchoolTimetable.Models
         public DateTime date { get; set; }
         public DateTime time { get; set; }
         public string grade { get; set; }
-      
+
         public string subject { get; set; }
-        
+
         public int? ParentId { get; set; }
         public string reason { get; set; }
         public int TeacherSubjectId { get; set; }
@@ -533,5 +534,14 @@ namespace SchoolTimetable.Models
         [ForeignKey("ParentId")]
         public virtual Parent Parent { get; set; }
 
-    } 
+    }
+
+
+  
 }
+
+
+
+
+
+    
