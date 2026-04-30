@@ -30,9 +30,36 @@
             padding: 8px;
             min-height: 40px;
         }
+
+        /* print styles */
+        @@media print {
+            .no-print { display: none !important; }
+        }
+
+        .top-actions {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .download-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .download-btn:hover { background: #45a049; }
     </style>
 </head>
 <body>
+    <div class="top-actions">
+        <button class="download-btn no-print" onclick="window.print();">Download PDF</button>
+    </div>
+
     <h2>Examination timetable</h2>
 
     @if (Model == null || !Model.Any())
