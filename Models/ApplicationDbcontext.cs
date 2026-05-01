@@ -13,8 +13,8 @@ namespace SchoolTimetable.Models
         public ApplicationDbContext()
             : base("name=SchoolTimetableContext")
         {
-            // Initializer handles the seeding of your initial data
-            Database.SetInitializer(new SchoolTimetableInitializer());
+            Database.SetInitializer(new System.Data.Entity.MigrateDatabaseToLatestVersion<
+                ApplicationDbContext, AssignTeacher.Migrations.Configuration>());
         }
 
         // ── 1. ACADEMIC DBSETS ──────────────────────────────────────────────
@@ -33,6 +33,8 @@ namespace SchoolTimetable.Models
         public DbSet<Student> Students { get; set; }
         public DbSet<StudentAccount> StudentAccounts { get; set; }
         public DbSet<Consultation> consultations { get; set; }
+
+        public DbSet<ReportGeneration> ReportGenerations { get; set; }
 
         // ── 2. LIBRARY & IDENTITY DBSETS ───────────────────────────────────
         public DbSet<AppUser> AppUsers { get; set; }
@@ -69,6 +71,13 @@ namespace SchoolTimetable.Models
             modelBuilder.Entity<OnlineClass>().HasRequired(c => c.Teacher).WithMany().HasForeignKey(c => c.TeacherId).WillCascadeOnDelete(false);
             modelBuilder.Entity<ClassAttendance>().HasRequired(a => a.OnlineClass).WithMany(c => c.Attendances).HasForeignKey(a => a.ClassId).WillCascadeOnDelete(true);
             modelBuilder.Entity<ClassAttendance>().HasRequired(a => a.Student).WithMany().HasForeignKey(a => a.StudentId).WillCascadeOnDelete(false);
+
+            // Explicitly configure ReportGeneration <- StudentAccount relationship
+            // A StudentAccount has many ReportGenerations; each ReportGeneration belongs to one StudentAccount.
+            modelBuilder.Entity<ReportGeneration>()
+                .HasRequired(r => r.StudentAccount)
+                .WithMany(sa => sa.ReportGenerations)
+                .WillCascadeOnDelete(false);
 
             base.OnModelCreating(modelBuilder);
         }

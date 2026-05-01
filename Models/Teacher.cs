@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
+using System.Linq;
 
 namespace SchoolTimetable.Models
 {
@@ -77,22 +78,33 @@ namespace SchoolTimetable.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required, StringLength(100)]
         public string FullName { get; set; }
+
         [Required, StringLength(150)]
         public string Email { get; set; }
+
         [StringLength(20)]
         public string StudentNumber { get; set; }
+
         public virtual StudentAccount StudentAccount { get; set; }
+
         [Required]
         public string PasswordHash { get; set; }
+
         public UserRole Role { get; set; } = UserRole.Student;
+
         public int? Grade { get; set; }
+
         public bool IsBlocked { get; set; } = false;
+
         [StringLength(400)]
         public string BlockReason { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public virtual ICollection<Borrowing> Borrowings { get; set; }
+
+        public virtual ICollection<Borrowing> Borrowings { get; set; } = new List<Borrowing>();
     }
 
     [Table("Books")]
@@ -100,27 +112,41 @@ namespace SchoolTimetable.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required, StringLength(200)]
         public string Title { get; set; }
+
         [Required, StringLength(150)]
         public string Author { get; set; }
+
         [StringLength(20)]
         public string ISBN { get; set; }
+
         [StringLength(80)]
         public string Genre { get; set; }
+
         [StringLength(120)]
         public string Publisher { get; set; }
+
         public int? PublicationYear { get; set; }
+
         [Required, Range(0, 9999)]
-        public int TotalCopies { get; set; } = 1;
-        public int AvailableCopies { get; set; } = 1;
+        public int TotalCopies { get; set; } = 0;
+
+        [Required, Range(0, 9999)]
+        public int AvailableCopies { get; set; } = 0;
+
         [StringLength(600)]
         public string Description { get; set; }
+
         public int? MinGrade { get; set; }
         public int? MaxGrade { get; set; }
+
         public DateTime AddedAt { get; set; } = DateTime.Now;
+
         public bool IsActive { get; set; } = true;
-        public virtual ICollection<Borrowing> Borrowings { get; set; }
+
+        public virtual ICollection<Borrowing> Borrowings { get; set; } = new List<Borrowing>();
     }
 
     [Table("Borrowings")]
@@ -428,15 +454,18 @@ namespace SchoolTimetable.Models
         }
     }
 
-    [Table("StudentAccounts")]
+    [Table("StudentAccount")]
     public class StudentAccount
     {
         [Key, ForeignKey("AppUser")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
+
         [Required, Display(Name = "Student Number")]
         public string StudentNumber { get; set; }
+
         public virtual AppUser AppUser { get; set; }
+
         [Required]
         public string FirstName { get; set; }
         [Required]
@@ -453,6 +482,9 @@ namespace SchoolTimetable.Models
         public bool IsBlocked { get; set; }
         [StringLength(400)]
         public string BlockReason { get; set; }
+
+            // A student account can have many report generations
+        public virtual ICollection<ReportGeneration> ReportGenerations { get; set; } = new List<ReportGeneration>();
     }
 
     // --- INTEGRATED ONLINE CLASS MODELS ---
@@ -536,12 +568,236 @@ namespace SchoolTimetable.Models
 
     }
 
+    public class ReportGeneration
+    {
+        public enum ReportSubject
+        {
+            SelectedSubject,
+            IsiZulu,
+            EnglishFA,
+            LifeScience,
+            AgriculturalScience,
+            LifeOrientation,
+            PhysicalScience,
+            Accounting,
+            History,
+            EGD,
+            Economics,
+            BusinesStudies,
+            CAT
+        }
 
-  
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ReportId { get; set; }
+        [Required, Display(Name = "Student Number")]
+        public string StudentNumber { get; set; }
+        public virtual AppUser AppUser { get; set; }
+        [Display(Name = "Student Name")]
+        public string StudentName { get; set; }
+        public virtual StudentAccount StudentAccount { get; set; }
+        public int TeacherId { get; set; }
+        [ForeignKey("TeacherId")]
+        public virtual Teacher Teacher { get; set; }
+        [Required, Display(Name = "Subject")]
+        public ReportSubject Subject { get; set; }
+        [Required, Display(Name = "Grade")]
+        public string Grade { get; set; }
+
+        // To be entered per student subject
+        [Required]
+        [DisplayName("Assignment Mark")]
+        public int assignmentMark { get; set; }
+        [Required]
+        [DisplayName("Test 1 Mark")]
+        public int test1Mark { get; set; }
+        [Required]
+        [DisplayName("Test 2 Mark")]
+        public int test2Mark { get; set; }
+        [Required]
+        [DisplayName("Exam Mark")]
+        public int examMark { get; set; }
+
+        // calculate total mark
+        public int Descriptor { get; set; }
+        public int Descriptors()
+        {
+            int mark = (test1Mark + test2Mark + assignmentMark + examMark) / 4;
+            if (mark == 0 || mark <= 29)
+            {
+                mark = 1;
+            }
+            else if (mark == 30 || mark <= 39)
+            {
+                mark = 2;
+            }
+            else if (mark == 40 || mark <= 49)
+            {
+                mark = 3;
+            }
+            else if (mark == 50 || mark <= 59)
+            {
+                mark = 4;
+            }
+            else if (mark == 60 || mark <= 69)
+            {
+                mark = 5;
+            }
+            else if (mark == 70 || mark <= 79)
+            {
+                mark = 6;
+            }
+            else if (mark == 80 || mark <= 100)
+            {
+                mark = 7;
+            }
+
+            return mark;
+        }
+
+        // calculate exam mark
+        public int Percentage { get; set; }
+        public int percenntage()
+        {
+            int mark = examMark;
+            int percentage = (int)((mark / 100.0) * 100.0);
+            return percentage;
+        }
+
+        // calculate final percentage
+        public double FinalPercentage { get; set; }
+        public double Final()
+        {
+            double mark = test1Mark + test2Mark + assignmentMark;
+            double percentage = (mark / 300.0) * 100.0;
+            return percentage;
+        }
+
+        // calculate grade avarege
+        public double GradeAverage { get; set; }
+        public double AVG()
+        {
+            double mark = test1Mark + test2Mark + assignmentMark + examMark;
+            double percentage = (mark / 400.0) * 100.0;
+            return percentage;
+        }
+
+        // to determine grade weather pass or fail
+        public string Status { get; set; }
+        public string state()
+        {
+            if (AVG() > 50)
+            {
+                Status = "Pass!!";
+            }
+            else if (AVG() < 50)
+            {
+                Status = "Fail!!";
+            }
+
+            return Status;
+        }
+
+        // ---------- Helper methods to load related data and persist report ----------
+
+        /// <summary>
+        /// Builds a ReportGeneration object by loading related entities from the provided context.
+        /// Marks must be provided to compute averages.
+        /// </summary>
+        public static ReportGeneration CreateFromStudent(ApplicationDbContext db, string studentNumber, int teacherId, ReportSubject subject,
+            int assignmentMark, int test1Mark, int test2Mark, int examMark)
+        {
+            if (db == null) throw new ArgumentNullException(nameof(db));
+            if (string.IsNullOrWhiteSpace(studentNumber)) throw new ArgumentNullException(nameof(studentNumber));
+
+            var account = db.StudentAccounts.FirstOrDefault(sa => sa.StudentNumber == studentNumber);
+            var appUser = db.AppUsers.FirstOrDefault(u => u.StudentNumber == studentNumber);
+            var student = db.Students.FirstOrDefault(s => s.StudentNumber == studentNumber);
+            var teacher = db.Teachers.Find(teacherId);
+
+            var report = new ReportGeneration
+            {
+                StudentNumber = studentNumber,
+                AppUser = appUser,
+                StudentAccount = account,
+                StudentName = account?.FullName ?? appUser?.FullName ?? student?.FullName,
+                TeacherId = teacherId,
+                Teacher = teacher,
+                Subject = subject,
+                assignmentMark = assignmentMark,
+                test1Mark = test1Mark,
+                test2Mark = test2Mark,
+                examMark = examMark
+            };
+
+            // compute derived values
+            report.GradeAverage = report.AVG();
+            report.FinalPercentage = report.Final();
+            report.Percentage = report.percenntage();
+            report.Descriptor = report.Descriptors();
+            report.Status = report.state();
+
+            return report;
+        }
+
+        /// <summary>
+        /// Persists the report to the database and returns the saved entity with key populated.
+        /// </summary>
+        public ReportGeneration Save(ApplicationDbContext db)
+        {
+            if (db == null) throw new ArgumentNullException(nameof(db));
+            db.ReportGenerations.Add(this);
+            db.SaveChanges();
+            return this;
+        }
+
+        /// <summary>
+        /// Loads recent reports for a given student number.
+        /// </summary>
+        public static IList<ReportGeneration> LoadForStudent(ApplicationDbContext db, string studentNumber)
+        {
+            if (db == null) throw new ArgumentNullException(nameof(db));
+            if (string.IsNullOrWhiteSpace(studentNumber)) return new List<ReportGeneration>();
+
+            return db.ReportGenerations
+                     .Where(r => r.StudentNumber == studentNumber)
+                     .OrderByDescending(r => r.ReportId)
+                     .ToList();
+        }
+
+    }
+
 }
 
 
 
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
