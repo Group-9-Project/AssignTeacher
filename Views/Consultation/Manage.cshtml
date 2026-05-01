@@ -5,61 +5,206 @@
     ViewBag.Title = "Consultation Management";
 }
 
-<div class="container mt-4">
-    <h2>Consultation Requests</h2>
-    <hr />
+<!-- Custom Styles -->
+<style>
+    :root {
+        --dgss-navy: #1a237e;
+        --dgss-gold: #ffd700;
+        --dgss-light-gray: #f8f9fa;
+    }
 
-    <table class="table table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>Parent/Student</th>
-                <th>Subject</th>
-                <th>Proposed Date/Time</th>
-                <th>Reason</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Class.Name</td>
-                    <td>@item.TeacherSubject.Subject.Name</td>
-                    <td>@item.date.ToShortDateString() at @item.time.ToShortTimeString()</td>
-                    <td><small>@item.reason</small></td>
-                    <td>
-                        @if (item.status == SchoolTimetable.Models.conStatus.Pending)
-                        {<span class="badge bg-warning">Pending</span> }
-                        else if (item.status == SchoolTimetable.Models.conStatus.Accepted)
-                        { <span class="badge bg-success">Accepted</span> }
-                        else
-                        { <span class="badge bg-danger">Rejected</span>}
-                    </td>
-                    <td>
-                        @if (item.status == SchoolTimetable.Models.conStatus.Pending)
+    body {
+        background-color: var(--dgss-light-gray);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .card-header-custom {
+        background-color: var(--dgss-navy);
+        color: white;
+        border-bottom: 3px solid var(--dgss-gold);
+        padding: 1.2rem 1.5rem;
+    }
+
+    .btn-back {
+        color: var(--dgss-navy);
+        text-decoration: none;
+        font-weight: 500;
+        transition: 0.2s;
+    }
+
+        .btn-back:hover {
+            color: #000;
+            transform: translateX(-3px);
+        }
+
+    .consultation-card {
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .table thead {
+        background-color: #f1f3f5;
+        color: var(--dgss-navy);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.5em 1em;
+        border-radius: 50px;
+    }
+
+    .proposal-box {
+        font-size: 0.8rem;
+        border: 1px dashed #ccc;
+        padding: 8px;
+        border-radius: 8px;
+        background-color: #fff;
+    }
+</style>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="@Url.Action("Dashboard", "Teachers")" class="btn-back">
+            <i class="bi bi-arrow-left-circle-fill me-2"></i>Back to Dashboard
+        </a>
+        <span class="text-muted small">Academic Year 2026</span>
+    </div>
+
+    <div class="card consultation-card">
+        <div class="card-header-custom d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="mb-0">Consultation Requests</h3>
+                <small class="text-white-50">Durban Girls Secondary School Portal</small>
+            </div>
+            <i class="bi bi-people-fill fs-2"></i>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Parent/Student</th>
+                            <th>Subject</th>
+                            <th>Parent's Request</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th class="text-center pe-4">Action / Response</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
                         {
-                            using (Html.BeginForm("Respond", "Consultation", FormMethod.Post, new { @class = "d-inline" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="id" value="@item.Id" />
+                            <tr>
+                                <td class="ps-4">
+                                    @if (item.Parent != null)
+                                    {
+                                        <span class="fw-bold d-block text-navy">@item.Parent.FullName</span>
+                                        <small class="text-muted">Class: @item.Class.Name</small>
+                                    }
+                                    else
+                                    {
+                                        <span class="fw-bold d-block text-navy">@item.Class.Name</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="text-secondary">@item.TeacherSubject.Subject.Name</span>
+                                </td>
+                                <td>
+                                    <div class="small fw-bold text-dark">@item.date.ToShortDateString()</div>
+                                    <div class="text-muted x-small">@item.time.ToShortTimeString()</div>
+                                </td>
+                                <td>
+                                    <div class="p-2 bg-light border-start border-3 border-navy small rounded">
+                                        @item.reason
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.status == SchoolTimetable.Models.conStatus.Pending)
+                                    {<span class="badge status-badge bg-warning text-dark">Pending</span> }
+                                    else if (item.status == SchoolTimetable.Models.conStatus.Accepted)
+                                    { <span class="badge status-badge bg-success">Accepted</span> }
+                                    else
+                                    { <span class="badge status-badge bg-danger">Rejected</span>}
+                                </td>
+                                <td class="pe-4 text-center" style="min-width: 220px;">
+                                    @if (item.status == SchoolTimetable.Models.conStatus.Pending)
+                                    {
+                                        // Added onsubmit check to validate rejections
+                                        using (Html.BeginForm("Respond", "Consultation", FormMethod.Post, new { @class = "row g-1", onsubmit = "return validateSubmission(this);" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
 
-                                <div class="input-group input-group-sm mb-1">
-                                    <input type="date" name="confirmedDate" class="form-control" title="Confirm Date" />
-                                    <input type="time" name="confirmedTime" class="form-control" title="Confirm Time" />
-                                </div>
+                                            // Store original values for comparison
+                                            <input type="hidden" class="orig-date" value="@item.date.ToString("yyyy-MM-dd")" />
+                                            <input type="hidden" class="orig-time" value="@item.time.ToString(@"hh\:mm")" />
 
-                                <button type="submit" name="decision" value="Accept" class="btn btn-sm btn-success">Accept</button>
-                                <button type="submit" name="decision" value="Reject" class="btn btn-sm btn-outline-danger">Reject</button>
-                            }
+                                            <div class="col-12 mb-1">
+                                                <div class="input-group input-group-sm">
+                                                    <input type="date" name="confirmedDate" class="form-control" value="@item.date.ToString("yyyy-MM-dd")" required />
+                                                    <input type="time" name="confirmedTime" class="form-control" value="@item.time.ToString(@"hh\:mm")" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <button type="submit" name="decision" value="Accept" class="btn btn-sm btn-success w-100 shadow-sm">Accept</button>
+                                            </div>
+                                            <div class="col-6">
+                                                <button type="submit" name="decision" value="Reject" class="btn btn-sm btn-outline-danger w-100 shadow-sm">Reject</button>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="proposal-box mx-auto" style="max-width: 180px;">
+                                            @if (item.status == SchoolTimetable.Models.conStatus.Accepted)
+                                            {
+                                                <div class="text-success small fw-bold"><i class="bi bi-check2-circle me-1"></i>Confirmed For:</div>
+                                            }
+                                            else
+                                            {
+                                                <div class="text-danger small fw-bold"><i class="bi bi-calendar-x me-1"></i>You Proposed:</div>
+                                            }
+                                            <div class="fw-bold text-navy mt-1">@item.date.ToShortDateString()</div>
+                                            <div class="text-muted small">at @item.time.ToShortTimeString()</div>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
                         }
-                        else
-                        {
-                            <span class="text-muted">Processed</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    function validateSubmission(form) {
+        // Find which button was clicked
+        var buttonValue = event.submitter.value;
+
+        if (buttonValue === "Reject") {
+            var inputDate = form.querySelector('input[name="confirmedDate"]').value;
+            var inputTime = form.querySelector('input[name="confirmedTime"]').value;
+            var origDate = form.querySelector('.orig-date').value;
+            var origTime = form.querySelector('.orig-time').value;
+
+            // If the date and time match the original request, stop the rejection
+            if (inputDate === origDate && inputTime === origTime) {
+                alert("Please enter your preferred time");
+                return false;
+            }
+        }
+        return true;
+    }
+</script>

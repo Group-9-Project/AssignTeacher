@@ -68,12 +68,14 @@ namespace SchoolTimetable.Controllers
         {
             int? userId = GetCurrentUserId();
             if (userId == null) return RedirectToLogin();
+
             var list = db.consultations
-            .Include(c => c.TeacherSubject.Subject)
-            .Include(c => c.Class)
-            .Where(c => c.TeacherSubject.TeacherId == userId)
-            .OrderByDescending(c => c.date)
-            .ToList();
+                .Include(c => c.Parent)
+                .Include(c => c.TeacherSubject.Subject)
+                .Include(c => c.Class)
+                .Where(c => c.TeacherSubject.TeacherId == userId)
+                .OrderByDescending(c => c.date)
+                .ToList();
 
             return View(list);
         }
