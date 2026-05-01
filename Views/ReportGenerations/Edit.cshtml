@@ -1,0 +1,234 @@
+﻿@model SchoolTimetable.Models.ReportGeneration
+
+@{
+    Layout = null;
+    ViewBag.Title = "Edit Report";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #d4e0f1;
+            font-family: Arial, sans-serif;
+            color: #222;
+            padding-bottom: 40px;
+        }
+
+        .header {
+            background-color: #f0f4f8;
+            padding: 18px 20px;
+            text-align: center;
+            border-bottom: 3px solid #0d2b73;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .header-logo img { height: 72px; width: auto; display:block; }
+
+        .header-text h1 {
+            margin: 0;
+            color: #0d2b73;
+            font-size: 30px;
+            font-weight: 700;
+        }
+        .header-text p { margin: 6px 0 0 0; color: #0d2b73; font-size: 14px; }
+
+        .container-custom {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 26px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .form-section { margin-bottom: 18px; }
+
+        .form-row { display: flex; gap: 28px; margin-bottom: 18px; flex-wrap: wrap; align-items: flex-end; }
+        .form-row-two-col { display:flex; gap: 60px; margin-bottom:18px; flex-wrap:wrap; }
+        .form-row-three-col { display:flex; gap: 40px; margin-bottom:18px; flex-wrap:wrap; }
+        .form-row-four-col { display:flex; gap: 20px; margin-bottom:18px; flex-wrap:wrap; }
+
+        .form-group-custom { display:flex; flex-direction:column; min-width:160px; }
+        .form-group-custom label { font-weight:700; color:#0d2b73; margin-bottom:6px; font-size:13px; }
+        .form-group-custom input,
+        .form-group-custom select { padding:10px 8px; font-size:14px; border:1px solid #cfdbe9; border-radius:4px; background:#fff; width:220px; }
+        .form-group-custom input:focus,
+        .form-group-custom select:focus { outline:none; border-color:#0d2b73; background:#fbfdff; }
+
+        .center-heading { text-align:center; color:#4169e1; font-size:18px; font-weight:700; margin:18px 0; }
+
+        .button-row { display:flex; gap:18px; justify-content:center; margin-top:18px; flex-wrap:wrap; }
+        .btn-custom { padding:10px 28px; font-weight:700; border-radius:6px; cursor:pointer; border:2px solid #0d2b73; background:#fff; color:#0d2b73; transition:all .2s; }
+        .btn-custom:hover { background:#0d2b73; color:#fff; }
+
+        .validation-summary { color:#d32f2f; margin-bottom:14px; padding:10px; background:#fff1f1; border-left:4px solid #d32f2f; border-radius:4px; }
+
+        .back-link { text-align:center; margin-top:12px; }
+        .back-link a { color:#0d2b73; font-weight:700; text-decoration:none; }
+        .back-link a:hover { text-decoration:underline; }
+
+        .footer { background-color:#0d2b73; color:#fff; padding:18px 20px; margin-top:24px; border-radius:4px; }
+        .footer-content { max-width:1000px; margin:0 auto; }
+        .footer-title { font-weight:700; margin-bottom:8px; }
+        .footer-info { font-size:13px; line-height:1.6; }
+
+        media (max-width: 720px) {
+            .form-group-custom input, .form-group-custom select { width:100%; }
+            .form-row-two-col, .form-row-three-col { gap:18px; }
+            .container-custom { padding:18px; margin:16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-logo">
+            <img src="https://tse3.mm.bing.net/th/id/OIP.4F7suouXbLCmtrEpz8RoXAHaCD?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo" />
+        </div>
+        <div class="header-text">
+            <h1>Report Generation</h1>
+            <p>Edit Student Report</p>
+        </div>
+    </div>
+
+    <div class="container-custom">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            if (ViewData.ModelState.Values.Any(x => x.Errors.Count > 0))
+            {
+                <div class="validation-summary">
+                    @Html.ValidationSummary(true, "Please correct the errors below:")
+                </div>
+            }
+
+            @Html.HiddenFor(m => m.ReportId)
+
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.StudentNumber)
+                        @Html.EditorFor(m => m.StudentNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.StudentNumber, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.StudentName)
+                        @Html.EditorFor(m => m.StudentName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.StudentName, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.Grade)
+                        @Html.EditorFor(m => m.Grade, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Grade, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="center-heading">Update Marks and Details</div>
+
+                <div class="form-row">
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.Subject)
+                        @Html.EnumDropDownListFor(m => m.Subject, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Subject, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.TeacherId, "Teacher")
+                        @Html.DropDownList("TeacherId", ViewBag.TeacherId as SelectList, "-- Select Teacher --", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.TeacherId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-row-four-col">
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.assignmentMark, "Assignment")
+                        @Html.EditorFor(m => m.assignmentMark, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                        @Html.ValidationMessageFor(m => m.assignmentMark, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.test1Mark, "Test 1")
+                        @Html.EditorFor(m => m.test1Mark, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                        @Html.ValidationMessageFor(m => m.test1Mark, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.test2Mark, "Test 2")
+                        @Html.EditorFor(m => m.test2Mark, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                        @Html.ValidationMessageFor(m => m.test2Mark, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.examMark, "Exam")
+                        @Html.EditorFor(m => m.examMark, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                        @Html.ValidationMessageFor(m => m.examMark, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-row-three-col">
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.Descriptor)
+                        @Html.EditorFor(m => m.Descriptor, new { htmlAttributes = new { @class = "form-control", type = "number", min = "1", max = "7" } })
+                        @Html.ValidationMessageFor(m => m.Descriptor, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.Percentage)
+                        @Html.EditorFor(m => m.Percentage, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", max = "100" } })
+                        @Html.ValidationMessageFor(m => m.Percentage, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.FinalPercentage)
+                        @Html.EditorFor(m => m.FinalPercentage, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", max = "100", step = "0.1" } })
+                        @Html.ValidationMessageFor(m => m.FinalPercentage, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-row-two-col">
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.GradeAverage)
+                        @Html.EditorFor(m => m.GradeAverage, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.1" } })
+                        @Html.ValidationMessageFor(m => m.GradeAverage, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group-custom">
+                        @Html.LabelFor(m => m.Status)
+                        @Html.EditorFor(m => m.Status, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button type="submit" class="btn-custom">Save Changes</button>
+                    <button type="button" class="btn-custom" onclick="location.href='@Url.Action("Index")'">Back to List</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="container-custom" style="margin-top:12px; background:transparent; box-shadow:none; padding:0;">
+        <div class="footer" style="border-radius:6px;">
+            <div class="footer-content">
+                <div class="footer-title">Durban Girls Secondary School</div>
+                <div class="footer-info">
+                    📍 165 Helen Street, Durban, South Africa, 4001<br />
+                    📞 +27 31 305 3163<br />
+                    ✉️ info@durbangirlsschool.co.za
+                </div>
+                <div style="text-align:center; margin-top:10px; font-size:13px;">© 2026 Durban Girls Secondary School</div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+</body>
+</html>

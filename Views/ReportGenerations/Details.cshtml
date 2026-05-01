@@ -1,0 +1,262 @@
+﻿@model SchoolTimetable.Models.ReportGeneration
+
+@{
+    Layout = null;
+    ViewBag.Title = "Details";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            background-color: #d4e0f1;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: #222;
+        }
+
+        .header {
+            background-color: #f0f4f8;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #0d2b73;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .header-logo img {
+            height: 80px;
+            width: auto;
+            display: block;
+        }
+
+        .page-title {
+            background-color: #d4e0f1;
+            padding: 18px;
+            text-align: center;
+            color: #4169e1;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 16px 40px;
+        }
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-top: 3px solid #0d2b73;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        .student-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0d2b73;
+        }
+
+        .student-info {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .info-item {
+            text-align: right;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 700;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #0d2b73;
+            font-weight: 700;
+        }
+
+        .marks-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+            .marks-table thead {
+                background: #0d2b73;
+                color: #fff;
+            }
+
+                .marks-table thead th {
+                    padding: 14px 12px;
+                    font-size: 13px;
+                    text-align: left;
+                    border-right: 1px solid rgba(255,255,255,0.06);
+                }
+
+                    .marks-table thead th:last-child {
+                        border-right: none;
+                    }
+
+            .marks-table tbody td {
+                padding: 18px 12px;
+                border-bottom: 1px solid #eef3fb;
+                font-size: 14px;
+                vertical-align: middle;
+            }
+
+        .button-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 22px;
+        }
+
+        .btn-action {
+            background: #0d2b73;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .btn-edit {
+            background: #4169e1;
+        }
+
+        .btn-action:hover {
+            opacity: 0.95;
+        }
+
+        .footer {
+            background: #0d2b73;
+            color: #fff;
+            padding: 20px;
+            margin-top: 28px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .footer-info {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .footer-copyright {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-logo">
+                <img src="https://tse3.mm.bing.net/th/id/OIP.4F7suouXbLCmtrEpz8RoXAHaCD?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo" />
+            </div>
+            <div class="header-text">
+                <h1 style="color:#0d2b73;margin:0;font-size:24px;">Report Generation</h1>
+                <p style="color:#0d2b73;margin:4px 0 0 0;font-size:14px;">Student Mark Report</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-title">Student Mark Report</div>
+
+    <div class="main-content">
+        <div class="student-header">
+            <div class="student-name">@Html.DisplayFor(m => m.StudentName)</div>
+            <div class="student-info">
+                <div class="info-item">
+                    <div class="info-label">Student Number</div>
+                    <div class="info-value">@Html.DisplayFor(m => m.StudentNumber)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade</div>
+                    <div class="info-value">@Html.DisplayFor(m => m.Grade)</div>
+                </div>
+            </div>
+        </div>
+
+        <table class="marks-table" role="table">
+            <thead>
+                <tr>
+                    <th>Teacher</th>
+                    <th>Subject</th>
+                    <th>Assignment</th>
+                    <th>Test 1</th>
+                    <th>Test 2</th>
+                    <th>Exam</th>
+                    <th>Descriptor</th>
+                    <th>Exam %</th>
+                    <th>Final %</th>
+                    <th>Grade Avg %</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@(Model.Teacher != null ? (Model.Teacher.FirstName + " " + Model.Teacher.LastName) : "-")</td>
+                    <td>@Html.DisplayFor(m => m.Subject)</td>
+                    <td>@Html.DisplayFor(m => m.assignmentMark)</td>
+                    <td>@Html.DisplayFor(m => m.test1Mark)</td>
+                    <td>@Html.DisplayFor(m => m.test2Mark)</td>
+                    <td>@Html.DisplayFor(m => m.examMark)</td>
+                    <td>@Html.DisplayFor(m => m.Descriptor)</td>
+                    <td>@Html.DisplayFor(m => m.Percentage)</td>
+                    <td>@Html.DisplayFor(m => m.FinalPercentage)</td>
+                    <td>@Html.DisplayFor(m => m.GradeAverage)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="button-container">
+            @Html.ActionLink("Edit", "Edit", new { id = Model.ReportId }, new { @class = "btn-action btn-edit" })
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn-action" })
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-title">Durban Girls Secondary School</div>
+            <div class="footer-info">
+                <div>📍 165 Helen Street, Durban, South Africa, 4001</div>
+                <div>📞 +27 31 305 3163</div>
+                <div>✉️ info@durbangirlsschool.co.za</div>
+            </div>
+            <div class="footer-copyright">© 2026 Durban Girls Secondary School</div>
+        </div>
+    </div>
+</body>
+</html>
