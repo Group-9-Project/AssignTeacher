@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Mlu\\Downloads\\gfg\\AssignTeacher\\AssignTeacher\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|c:\\users\\mlu\\downloads\\gfg\\assignteacher\\assignteacher\\views\\admin\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|solutionrelative:views\\admin\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|c:\\users\\mlu\\downloads\\gfg\\assignteacher\\assignteacher\\views\\admin\\allocatestudents.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9102781C-A99A-4B6C-9616-B728F56D4740}|SchoolTimetable.csproj|solutionrelative:views\\admin\\allocatestudents.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Dashboard.cshtml",
+              "DocumentMoniker": "C:\\Users\\Mlu\\Downloads\\gfg\\AssignTeacher\\AssignTeacher\\Views\\Admin\\Dashboard.cshtml",
+              "RelativeDocumentMoniker": "Views\\Admin\\Dashboard.cshtml",
+              "ToolTip": "C:\\Users\\Mlu\\Downloads\\gfg\\AssignTeacher\\AssignTeacher\\Views\\Admin\\Dashboard.cshtml*",
+              "RelativeToolTip": "Views\\Admin\\Dashboard.cshtml*",
+              "ViewState": "AgIAAOcAAAAAAAAAAAAAAAIBAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-28T21:50:08.01Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AllocateStudents.cshtml",
+              "DocumentMoniker": "C:\\Users\\Mlu\\Downloads\\gfg\\AssignTeacher\\AssignTeacher\\Views\\Admin\\AllocateStudents.cshtml",
+              "RelativeDocumentMoniker": "Views\\Admin\\AllocateStudents.cshtml",
+              "ToolTip": "C:\\Users\\Mlu\\Downloads\\gfg\\AssignTeacher\\AssignTeacher\\Views\\Admin\\AllocateStudents.cshtml*",
+              "RelativeToolTip": "Views\\Admin\\AllocateStudents.cshtml*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-28T21:40:26.032Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

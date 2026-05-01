@@ -1,0 +1,224 @@
+﻿@model IEnumerable<SchoolTimetable.Models.ReportGeneration>
+
+@{
+    Layout = null;
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body { height: 100%; background-color: #d4e0f1; }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            color: #222;
+        }
+
+        .header {
+            background-color: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #0d2b73;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .header-logo img { height: 80px; width: auto; }
+
+        .page-title {
+            background-color: #d4e0f1;
+            padding: 20px;
+            text-align: center;
+            color: #4169e1;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .main-content { flex: 1; background-color: #d4e0f1; padding: 20px; }
+
+        .table-container {
+            background-color: #d4e0f1;
+            overflow-x: auto;
+            margin: 0 auto;
+            max-width: 1400px;
+        }
+
+        .table-styled {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .table-styled thead {
+            background-color: #0d2b73;
+            color: #fff;
+        }
+
+        .table-styled thead th {
+            padding: 12px 10px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            border-right: 1px solid #0a1f52;
+        }
+
+        .table-styled thead th:last-child { border-right: none; }
+
+        .table-styled tbody td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e9eef8;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .table-styled tbody tr:hover { background-color: #f5f7fb; }
+
+        .create-button-container { text-align: center; margin-bottom: 20px; }
+
+        .create-button {
+            background-color: #0d2b73;
+            color: #fff;
+            padding: 10px 30px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+            display: inline-block;
+            transition: background-color 0.25s;
+        }
+
+        .create-button:hover { background-color: #0a1f52; }
+
+        .edit-link { color: #0d2b73; text-decoration: none; font-weight: bold; }
+        .edit-link:hover { text-decoration: underline; }
+
+        .footer {
+            background-color: #0d2b73;
+            color: #fff;
+            padding: 20px;
+            text-align: left;
+        }
+
+        .footer-content { max-width: 1400px; margin: 0 auto; }
+
+        .footer-title { font-weight: bold; margin-bottom: 8px; font-size: 14px; }
+        .footer-info { font-size: 12px; line-height: 1.6; }
+        .footer-copyright { text-align: center; font-size: 12px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 10px; }
+
+        .no-data { text-align: center; padding: 40px; color: #666; font-size: 16px; }
+
+        media (max-width: 960px) {
+            .table-styled thead th { font-size: 11px; padding: 10px 8px; }
+            .table-styled tbody td { font-size: 12px; padding: 10px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-logo">
+                <img src="https://tse3.mm.bing.net/th/id/OIP.4F7suouXbLCmtrEpz8RoXAHaCD?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo" />
+            </div>
+            <div class="header-text">
+                <h1 style="color:#0d2b73; font-size:28px; margin:0;">Report Generation</h1>
+                <p style="color:#0d2b73; margin:4px 0 0 0;">Student Marks and Reports</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-title">Student Mark Report</div>
+
+    <div class="main-content">
+        <div class="create-button-container">
+            @Html.ActionLink("Create New", "Create", null, new { @class = "create-button" })
+        </div>
+
+        <div class="table-container">
+            @if (Model != null && Model.Any())
+            {
+                <table class="table-styled">
+                    <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Student Number</th>
+                            <th>Student Name</th>
+                            <th>Grade</th>
+                            <th>Subject</th>
+                            <th>Assignment</th>
+                            <th>Test 1</th>
+                            <th>Test 2</th>
+                            <th>Exam</th>
+                            <th>Descriptor</th>
+                            <th>Exam %</th>
+                            <th>Final %</th>
+                            <th>Grade Avg %</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@(item.Teacher != null ? (item.Teacher.FirstName + " " + item.Teacher.LastName) : "-")</td>
+                                <td>@Html.DisplayFor(modelItem => item.StudentNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.StudentName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Grade)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                                <td>@Html.DisplayFor(modelItem => item.assignmentMark)</td>
+                                <td>@Html.DisplayFor(modelItem => item.test1Mark)</td>
+                                <td>@Html.DisplayFor(modelItem => item.test2Mark)</td>
+                                <td>@Html.DisplayFor(modelItem => item.examMark)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Descriptor)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Percentage)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FinalPercentage)</td>
+                                <td>@Html.DisplayFor(modelItem => item.GradeAverage)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.ReportId }, new { @class = "edit-link" }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.ReportId }, new { @class = "edit-link" }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.ReportId }, new { @class = "edit-link" })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="no-data">
+                    <p>No student records found. @Html.ActionLink("Create one now!", "Create")</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-title">Durban Girls Secondary School</div>
+            <div class="footer-info">
+                <div>📍 165 Helen Street, Durban, South Africa, 4001</div>
+                <div>📞 +27 31 305 3163</div>
+                <div>✉️ info@durbangirlsschool.co.za</div>
+            </div>
+            <div class="footer-copyright">
+                © 2026 Durban Girls Secondary School
+            </div>
+        </div>
+    </div>
+</body>
+</html>
