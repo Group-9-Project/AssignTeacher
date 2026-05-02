@@ -8,6 +8,7 @@ using System.Data.Entity;
 
 namespace Setup_Examination_timetable.Models
 {
+    [Table("Setup_exam_time")]
     public class Setup_exam_time
     {
         [Key]
@@ -23,12 +24,6 @@ namespace Setup_Examination_timetable.Models
         public string Exam_Endtime { get; set; }
         [Required]
         public DateTime Exam_date { get; set; }
-
-        // New field to represent Grade (replaces Level/Qualification concepts)
         public string Grade { get; set; }
-    }
-    public class SetupExamTimeContext : DbContext
-    {
-        public DbSet<Setup_exam_time> SetupExamTimes { get; set; }
     }
 }

@@ -7,13 +7,13 @@ namespace AssignTeacher.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class sibongakonke : IMigrationMetadata
+    public sealed partial class RemoveGrade : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(sibongakonke));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(RemoveGrade));
         
         string IMigrationMetadata.Id
         {
-            get { return "202605011440120_sibongakonke"; }
+            get { return "202605012341247_RemoveGrade"; }
         }
         
         string IMigrationMetadata.Source

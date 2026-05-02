@@ -1,645 +1,423 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-    <title>Exam Timetable Studio | Setup</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exam Timetable Studio</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
+        /* --- CORE RESET --- */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #f8fafc !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        :root {
+            --navy-primary: #0f172a;
+            --navy-dark: #020617;
+            --accent-blue: #2563eb;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --radius: 12px;
+            /* Grade Colors */
+            --g8: #ef4444;
+            --g9: #f59e0b;
+            --g10: #10b981;
+            --g11: #3b82f6;
+            --g12: #8b5cf6;
+        }
+
+        .studio-container {
+            padding: 1.5rem;
+            width: 100%;
             box-sizing: border-box;
         }
 
-        body {
-            background: #f0f2f8;
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            padding: 32px 28px;
-            color: #1a2634;
-        }
-
-        /* main container */
-        .dashboard-container {
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        /* header zone */
-        .page-header {
+        /* --- NAVBAR --- */
+        .studio-navbar {
+            background: var(--white);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
-            flex-wrap: wrap;
-            margin-bottom: 28px;
-            background: white;
-            padding: 20px 28px;
-            border-radius: 28px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.05);
-            border: 1px solid #eef2f6;
-        }
-
-        .title-section h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #1F2B3C, #2C3E4E);
-            color: transparent;
-            letter-spacing: -0.3px;
-        }
-
-        .title-section p {
-            color: #5d6f83;
-            font-size: 0.9rem;
-            margin-top: 6px;
-        }
-
-        .action-links {
-            display: flex;
-            gap: 18px;
-        }
-
-        .publish-link {
-            background: #eef2ff;
-            padding: 10px 20px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: #1f4f8a;
-            transition: all 0.2s;
-            display: inline-flex;
             align-items: center;
-            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+            border-radius: var(--radius);
         }
 
-            .publish-link i {
-                font-size: 0.9rem;
-            }
-
-            .publish-link:hover {
-                background: #e0e7fc;
-                color: #0a3a62;
-                transform: translateY(-1px);
-            }
-
-        /* control cards */
-        .controls-panel {
-            background: white;
-            border-radius: 26px;
-            padding: 24px 28px;
-            margin-bottom: 32px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.05);
-            border: 1px solid #eef2f6;
+        .studio-logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--navy-primary);
+            letter-spacing: -0.5px;
         }
 
-        .row-flex {
+        /* --- CONTROL PANEL --- */
+        .control-panel {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .control-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 18px;
+            gap: 1.5rem;
             align-items: flex-end;
-            justify-content: space-between;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 0.5rem;
         }
 
             .input-group label {
-                font-size: 0.75rem;
-                font-weight: 600;
+                font-size: 0.7rem;
+                font-weight: 700;
                 text-transform: uppercase;
-                letter-spacing: 0.5px;
-                color: #4b5e74;
+                color: #64748b;
             }
 
             .input-group input {
-                padding: 10px 14px;
-                border-radius: 18px;
-                border: 1px solid #cfdee9;
-                font-family: 'Inter', monospace;
-                font-size: 0.85rem;
-                background: #ffffff;
-                transition: 0.15s;
+                padding: 0.7rem;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                font-size: 0.9rem;
+                outline: none;
             }
 
                 .input-group input:focus {
-                    outline: none;
-                    border-color: #3b82f6;
-                    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+                    border-color: var(--accent-blue);
                 }
 
+        /* --- BUTTONS --- */
+        .btn-flex {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+
         .btn {
-            border: none;
-            font-family: 'Inter', sans-serif;
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
             font-weight: 600;
-            padding: 10px 22px;
-            border-radius: 36px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
             font-size: 0.85rem;
-            background: #f1f5f9;
-            color: #1f3a4b;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
         }
 
-        .btn-primary {
-            background: #1f4f8a;
+        .btn-navy {
+            background: var(--navy-primary);
             color: white;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
-            .btn-primary:hover {
-                background: #123b66;
+            .btn-navy:hover {
+                background: var(--navy-dark);
                 transform: translateY(-1px);
-                box-shadow: 0 6px 14px rgba(31,79,138,0.2);
             }
 
-        .btn-outline-accent {
+        .btn-outline {
             background: white;
-            border: 1px solid #bfd6e8;
-            color: #2c5a7a;
+            border: 1px solid var(--border-color);
+            color: var(--navy-primary);
         }
 
-            .btn-outline-accent:hover {
-                background: #eef5fc;
-                border-color: #7899b5;
+            .btn-outline:hover {
+                background: #f1f5f9;
             }
 
-        .btn-save {
-            background: #0f5c3e;
-            color: white;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-            .btn-save:hover {
-                background: #0a4630;
-                transform: translateY(-1px);
-            }
-
-        .action-group {
+        /* THE REMOVE ICON BUTTON */
+        .btn-remove {
+            background: #fee2e2;
+            color: #ef4444;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            position: absolute;
+            top: 12px;
+            right: 12px;
         }
 
-        /* columns wrapper */
-        .table-wrapper {
-            background: white;
-            border-radius: 28px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+            .btn-remove:hover {
+                background: #ef4444;
+                color: white;
+            }
+
+        /* --- TIMETABLE GRID --- */
+        .timetable-canvas {
+            display: flex;
+            gap: 1.5rem;
             overflow-x: auto;
-            padding: 16px;
-            border: 1px solid #eef2f6;
-        }
-
-        .columns-wrapper {
-            display: flex;
-            gap: 18px;
-            align-items: flex-start;
-            min-height: 220px;
+            padding-bottom: 2rem;
+            width: 100%;
         }
 
         .session-column {
-            width: 280px;
-            background: #fbfdff;
-            border-radius: 16px;
-            border: 1px solid #e6eef5;
-            display: flex;
-            flex-direction: column;
+            min-width: 320px;
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             overflow: hidden;
-            box-shadow: 0 6px 18px rgba(20,40,60,0.03);
         }
 
-        .session-header {
-            padding: 12px 14px;
-            background: linear-gradient(180deg, #f8fbff, #ffffff);
-            border-bottom: 1px solid #e6eef5;
+        .column-header {
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
         }
 
-            .session-header .session-date {
-                font-weight: 700;
-                font-size: 0.9rem;
-                color: #0f2b3f;
+            .column-header .date {
+                font-weight: 800;
+                font-size: 1rem;
+                color: var(--navy-primary);
             }
 
-            .session-header .session-time {
-                font-weight: 400;
-                font-size: 0.75rem;
-                color: #4a627a;
+            .column-header .time {
+                font-size: 0.8rem;
+                color: #64748b;
+                font-weight: 500;
                 margin-top: 4px;
             }
 
-        .session-slots {
-            padding: 12px;
+        .card-list {
+            padding: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 1rem;
         }
 
-        .subject-slot {
+        /* --- EXAM CARD --- */
+        .exam-card {
             background: #ffffff;
-            padding: 10px;
-            border-radius: 12px;
-            border: 1px solid #e8f0f6;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 0.6rem;
+            border-left: 5px solid var(--border-color);
         }
 
-        /* cell styling (reused inside subject-slot) */
-        .cell-block {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+            /* Grade Coloring Logic */
+            .exam-card[data-grade="Grade 8"] {
+                border-left-color: var(--g8);
+            }
 
-            .cell-block select, .cell-block .venue-editable {
+            .exam-card[data-grade="Grade 9"] {
+                border-left-color: var(--g9);
+            }
+
+            .exam-card[data-grade="Grade 10"] {
+                border-left-color: var(--g10);
+            }
+
+            .exam-card[data-grade="Grade 11"] {
+                border-left-color: var(--g11);
+            }
+
+            .exam-card[data-grade="Grade 12"] {
+                border-left-color: var(--g12);
+            }
+
+            .exam-card select {
                 width: 100%;
-                font-family: 'Inter', monospace;
-                font-size: 0.75rem;
-                border-radius: 16px;
-                padding: 8px 10px;
-                border: 1px solid #cbdde9;
-                background: #fff;
-                transition: 0.1s;
+                padding: 0.5rem;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+                font-size: 0.85rem;
+                font-family: inherit;
+                outline: none;
             }
 
-                .cell-block select:focus, .cell-block .venue-editable:focus {
-                    border-color: #3b82f6;
-                    outline: none;
-                    box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
-                }
-
-        .venue-editable {
-            background: #fefcf5;
-            cursor: text;
-            min-height: 38px;
-        }
-
-            .venue-editable[contenteditable="true"]:empty:before {
-                content: "Enter venue";
-                color: #8ba0b2;
-            }
-
-        .empty-cell-placeholder {
-            color: #b9cee0;
-            font-style: italic;
-            font-size: 0.7rem;
+        .venue-input {
+            font-size: 0.75rem;
+            border: 1px dashed #cbd5e1;
+            padding: 0.5rem;
+            border-radius: 6px;
             text-align: center;
-            padding: 6px 0;
+            background: #f8fafc;
+            font-weight: 600;
+            color: #64748b;
         }
 
-        /* info toast */
-        .toast-msg {
+        /* --- TOAST --- */
+        .toast {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: #1f2f3e;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--navy-primary);
             color: white;
-            padding: 12px 20px;
-            border-radius: 40px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
             font-size: 0.85rem;
+            font-weight: 600;
             z-index: 1000;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-            backdrop-filter: blur(8px);
-            transition: opacity 0.2s;
-            font-weight: 500;
-            pointer-events: none;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
 
-        .footer-note {
-            margin-top: 24px;
-            text-align: center;
-            font-size: 0.7rem;
-            color: #6c829b;
+        @@media print {
+            .control-panel, .btn-remove, .studio-navbar .btn {
+                display: none !important;
+            }
+
+            .timetable-canvas {
+                overflow: visible;
+                display: block;
+            }
+
+            .session-column {
+                margin-bottom: 20px;
+                page-break-inside: avoid;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="page-header">
-            <div class="title-section">
-                <h1><i class="fas fa-calendar-alt" style="margin-right: 12px; color: #2c6280;"></i> Exam Timetable � Setup Studio</h1>
-                <p>Design sessions, assign subjects, grades & venues � structured & professional</p>
-            </div>
-            <div class="action-links">
-                <a href="@Url.Action("Published","Setup_exam_time")" target="_blank" class="publish-link"><i class="fas fa-external-link-alt"></i> View Published Timetable</a>
-            </div>
-        </div>
 
-        <div class="controls-panel">
-            <div class="row-flex">
-                <div class="input-group">
-                    <label><i class="far fa-calendar-check"></i> Session Date</label>
-                    <input type="date" id="sessionDate" />
-                </div>
-                <div class="input-group">
-                    <label><i class="far fa-clock"></i> Start Time</label>
-                    <input type="time" id="sessionStart" />
-                </div>
-                <div class="input-group">
-                    <label><i class="far fa-clock"></i> End Time</label>
-                    <input type="time" id="sessionEnd" />
-                </div>
-                <div class="action-group">
-                    <button id="addSession" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add Column (Session)</button>
-                    <button id="addRow" class="btn btn-outline-accent"><i class="fas fa-layer-group"></i> Add Row (Subject block)</button>
-                    <button id="save" class="btn btn-save"><i class="fas fa-save"></i> Save Timetable</button>
-                </div>
-            </div>
-        </div>
+    <div class="studio-container">
 
-        <div class="table-wrapper">
-            <div class="columns-wrapper" id="sessionRow">
-                <!-- each session column will be appended here -->
+        <nav class="studio-navbar">
+            <div class="studio-logo">Exam Timetable Studio</div>
+            <button class="btn btn-outline" onclick="window.print()">Export PDF</button>
+        </nav>
+
+        <section class="control-panel">
+            <div class="control-grid">
+                <div class="input-group">
+                    <label>Exam Date</label>
+                    <input type="date" id="js-date">
+                </div>
+                <div class="input-group">
+                    <label>Start</label>
+                    <input type="time" id="js-start" value="08:00">
+                </div>
+                <div class="input-group">
+                    <label>End</label>
+                    <input type="time" id="js-end" value="11:00">
+                </div>
+                <div class="btn-flex">
+                    <button class="btn btn-outline" onclick="studio.addRow()">+ Add Grade Row</button>
+                    <button class="btn btn-navy" onclick="studio.addSession()">Add Session</button>
+                    <button class="btn btn-navy" style="background:#475569" onclick="studio.saveAll()">Save Data</button>
+                </div>
             </div>
-        </div>
-        <div class="footer-note">
-            <i class="fas fa-edit"></i> Timetable changes are saved to server. All cells support grade + exam + venue.
-        </div>
+        </section>
+
+        <main class="timetable-canvas" id="canvas-root">
+            <!-- Columns populate here -->
+        </main>
+
     </div>
 
     <script>
-        (function () {
-            // ---------- DOM references ----------
-            const sessionRow = document.getElementById('sessionRow'); // now a columns wrapper
-            const addSessionBtn = document.getElementById('addSession');
-            const addRowBtn = document.getElementById('addRow');
-            const saveBtn = document.getElementById('save');
+        const studio = {
+            rowCount: 0,
+            grades: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
+            subjects: ["Mathematics", "Physical Sciences", "Life Sciences", "English HL", "English FAL", "IsiZulu", "History", "Geography", "Accounting", "Business Studies", "CAT", "IT"],
 
-            // demo defaults
-            const demoDate = new Date().toISOString().slice(0, 10);
-            const demoStart = '09:00';
-            const demoEnd = '11:00';
+            init() {
+                document.getElementById('js-date').valueAsDate = new Date();
+            },
 
-            // track number of subject slots (rows) present
-            let subjectCount = 0;
+            showToast(msg) {
+                const t = document.createElement('div');
+                t.className = 'toast';
+                t.innerText = msg;
+                document.body.appendChild(t);
+                setTimeout(() => t.remove(), 2500);
+            },
 
-            // ---------- Data sets ----------
-            const gradeOptions = ["8A", "8B", "8C", "9A", "9B", "9C", "10A", "10B", "10C", "11A", "11B", "11C", "12A", "12B", "12C"];
-            const examOptions = ["IsiZulu", "English FAL", "Life science", "Agricultural scrince", "Life oriantation", "Physical science", "Accounting", "Histroy", "EGD", "Economics", "Business studies","CAT"];
+            createCard() {
+                const card = document.createElement('div');
+                card.className = 'exam-card';
+                card.innerHTML = `
+                        <select class="sel-grade" onchange="this.parentElement.dataset.grade = this.value">
+                            <option value="">-- Grade --</option>
+                            ${this.grades.map(g => `<option value="${g}">${g}</option>`).join('')}
+                        </select>
+                        <select class="sel-subject">
+                            <option value="">-- Subject --</option>
+                            ${this.subjects.map(s => `<option value="${s}">${s}</option>`).join('')}
+                        </select>
+                        <div class="venue-input" contenteditable="true">Assign Venue...</div>
+                    `;
+                return card;
+            },
 
-            // Helper: show toast message (non-intrusive)
-            function showToast(message, isError = false) {
-                let toast = document.querySelector('.toast-msg');
-                if (toast) toast.remove();
-                const div = document.createElement('div');
-                div.className = 'toast-msg';
-                div.style.background = isError ? '#b91c2c' : '#1f4f8a';
-                div.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${message}`;
-                document.body.appendChild(div);
-                setTimeout(() => { if (div && div.remove) div.remove(); }, 2800);
-            }
+            addSession() {
+                const dateVal = document.getElementById('js-date').value;
+                const startVal = document.getElementById('js-start').value;
+                const endVal = document.getElementById('js-end').value;
 
-            // Create select dropdown (grade or exam)
-            function createSelect(options, className, selectedValue = '') {
-                const sel = document.createElement('select');
-                sel.className = `${className}`;
-                // add empty placeholder option
-                const emptyOpt = document.createElement('option');
-                emptyOpt.value = '';
-                emptyOpt.textContent = className === 'grade-select' ? '� Grade �' : '� Exam �';
-                sel.appendChild(emptyOpt);
-                for (let opt of options) {
-                    const optionElem = document.createElement('option');
-                    optionElem.value = opt;
-                    optionElem.textContent = opt;
-                    if (selectedValue && selectedValue === opt) optionElem.selected = true;
-                    sel.appendChild(optionElem);
-                }
-                return sel;
-            }
+                if (!dateVal) return this.showToast("Please select a date.");
 
-            // Create a subject-slot div (stacked inside session column)
-            function createCellBlock(gradeVal = '', venueText = '', examVal = '') {
-                const slot = document.createElement('div');
-                slot.className = 'subject-slot';
-
-                const container = document.createElement('div');
-                container.className = 'cell-block';
-
-                // Grade select
-                const gradeSel = createSelect(gradeOptions, 'grade-select', gradeVal);
-                // Venue editable (contenteditable)
-                const venueDiv = document.createElement('div');
-                venueDiv.className = 'venue-editable';
-                venueDiv.setAttribute('contenteditable', 'true');
-                venueDiv.innerText = venueText || '';
-                if (!venueText) venueDiv.innerText = '';
-                // Exam select
-                const examSel = createSelect(examOptions, 'exam-select', examVal);
-
-                container.appendChild(gradeSel);
-                container.appendChild(venueDiv);
-                container.appendChild(examSel);
-                slot.appendChild(container);
-                return slot;
-            }
-
-            // Add a new session column (header + stacked slots container)
-            function addSessionColumn(date, start, end) {
-                if (!date || !start || !end) {
-                    showToast('Please fill date, start & end time before adding session', true);
-                    return false;
-                }
-
-                const column = document.createElement('div');
-                column.className = 'session-column';
-                column.setAttribute('data-date', date);
-                column.setAttribute('data-start', start);
-                column.setAttribute('data-end', end);
-
-                const header = document.createElement('div');
-                header.className = 'session-header';
-                header.innerHTML = `
-                        <div class="session-date"><i class="far fa-calendar-alt"></i> ${escapeHtml(date)}</div>
-                        <div class="session-time"><i class="far fa-hourglass-half"></i> ${escapeHtml(start)} � ${escapeHtml(end)}</div>
+                const col = document.createElement('div');
+                col.className = 'session-column';
+                col.innerHTML = `
+                        <div class="column-header">
+                            <button class="btn-remove" onclick="this.parentElement.parentElement.remove()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                            <div class="date">${new Date(dateVal).toDateString()}</div>
+                            <div class="time">${startVal} - ${endVal}</div>
+                        </div>
+                        <div class="card-list"></div>
                     `;
 
-                const slots = document.createElement('div');
-                slots.className = 'session-slots';
-
-                // ensure this new column has existing subject slots if any
-                for (let i = 0; i < subjectCount; i++) {
-                    slots.appendChild(createCellBlock('', '', ''));
+                const list = col.querySelector('.card-list');
+                const initialRows = Math.max(1, this.rowCount);
+                for (let i = 0; i < initialRows; i++) {
+                    list.appendChild(this.createCard());
                 }
 
-                column.appendChild(header);
-                column.appendChild(slots);
-                sessionRow.appendChild(column);
+                document.getElementById('canvas-root').appendChild(col);
+                this.showToast("Session added to timeline.");
+            },
 
-                showToast(`Session ${date} added`, false);
-                return true;
+            addRow() {
+                this.rowCount++;
+                const lists = document.querySelectorAll('.card-list');
+                if (lists.length === 0) {
+                    this.showToast("Grade row count updated.");
+                } else {
+                    lists.forEach(l => l.appendChild(this.createCard()));
+                    this.showToast("Grade row added to all sessions.");
+                }
+            },
+
+            saveAll() {
+                this.showToast("Timetable data saved locally.");
             }
-
-            // Add a new subject slot across all sessions (stacked inside each column)
-            function addNewRow() {
-                const columns = sessionRow.children;
-                if (columns.length === 0) {
-                    subjectCount++;
-                    showToast('New row added, but no sessions exist. Add a session column first.', false);
-                    return;
-                }
-                for (let i = 0; i < columns.length; i++) {
-                    const slots = columns[i].querySelector('.session-slots');
-                    if (slots) slots.appendChild(createCellBlock('', '', ''));
-                }
-                subjectCount++;
-                showToast('New timetable row created', false);
-            }
-
-            // Helper to escape HTML (prevent injection)
-            function escapeHtml(str) {
-                if (!str) return '';
-                return str.replace(/[&<>]/g, function (m) {
-                    if (m === '&') return '&amp;';
-                    if (m === '<') return '&lt;';
-                    if (m === '>') return '&gt;';
-                    return m;
-                }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function (c) {
-                    return c;
-                });
-            }
-
-            // collect all data from the columns and send to server
-            function saveTimetable() {
-                const columns = sessionRow.children;
-                const colCount = columns.length;
-                if (colCount === 0) {
-                    showToast('No session columns exist. Add at least one session before saving.', true);
-                    return;
-                }
-
-                const items = [];
-
-                for (let c = 0; c < colCount; c++) {
-                    const col = columns[c];
-                    const date = col.getAttribute('data-date') || '';
-                    const start = col.getAttribute('data-start') || '';
-                    const end = col.getAttribute('data-end') || '';
-                    const slots = col.querySelectorAll('.subject-slot');
-                    for (let s = 0; s < slots.length; s++) {
-                        const slot = slots[s];
-                        const gradeSelect = slot.querySelector('.grade-select');
-                        const examSelect = slot.querySelector('.exam-select');
-                        const venueDiv = slot.querySelector('.venue-editable');
-
-                        let grade = gradeSelect ? gradeSelect.value : '';
-                        let examName = examSelect ? examSelect.value : '';
-                        let venue = venueDiv ? venueDiv.innerText.trim() : '';
-
-                        if (!grade && !examName && !venue) continue; // skip empty
-
-                        items.push({
-                            Exam_name: examName,
-                            venue: venue,
-                            Exam_date: date,
-                            Exam_Starttime: start,
-                            Exam_Endtime: end,
-                            Grade: grade
-                        });
-                    }
-                }
-
-                if (items.length === 0) {
-                    showToast('No filled entries to save. Please assign some grades/exams.', true);
-                    return;
-                }
-
-                // Send via XHR POST to /Setup_exam_time/SaveTimetable (controller action)
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', '/Setup_exam_time/SaveTimetable', true);
-                xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            try {
-                                const resp = JSON.parse(xhr.responseText);
-                                if (resp.success) showToast('Timetable saved successfully!', false);
-                                else showToast('Server error: ' + (resp.error || 'unknown'), true);
-                            } catch (e) {
-                                showToast('Saved (response parsed as success)', false);
-                            }
-                        } else {
-                            showToast(`Error ${xhr.status} while saving`, true);
-                        }
-                    }
-                };
-                xhr.send(JSON.stringify(items));
-            }
-
-            // Initialization: set default input values but do not auto-create demo session or rows
-            function initializeDefaultDemo() {
-                const dateInput = document.getElementById('sessionDate');
-                const startInput = document.getElementById('sessionStart');
-                const endInput = document.getElementById('sessionEnd');
-                if (dateInput) dateInput.value = demoDate;
-                if (startInput) startInput.value = demoStart;
-                if (endInput) endInput.value = demoEnd;
-                // Intentionally do NOT call addSessionColumn or addNewRow
-            }
-
-            // Helper to apply venue placeholder fallback without content
-            function applyVenuePlaceholderBehavior() {
-                document.body.addEventListener('focusout', function (e) {
-                    if (e.target && e.target.classList && e.target.classList.contains('venue-editable')) {
-                        if (e.target.innerText.trim() === '') {
-                            e.target.innerText = '';
-                        }
-                    }
-                });
-            }
-
-            // ----- Events binding -----
-            addSessionBtn.addEventListener('click', () => {
-                const date = document.getElementById('sessionDate').value;
-                const start = document.getElementById('sessionStart').value;
-                const end = document.getElementById('sessionEnd').value;
-                if (!date || !start || !end) {
-                    showToast('Session date, start & end time required!', true);
-                    return;
-                }
-                addSessionColumn(date, start, end);
-            });
-
-            addRowBtn.addEventListener('click', () => {
-                addNewRow();
-            });
-
-            saveBtn.addEventListener('click', () => {
-                saveTimetable();
-            });
-
-            initializeDefaultDemo();
-            applyVenuePlaceholderBehavior();
-
-            // small dynamic styles for contenteditable placeholder & UX
-            const style = document.createElement('style');
-            style.textContent = `
-                    .venue-editable:empty:before {
-                        content: "?? Enter venue";
-                        color: #9bb7cf;
-                        font-style: italic;
-                        font-weight: normal;
-                    }
-                    .grade-select, .exam-select {
-                        background-color: #ffffff;
-                        cursor: pointer;
-                    }
-                    .subject-slot:hover {
-                        transform: translateY(-1px);
-                        transition: transform 0.12s;
-                    }
-                `;
-            document.head.appendChild(style);
-
-            console.log('Column-based Exam Timetable ready');
-        })();
+        };
+        studio.init();
     </script>
 </body>
 </html>

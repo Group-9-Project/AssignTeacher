@@ -2,7 +2,7 @@
 
 @{
     Layout = null;
-    ViewBag.Title = "Student Academic Report";
+    ViewBag.Title = "Student Academic Report - DGSS";
 }
 
 <!DOCTYPE html>
@@ -12,227 +12,279 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title</title>
     <style>
+        :root {
+            --dgss-navy: #0d2b73;
+            --dgss-light-blue: #d4e0f1;
+            --dgss-accent: #4169e1;
+            --dgss-white: #ffffff;
+            --dgss-border: #cfdbe9;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Calibri', 'Arial', sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
+            font-family: 'Segoe UI', Calibri, sans-serif;
+            background-color: var(--dgss-light-blue);
+            padding: 40px 20px;
             color: #333;
         }
 
-        .report-container {
-            max-width: 900px;
+        .report-paper {
+            max-width: 850px;
             margin: 0 auto;
-            background-color: #ffffff;
-            padding: 30px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-            border-radius: 6px;
+            background-color: var(--dgss-white);
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(13, 43, 115, 0.15);
+            border-radius: 4px;
+            position: relative;
+            border-top: 8px solid var(--dgss-navy);
         }
 
-        .header {
-            text-align: center;
-            border-bottom: 3px solid #003d7a;
-            padding-bottom: 15px;
-            margin-bottom: 22px;
+        /* Official Header */
+        .header-layout {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--dgss-navy);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
         }
+
+        .school-branding { text-align: left; }
 
         .school-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #003d7a;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--dgss-navy);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .report-title {
+        .report-type {
+            font-size: 16px;
+            color: var(--dgss-accent);
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .logo-box img { height: 70px; width: auto; }
+
+        /* Student Profiles */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: #f8faff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid var(--dgss-border);
+        }
+
+        .data-item { margin-bottom: 8px; font-size: 14px; }
+        .label { font-weight: 700; color: var(--dgss-navy); text-transform: uppercase; font-size: 11px; display: block; }
+        .value { font-size: 16px; color: #333; font-weight: 500; }
+
+        /* Grades Table */
+        .results-section { margin-top: 20px; }
+        .table-title {
             font-size: 14px;
-            color: #666;
-            margin-top: 6px;
+            font-weight: 800;
+            color: var(--dgss-navy);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .student-info {
-            background-color: #f0f4fb;
-            padding: 16px;
-            margin-bottom: 20px;
-            border-left: 5px solid #003d7a;
+        .table-title::after { content: ""; flex: 1; height: 1px; background: var(--dgss-border); }
+
+        .report-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        .report-table th {
+            background-color: var(--dgss-navy);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 11px;
+            text-transform: uppercase;
+            border: 1px solid #0a1f52;
+        }
+
+        .report-table td {
+            padding: 15px 12px;
+            border: 1px solid var(--dgss-border);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .subject-name { text-align: left !important; font-weight: 700; color: var(--dgss-navy); }
+
+        .descriptor-badge {
+            background: var(--dgss-navy);
+            color: white;
+            padding: 4px 10px;
             border-radius: 4px;
+            font-weight: 800;
         }
 
-        .student-name {
-            font-size: 22px;
-            font-weight: 700;
-            color: #003d7a;
-            margin-bottom: 8px;
+        .status-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 12px;
+            text-transform: uppercase;
         }
+        .status-pass { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .status-fail { background-color: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
 
-        .info-row {
+        /* Official Footer */
+        .report-footer {
+            margin-top: 50px;
             display: flex;
             justify-content: space-between;
-            margin-bottom: 6px;
-            font-size: 14px;
+            align-items: flex-end;
         }
 
-        .info-label { font-weight: 600; color: #333; }
-        .info-value { color: #444; }
-
-        .results-section { margin-top: 18px; }
-
-        .section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #003d7a;
-            border-bottom: 2px solid #e6eef9;
-            padding-bottom: 10px;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-        }
-
-        .results-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
-        .results-table thead { background-color: #003d7a; color: #fff; }
-        .results-table th {
-            padding: 10px 12px;
-            text-align: left;
+        .signature-box {
+            border-top: 1px solid #333;
+            width: 200px;
+            text-align: center;
+            padding-top: 10px;
             font-size: 12px;
-            font-weight: 700;
-            border: 1px solid #e6eef9;
+            color: #666;
         }
-        .results-table td {
-            padding: 10px 12px;
-            border: 1px solid #eef3fb;
-            font-size: 13px;
-            vertical-align: middle;
-        }
-        .results-table tbody tr:nth-child(even) { background-color: #fbfdff; }
 
-        .subject-cell { font-weight: 600; color: #003d7a; }
-        .grade-cell { text-align: center; font-weight: 700; color: #003d7a; }
-        .percentage-cell { text-align: center; font-weight: 600; color: #333; }
-
-        .status-cell {
+        .official-seal {
+            width: 100px;
+            height: 100px;
+            border: 3px double var(--dgss-navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 6px 10px;
-            border-radius: 4px;
-            display: inline-block;
-            min-width: 80px;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--dgss-navy);
+            opacity: 0.6;
+            transform: rotate(-15deg);
         }
-        .status-pass { background-color: #d4edda; color: #155724; }
-        .status-fail { background-color: #f8d7da; color: #721c24; }
 
-        .no-results {
+        .actions {
+            margin-top: 30px;
             text-align: center;
-            padding: 20px;
-            color: #999;
-            font-style: italic;
-            background-color: #fafbfc;
-            border: 1px solid #eee;
-            border-radius: 4px;
         }
 
-        .footer {
-            margin-top: 22px;
-            padding-top: 12px;
-            border-top: 1px solid #eee;
-            text-align: center;
-            font-size: 12px;
-            color: #888;
-        }
-
-        .action-links { margin-top: 18px; text-align: center; }
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            margin: 6px;
-            background-color: #003d7a;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 13px;
+        .btn-print {
+            background: var(--dgss-navy);
+            color: white;
             border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
             cursor: pointer;
-        }
-        .btn-secondary { background-color: #6c757d; }
-        .btn:hover { background-color: #002d5c; }
-
-        .grade-descriptor {
-            font-size: 12px;
-            text-align: center;
-            background-color: #e7f3ff;
-            color: #003d7a;
             font-weight: 700;
-            padding: 6px 8px;
-            border-radius: 3px;
-            display: inline-block;
+            text-transform: uppercase;
+            transition: 0.3s;
         }
 
-        media print {
-            body { background-color: #fff; }
-            .report-container { box-shadow: none; border: none; }
-            .action-links { display: none; }
+        .btn-print:hover { background: var(--dgss-accent); }
+
+        .btn-back {
+            color: var(--dgss-navy);
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        @@media print {
+            body { background: white; padding: 0; }
+            .report-paper { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+            .actions { display: none; }
+            .report-paper { border-top: 4px solid var(--dgss-navy); }
         }
     </style>
 </head>
 <body>
-    <div class="report-container">
-        <div class="header">
-            <div class="school-name">South African School Report</div>
-            <div class="report-title">Student Academic Performance Report</div>
+
+    <div class="report-paper">
+        <div class="header-layout">
+            <div class="school-branding">
+                <div class="school-name">Durban Girls Secondary School</div>
+                <div class="report-type">Official Academic Statement</div>
+            </div>
+            <div class="logo-box">
+                <img src="https://tse3.mm.bing.net/th/id/OIP.4F7suouXbLCmtrEpz8RoXAHaCD?rs=1&pid=ImgDetMain&o=7&rm=3" alt="DGSS Logo" />
+            </div>
         </div>
 
-        <div class="student-info">
-            <div class="student-name">@Model.StudentName</div>
-            <div class="info-row">
-                <span class="info-label">Student Number:</span>
-                <span class="info-value">@Model.StudentNumber</span>
+        <div class="profile-grid">
+            <div class="data-item">
+                <span class="label">Full Name of Student</span>
+                <span class="value">@Model.StudentName</span>
             </div>
-            <div class="info-row">
-                <span class="info-label">Grade:</span>
-                <span class="info-value">@Model.Grade</span>
+            <div class="data-item">
+                <span class="label">Student Reference Number</span>
+                <span class="value">@Model.StudentNumber</span>
+            </div>
+            <div class="data-item">
+                <span class="label">Date of Issue</span>
+                <span class="value">@DateTime.Now.ToString("dd MMMM yyyy")</span>
             </div>
         </div>
 
         <div class="results-section">
-            <div class="section-title">Subject Performance</div>
-
-            <table class="results-table">
+            <div class="table-title">Subject Performance Summary</div>
+            <table class="report-table">
                 <thead>
                     <tr>
-                        <th>Subject</th>
-                        <th>Grade Descriptor</th>
-                        <th style="text-align:center;">Exam %</th>
-                        <th style="text-align:center;">Continuous %</th>
-                        <th style="text-align:center;">Overall %</th>
-                        <th style="text-align:center;">Status</th>
+                        <th style="text-align:left;">Subject</th>
+                        <th>Level</th>
+                        <th>Exam %</th>
+                        <th>Final Mark</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="subject-cell">@Model.Subject</td>
-                        <td class="grade-descriptor">@Model.Descriptor</td>
-                        <td class="percentage-cell">@Model.Percentage%</td>
-                        <td class="percentage-cell">@Math.Round(Model.FinalPercentage, 1)%</td>
-                        <td class="percentage-cell"><strong>@Math.Round(Model.GradeAverage, 1)%</strong></td>
+                        <td class="subject-name">@Model.Subject</td>
+                        <td><span class="descriptor-badge">@Model.Descriptor</span></td>
+                        <td>@Model.Percentage%</td>
+                        <td style="font-size: 18px; font-weight: 800;">@Math.Round(Model.GradeAverage, 1)%</td>
                         <td>
                             @{
-                                var statusClass = !string.IsNullOrEmpty(Model.Status) && Model.Status.Contains("Pass") ? "status-pass" : "status-fail";
+                                var isPass = !string.IsNullOrEmpty(Model.Status) && Model.Status.ToLower().Contains("pass");
+                                var statusStyle = isPass ? "status-pass" : "status-fail";
                             }
-                            <span class="status-cell @statusClass">@Model.Status</span>
+                            <span class="status-pill @statusStyle">@Model.Status</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="footer">
-            <p>Report Generated: @DateTime.Now.ToString("dd MMMM yyyy")</p>
-            <p>This is an official South African school report.</p>
+        <div style="font-size: 12px; color: #666; font-style: italic; margin-top: 20px;">
+            * Continuous Assessment (CASS) accounts for @Math.Round(Model.FinalPercentage, 1)% of the weighted total.
         </div>
 
-        <div class="action-links">
-            <button onclick="window.print();" class="btn">Print Report</button>
+        <div class="report-footer">
+            <div class="signature-box">
+                School Principal
+            </div>
+            <div class="official-seal">
+                OFFICIAL SEAL<br />DGSS DURBAN<br />EST. 1882
+            </div>
+            <div class="signature-box">
+                Subject Educator
+            </div>
         </div>
     </div>
+
+    <div class="actions">
+        <button onclick="window.print();" class="btn-print">Print Official Report</button>
+        <a href="@Url.Action("Index")" class="btn-back">Return to List</a>
+    </div>
+
 </body>
 </html>

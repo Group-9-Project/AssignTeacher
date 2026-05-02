@@ -2,160 +2,194 @@
 
 @{
     Layout = null;
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Student Report Details";
 }
 
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title</title>
     <style>
-        body {
-            background-color: #d4e0f1;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            color: #222;
+        :root {
+            --dgss-navy: #0d2b73;
+            --dgss-light-blue: #d4e0f1;
+            --dgss-accent: #4169e1;
+            --dgss-white: #ffffff;
+            --dgss-text: #222222;
         }
 
+        body {
+            background-color: var(--dgss-light-blue);
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dgss-text);
+        }
+
+        /* Header Styling */
         .header {
             background-color: #f0f4f8;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
-            border-bottom: 3px solid #0d2b73;
+            border-bottom: 4px solid var(--dgss-navy);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .header-content {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
         }
 
         .header-logo img {
-            height: 80px;
+            height: 85px;
             width: auto;
-            display: block;
         }
 
+        .header-text h1 {
+            color: var(--dgss-navy);
+            margin: 0;
+            font-size: 26px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        /* Page Title Section */
         .page-title {
-            background-color: #d4e0f1;
-            padding: 18px;
+            padding: 20px;
             text-align: center;
-            color: #4169e1;
-            font-size: 20px;
+            color: var(--dgss-accent);
+            font-size: 22px;
             font-weight: bold;
+            letter-spacing: 0.5px;
         }
 
         .main-content {
             max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 16px 40px;
+            margin: 0 auto 50px auto;
+            padding: 0 20px;
         }
 
+        /* Student ID Card Style Header */
         .student-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-top: 3px solid #0d2b73;
-            border-radius: 4px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            background: var(--dgss-white);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-top: 5px solid var(--dgss-navy);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .student-name {
-            font-size: 28px;
-            font-weight: 700;
-            color: #0d2b73;
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--dgss-navy);
         }
 
         .student-info {
             display: flex;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .info-item {
-            text-align: right;
+            gap: 45px;
         }
 
         .info-label {
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
-            font-weight: 700;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 4px;
         }
 
         .info-value {
-            font-size: 16px;
-            color: #0d2b73;
+            font-size: 18px;
+            color: var(--dgss-navy);
             font-weight: 700;
+        }
+
+        /* Table Design */
+        .marks-table-container {
+            background: var(--dgss-white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .marks-table {
             width: 100%;
             border-collapse: collapse;
-            background: #fff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            border-radius: 4px;
-            overflow: hidden;
         }
 
             .marks-table thead {
-                background: #0d2b73;
+                background: var(--dgss-navy);
                 color: #fff;
             }
 
-                .marks-table thead th {
-                    padding: 14px 12px;
-                    font-size: 13px;
-                    text-align: left;
-                    border-right: 1px solid rgba(255,255,255,0.06);
-                }
-
-                    .marks-table thead th:last-child {
-                        border-right: none;
-                    }
-
-            .marks-table tbody td {
-                padding: 18px 12px;
-                border-bottom: 1px solid #eef3fb;
-                font-size: 14px;
-                vertical-align: middle;
+            .marks-table th {
+                padding: 16px 12px;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                text-align: left;
+                border-right: 1px solid rgba(255,255,255,0.1);
             }
 
+            .marks-table tbody td {
+                padding: 20px 12px;
+                border-bottom: 1px solid #eef3fb;
+                font-size: 15px;
+            }
+
+            .marks-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+        .highlight-cell {
+            background-color: #f9fbff;
+            font-weight: bold;
+            color: var(--dgss-navy);
+        }
+
+        /* Action Buttons */
         .button-container {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             justify-content: center;
-            margin-top: 22px;
+            margin-top: 35px;
         }
 
         .btn-action {
-            background: #0d2b73;
+            background: var(--dgss-navy);
             color: #fff;
-            padding: 10px 24px;
-            border-radius: 6px;
+            padding: 12px 30px;
+            border-radius: 8px;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
             display: inline-block;
         }
 
         .btn-edit {
-            background: #4169e1;
+            background: var(--dgss-accent);
         }
 
         .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             opacity: 0.95;
         }
 
+        /* Footer Section */
         .footer {
-            background: #0d2b73;
+            background: var(--dgss-navy);
             color: #fff;
-            padding: 20px;
-            margin-top: 28px;
+            padding: 40px 20px;
+            margin-top: 50px;
         }
 
         .footer-content {
@@ -164,19 +198,41 @@
         }
 
         .footer-title {
-            font-weight: 700;
-            margin-bottom: 8px;
+            font-weight: 800;
+            font-size: 16px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
         }
 
         .footer-info {
-            font-size: 12px;
-            line-height: 1.6;
+            font-size: 13px;
+            line-height: 1.8;
+            opacity: 0.9;
         }
 
         .footer-copyright {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 25px;
+            padding-top: 20px;
             font-size: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.7;
+        }
+
+        @@media (max-width: 768px) {
+            .student-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .student-info {
+                gap: 20px;
+            }
+
+            .marks-table-container {
+                overflow-x: auto;
+            }
         }
     </style>
 </head>
@@ -187,63 +243,79 @@
                 <img src="https://tse3.mm.bing.net/th/id/OIP.4F7suouXbLCmtrEpz8RoXAHaCD?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo" />
             </div>
             <div class="header-text">
-                <h1 style="color:#0d2b73;margin:0;font-size:24px;">Report Generation</h1>
-                <p style="color:#0d2b73;margin:4px 0 0 0;font-size:14px;">Student Mark Report</p>
+                <h1>Report Generation</h1>
+                <p style="color:var(--dgss-navy); margin:4px 0 0 0; opacity:0.8;">Academic Record Excellence</p>
             </div>
         </div>
     </div>
 
-    <div class="page-title">Student Mark Report</div>
+    <div class="page-title">Detailed Performance Report</div>
 
     <div class="main-content">
         <div class="student-header">
             <div class="student-name">@Html.DisplayFor(m => m.StudentName)</div>
             <div class="student-info">
                 <div class="info-item">
-                    <div class="info-label">Student Number</div>
+                    <div class="info-label">Student ID</div>
                     <div class="info-value">@Html.DisplayFor(m => m.StudentNumber)</div>
                 </div>
                 <div class="info-item">
-                    <div class="info-label">Grade</div>
-                    <div class="info-value">@Html.DisplayFor(m => m.Grade)</div>
+                    <div class="info-label">Subject</div>
+                    <div class="info-value">@Html.DisplayFor(m => m.Subject)</div>
                 </div>
             </div>
         </div>
 
-        <table class="marks-table" role="table">
-            <thead>
-                <tr>
-                    <th>Teacher</th>
-                    <th>Subject</th>
-                    <th>Assignment</th>
-                    <th>Test 1</th>
-                    <th>Test 2</th>
-                    <th>Exam</th>
-                    <th>Descriptor</th>
-                    <th>Exam %</th>
-                    <th>Final %</th>
-                    <th>Grade Avg %</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@(Model.Teacher != null ? (Model.Teacher.FirstName + " " + Model.Teacher.LastName) : "-")</td>
-                    <td>@Html.DisplayFor(m => m.Subject)</td>
-                    <td>@Html.DisplayFor(m => m.assignmentMark)</td>
-                    <td>@Html.DisplayFor(m => m.test1Mark)</td>
-                    <td>@Html.DisplayFor(m => m.test2Mark)</td>
-                    <td>@Html.DisplayFor(m => m.examMark)</td>
-                    <td>@Html.DisplayFor(m => m.Descriptor)</td>
-                    <td>@Html.DisplayFor(m => m.Percentage)</td>
-                    <td>@Html.DisplayFor(m => m.FinalPercentage)</td>
-                    <td>@Html.DisplayFor(m => m.GradeAverage)</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="marks-table-container">
+            <table class="marks-table" role="table">
+                <thead>
+                    <tr>
+                        <th>Assigned Educator</th>
+                        <th>Subject</th>
+                        <th>Assign.</th>
+                        <th>Test 1</th>
+                        <th>Test 2</th>
+                        <th>Exam</th>
+                        <th>Descriptor</th>
+                        <th>Exam %</th>
+                        <th>Final %</th>
+                        <th>Avg %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@(Model.Teacher != null ? (Model.Teacher.FirstName + " " + Model.Teacher.LastName) : "Not Assigned")</td>
+                        <td class="highlight-cell">@Html.DisplayFor(m => m.Subject)</td>
+                        <td>@Html.DisplayFor(m => m.assignmentMark)</td>
+                        <td>@Html.DisplayFor(m => m.test1Mark)</td>
+                        <td>@Html.DisplayFor(m => m.test2Mark)</td>
+                        <td>@Html.DisplayFor(m => m.examMark)</td>
+                        <td>@Html.DisplayFor(m => m.Descriptor)</td>
+                        <td>@Math.Round(Convert.ToDouble(Model.Percentage), 2)%</td>
+                        <td class="highlight-cell">@Math.Round(Convert.ToDouble(Model.FinalPercentage), 2)%</td>
+                        <td>@Math.Round(Convert.ToDouble(Model.GradeAverage), 2)%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div class="button-container">
-            @Html.ActionLink("Edit", "Edit", new { id = Model.ReportId }, new { @class = "btn-action btn-edit" })
-            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn-action" })
+            @if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Teacher")
+            {
+              
+                @Html.ActionLink("Edit", "Edit", new { id = Model.ReportId }, new { @class = "btn-action btn-edit" })
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn-action" })
+            }
+            else if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Parent")
+            {
+              
+                <a href="@Url.Action("Index", "Parents")" class="btn-action">Return to Dashboard</a>
+            }
+            else
+            {
+                
+                <a href="javascript:history.back()" class="btn-action">Go Back</a>
+            }
         </div>
     </div>
 
@@ -251,11 +323,11 @@
         <div class="footer-content">
             <div class="footer-title">Durban Girls Secondary School</div>
             <div class="footer-info">
-                <div>📍 165 Helen Street, Durban, South Africa, 4001</div>
-                <div>📞 +27 31 305 3163</div>
-                <div>✉️ info@durbangirlsschool.co.za</div>
+                📍 165 Helen Street, Durban, South Africa, 4001<br />
+                📞 +27 31 305 3163<br />
+                ✉️ info@durbangirlsschool.co.za
             </div>
-            <div class="footer-copyright">© 2026 Durban Girls Secondary School</div>
+            <div class="footer-copyright">© @DateTime.Now.Year Durban Girls Secondary School. All Rights Reserved.</div>
         </div>
     </div>
 </body>

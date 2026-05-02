@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Setup_Examination_timetable.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
@@ -33,16 +34,15 @@ namespace SchoolTimetable.Models
         public DbSet<Student> Students { get; set; }
         public DbSet<StudentAccount> StudentAccounts { get; set; }
         public DbSet<Consultation> consultations { get; set; }
+        public DbSet<Setup_exam_time> Setup_exam_time { get; set; }
 
         public DbSet<ReportGeneration> ReportGenerations { get; set; }
 
-        // ── 2. LIBRARY & IDENTITY DBSETS ───────────────────────────────────
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<Borrowing> Borrowings { get; set; }
         public DbSet<Entrance_test> Entrance_tests { get; set; }
 
-        // ── 3. ONLINE CLASSROOM DBSETS ─────────────────────────────────────
         public DbSet<OnlineClass> OnlineClasses { get; set; }
         public DbSet<ClassAttendance> ClassAttendances { get; set; }
 
@@ -105,7 +105,6 @@ namespace SchoolTimetable.Models
             if (overdueItems.Any()) db.SaveChanges();
         }
 
-        public System.Data.Entity.DbSet<Setup_Examination_timetable.Models.Setup_exam_time> Setup_exam_time { get; set; }
     }
 
     // ── INITIALIZER & SEED DATA ────────────────────────────────────────────

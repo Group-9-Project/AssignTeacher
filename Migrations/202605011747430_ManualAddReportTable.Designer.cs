@@ -7,13 +7,13 @@ namespace AssignTeacher.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class ReportGenerationStudent : IMigrationMetadata
+    public sealed partial class ManualAddReportTable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ReportGenerationStudent));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ManualAddReportTable));
         
         string IMigrationMetadata.Id
         {
-            get { return "202605011325112_ReportGenerationStudent"; }
+            get { return "202605011747430_ManualAddReportTable"; }
         }
         
         string IMigrationMetadata.Source

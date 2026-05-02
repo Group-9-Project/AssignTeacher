@@ -18,7 +18,7 @@ namespace AssignTeacher.Controllers
         // GET: Setup_exam_time
         public ActionResult Index()
         {
-            return View(db.Setup_exam_time.ToList());
+            return View(new List<Setup_exam_time>());
         }
 
         // GET: Setup_exam_time/Details/5

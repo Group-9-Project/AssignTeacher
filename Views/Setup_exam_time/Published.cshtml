@@ -5,92 +5,234 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Published Timetable</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --navy-primary: #0f172a;
+            --navy-dark: #020617;
+            --accent-blue: #2563eb;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+            --bg-main: #f8fafc;
+            --text-main: #1e293b;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--navy-primary);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            margin: 0;
+            font-weight: 800;
+            color: var(--navy-primary);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .table-wrapper {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 6px;
-            text-align: center;
-            vertical-align: top;
+            min-width: 800px;
         }
 
         th {
-            background: #eee;
+            background: var(--navy-primary);
+            color: var(--white);
+            padding: 1.25rem;
+            text-align: center;
+            font-weight: 700;
+            border-right: 1px solid rgba(255,255,255,0.1);
         }
 
-        .stack {
-            padding: 8px;
-            min-height: 40px;
+        .th-date {
+            font-size: 1rem;
+            display: block;
         }
 
-        .session-actions {
-            margin-top: 6px;
+        .th-time {
+            font-size: 0.8rem;
+            font-weight: 500;
+            opacity: 0.8;
+            display: block;
+            margin-top: 4px;
+        }
+
+        td {
+            padding: 1rem;
+            border-right: 1px solid var(--border-color);
+            vertical-align: top;
+            background-color: #ffffff;
+        }
+
+        /* Exam Card Styling within Cell */
+        .exam-entry {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            text-align: left;
+        }
+
+            .exam-entry:last-child {
+                margin-bottom: 0;
+            }
+
+        .label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #64748b;
+            display: block;
+        }
+
+        .value {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--navy-primary);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        /* Delete Button Styling */
+        .btn-delete {
+            margin-top: 10px;
+            background: #fee2e2;
+            color: #ef4444;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+
+            .btn-delete:hover {
+                background: #ef4444;
+                color: white;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 12px;
+            border: 2px dashed var(--border-color);
+            color: #64748b;
+        }
+
+        @@media print {
+            .btn-delete, form {
+                display: none !important;
+            }
+
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .table-wrapper {
+                box-shadow: none;
+                border-radius: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <h2>Published Timetable</h2>
+
+    <div class="header-container">
+        <h2>Published Timetable</h2>
+        <button class="btn-delete" style="background: var(--navy-primary); color: white;" onclick="window.print()">Print PDF</button>
+    </div>
 
     @if (Model == null || !Model.Any())
     {
-        <p>No timetable entries published.</p>
+        <div class="empty-state">
+            <p>No timetable entries have been published yet.</p>
+        </div>
     }
     else
     {
-        <table>
-            <thead>
-                <tr>
-                    @* render a header cell for each distinct session (date + start + end) *@
-                    @{ var sessions = Model.GroupBy(m => new { m.Exam_date, m.Exam_Starttime, m.Exam_Endtime })
-                                             .OrderBy(g => g.Key.Exam_date).ThenBy(g => g.Key.Exam_Starttime).ToList(); }
-                    @foreach (var s in sessions)
-                    {
-                        <th>
-                            @s.Key.Exam_date.ToString("yyyy-MM-dd")<br />
-                            @s.Key.Exam_Starttime @(" - ") @s.Key.Exam_Endtime
-                            <div class="session-actions">
-                                @* POST to Setup_exam_time/DeleteSession (was incorrectly posting to Home) *@
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        @{ var sessions = Model.GroupBy(m => new { m.Exam_date, m.Exam_Starttime, m.Exam_Endtime })
+                                              .OrderBy(g => g.Key.Exam_date).ThenBy(g => g.Key.Exam_Starttime).ToList(); }
+                        @foreach (var s in sessions)
+                        {
+                            <th>
+                                <span class="th-date">@s.Key.Exam_date.ToString("ddd, dd MMM yyyy")</span>
+                                <span class="th-time">@s.Key.Exam_Starttime - @s.Key.Exam_Endtime</span>
+
                                 @using (Html.BeginForm("DeleteSession", "Setup_exam_time", FormMethod.Post))
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="date" value="@s.Key.Exam_date.ToString("yyyy-MM-dd")" />
                                     <input type="hidden" name="start" value="@s.Key.Exam_Starttime" />
                                     <input type="hidden" name="end" value="@s.Key.Exam_Endtime" />
-                                    <input type="submit" value="Delete Session" onclick="return confirm('Delete all entries for this session?');" />
+                                    <button type="submit" class="btn-delete" onclick="return confirm('Delete this entire session?');">
+                                        Remove Session
+                                    </button>
                                 }
-                            </div>
-                        </th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    @* for each session column, show stacked Grade, Venue, Exam Name. If multiple entries exist for that session, show them stacked separated *@
-                    @foreach (var s in sessions)
-                    {
-                        <td>
-                            <div class="stack">
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach (var s in sessions)
+                        {
+                            <td>
                                 @foreach (var item in s)
                                 {
-                                    <div><strong>Grade:</strong> @item.Grade</div>
-                                    <div><strong>Venue:</strong> @item.venue</div>
-                                    <div><strong>Exam:</strong> @item.Exam_name</div>
-                                    <hr />
+                                    <div class="exam-entry">
+                                        <span class="label">Grade</span>
+                                        <span class="value">@item.Grade</span>
+
+                                        <span class="label">Subject</span>
+                                        <span class="value">@item.Exam_name</span>
+
+                                        <span class="label">Venue</span>
+                                        <span class="value" style="margin-bottom:0; color: var(--accent-blue);">@item.venue</span>
+                                    </div>
                                 }
-                            </div>
-                        </td>
-                    }
-                </tr>
-            </tbody>
-        </table>
+                            </td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     }
 </body>
 </html>

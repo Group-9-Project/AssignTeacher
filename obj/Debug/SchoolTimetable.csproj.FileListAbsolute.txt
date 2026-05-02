@@ -96,6 +96,10 @@ C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\AssignTeacher.Migra
 C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\AssignTeacher.Migrations.InitialConsultation1.resources
 C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\AssignTeacher.Migrations.SetupExam.resources
 C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\AssignTeacher.Migrations.SyncRemainingChanges.resources
+C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\AssignTeacher.Migrations.ManualAddReportTable.resources
+C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\AssignTeacher.Migrations.AddSetupExamTimeTable.resources
+C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\AssignTeacher.Migrations.AddGradeToStudentAccount.resources
+C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\AssignTeacher.Migrations.RemoveGrade.resources
 C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\SchoolTimetable.csproj.GenerateResource.cache
 C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\SchoolTimetable.csproj.CoreCompileInputs.cache
 C:\Users\Minenhle Xulu\Desktop\2026\New folder (2)\obj\Debug\SchoolTi.FE5D8B21.Up2Date

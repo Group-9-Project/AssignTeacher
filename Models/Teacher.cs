@@ -465,6 +465,7 @@ namespace SchoolTimetable.Models
         public string StudentNumber { get; set; }
 
         public virtual AppUser AppUser { get; set; }
+        public int? Grade { get; set; }
 
         [Required]
         public string FirstName { get; set; }
@@ -601,9 +602,6 @@ namespace SchoolTimetable.Models
         public virtual Teacher Teacher { get; set; }
         [Required, Display(Name = "Subject")]
         public ReportSubject Subject { get; set; }
-        [Required, Display(Name = "Grade")]
-        public string Grade { get; set; }
-
         // To be entered per student subject
         [Required]
         [DisplayName("Assignment Mark")]
@@ -698,12 +696,6 @@ namespace SchoolTimetable.Models
             return Status;
         }
 
-        // ---------- Helper methods to load related data and persist report ----------
-
-        /// <summary>
-        /// Builds a ReportGeneration object by loading related entities from the provided context.
-        /// Marks must be provided to compute averages.
-        /// </summary>
         public static ReportGeneration CreateFromStudent(ApplicationDbContext db, string studentNumber, int teacherId, ReportSubject subject,
             int assignmentMark, int test1Mark, int test2Mark, int examMark)
         {
@@ -730,7 +722,7 @@ namespace SchoolTimetable.Models
                 examMark = examMark
             };
 
-            // compute derived values
+       
             report.GradeAverage = report.AVG();
             report.FinalPercentage = report.Final();
             report.Percentage = report.percenntage();
@@ -740,9 +732,6 @@ namespace SchoolTimetable.Models
             return report;
         }
 
-        /// <summary>
-        /// Persists the report to the database and returns the saved entity with key populated.
-        /// </summary>
         public ReportGeneration Save(ApplicationDbContext db)
         {
             if (db == null) throw new ArgumentNullException(nameof(db));
@@ -751,9 +740,6 @@ namespace SchoolTimetable.Models
             return this;
         }
 
-        /// <summary>
-        /// Loads recent reports for a given student number.
-        /// </summary>
         public static IList<ReportGeneration> LoadForStudent(ApplicationDbContext db, string studentNumber)
         {
             if (db == null) throw new ArgumentNullException(nameof(db));

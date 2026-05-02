@@ -5,76 +5,201 @@
 }
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Delete</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Delete Examination - DGSS</title>
+
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --navy-primary: #050c18;
+            --navy-accent: #112240;
+            --pure-white: #ffffff;
+            --off-white: #f8f9fa;
+            --gold-accent: #c5a059;
+            --danger: #ff4d4d;
+            --text-muted: #8892b0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Barlow', sans-serif;
+            background: var(--navy-primary);
+            color: var(--off-white);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Background texture matching system */
+        .page-bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(5, 12, 24, 0.95), rgba(5, 12, 24, 0.85)), url('/Content/Images/tp-image-3986.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .delete-container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--pure-white);
+            padding: 40px;
+            border-radius: 4px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
+            margin: 20px;
+            color: var(--navy-primary);
+        }
+
+        h2 {
+            font-family: 'Barlow Condensed', sans-serif;
+            text-align: center;
+            color: var(--danger);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1px;
+            font-size: 2rem;
+        }
+
+        .warning-subtitle {
+            text-align: center;
+            color: var(--navy-primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .info-grid {
+            border-top: 2px solid var(--off-white);
+            padding-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--off-white);
+        }
+
+        .info-label {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--navy-primary);
+            text-align: right;
+        }
+
+        .btn-delete {
+            width: 100%;
+            padding: 14px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            margin-bottom: 15px;
+        }
+
+            .btn-delete:hover {
+                background: #cc0000;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+            }
+
+        .back-link {
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            color: var(--navy-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+            .back-link:hover {
+                color: var(--gold-accent);
+            }
+
+        i {
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
-    <h3>Are you sure you want to delete this?</h3>
-    <div>
-        <h4>Setup_exam_time</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Exam_name)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Exam_name)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.venue)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.venue)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Exam_Starttime)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Exam_Starttime)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Exam_Endtime)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Exam_Endtime)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Exam_date)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Exam_date)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Grade)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Grade)
-            </dd>
-    
-        </dl>
-    
-        @using (Html.BeginForm()) {
-            @Html.AntiForgeryToken()
-    
-            <div class="form-actions no-color">
-                <input type="submit" value="Delete" class="btn btn-default" /> |
-                @Html.ActionLink("Back to List", "Index")
+
+    <div class="page-bg-overlay"></div>
+
+    <div class="delete-container">
+        <h2>Confirm Delete</h2>
+        <div class="warning-subtitle">Are you sure you want to remove this record?</div>
+
+        <div class="info-grid">
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-file-alt"></i> @Html.DisplayNameFor(model => model.Exam_name)</span>
+                <span class="info-value">@Html.DisplayFor(model => model.Exam_name)</span>
             </div>
+
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-map-marker-alt"></i> @Html.DisplayNameFor(model => model.venue)</span>
+                <span class="info-value">@Html.DisplayFor(model => model.venue)</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-clock"></i> Start Time</span>
+                <span class="info-value">@Html.DisplayFor(model => model.Exam_Starttime)</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-stopwatch"></i> End Time</span>
+                <span class="info-value">@Html.DisplayFor(model => model.Exam_Endtime)</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-calendar-day"></i> @Html.DisplayNameFor(model => model.Exam_date)</span>
+                <span class="info-value">@Html.DisplayFor(model => model.Exam_date)</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-graduation-cap"></i> @Html.DisplayNameFor(model => model.Grade)</span>
+                <span class="info-value">@Html.DisplayFor(model => model.Grade)</span>
+            </div>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn-delete">
+                <i class="fas fa-trash-alt"></i> Delete Permanently
+            </button>
+            @Html.ActionLink("Cancel and Go Back", "Index", null, new { @class = "back-link" })
         }
     </div>
+
 </body>
 </html>

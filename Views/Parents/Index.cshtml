@@ -208,11 +208,24 @@
             <p>Make consultations with teachers</p>
             <span class="action-link">Request Consultation</span>
         </a>
-        <a href="@Url.Action("Details", "ReportGeneration")" class="action-card primary">
-            <h3>Veiw Academic Record</h3>
-            <p>View academic records/student progress</p>
-            <span class="action-link">Veiw Academic Record</span>
-        </a>
+        @{
+            // Find the child's ID without using the ?. operator
+            int childId = 0;
+            var firstApp = Model.FirstOrDefault();
+            if (firstApp != null)
+            {
+                childId = firstApp.Id;
+            }
+        }
+
+        @if (childId > 0)
+        {
+            <a href="@Url.Action("Details", "ReportGenerations", new { id = childId })" class="action-card primary">
+                <h3>View Academic Record</h3>
+                <p>View academic records/student progress</p>
+                <span class="action-link">View Academic Record</span>
+            </a>
+        }
     </div>
 </body>
 </html>

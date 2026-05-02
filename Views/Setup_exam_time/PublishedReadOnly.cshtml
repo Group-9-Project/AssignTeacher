@@ -8,63 +8,119 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Examination timetable</title>
+    <title>Examination Timetable</title>
     <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: white;
+            color: #333;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #000080; /* Navy Blue */
+            text-align: center;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000080;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 6px;
-            text-align: center;
-            vertical-align: top;
+            border: 2px solid #000080;
         }
 
         th {
-            background: #eee;
+            background-color: #000080; /* Navy Blue */
+            color: white;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid white;
+            font-size: 0.9em;
+        }
+
+        td {
+            border: 1px solid #000080;
+            padding: 0; /* Removing padding to let the stack fill the cell */
+            text-align: center;
+            vertical-align: top;
+            width: @(100 / (Model.GroupBy(m => new { m.Exam_date, m.Exam_Starttime }).Count() > 0 ? Model.GroupBy(m => new { m.Exam_date, m.Exam_Starttime }).Count() : 1))%;
         }
 
         .stack {
+            padding: 10px;
+            min-height: 100px;
+            background-color: white;
+        }
+
+        .exam-box {
+            background-color: #f9f9f9;
+            border: 1px solid #000080;
+            margin-bottom: 10px;
             padding: 8px;
-            min-height: 40px;
+            text-align: left;
+            border-left: 5px solid #000080; /* Navy accent stripe */
+        }
+
+        .exam-box div {
+            margin-bottom: 3px;
+            font-size: 0.85em;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #000080;
         }
 
         /* print styles */
         @@media print {
             .no-print { display: none !important; }
+            body { margin: 0; }
+            th {
+                background-color: #000080 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+            }
+            .exam-box {
+                -webkit-print-color-adjust: exact;
+                border: 1px solid #000080 !important;
+            }
         }
 
         .top-actions {
-            margin-bottom: 12px;
+            margin-bottom: 20px;
             display: flex;
-            align-items: center;
+            justify-content: flex-end;
         }
 
         .download-btn {
-            background: #4CAF50;
+            background: #000080;
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border-radius: 2px;
             cursor: pointer;
             font-weight: 600;
+            text-transform: uppercase;
         }
 
-        .download-btn:hover { background: #45a049; }
+        .download-btn:hover {
+            background: #000066;
+        }
     </style>
 </head>
 <body>
     <div class="top-actions">
-        <button class="download-btn no-print" onclick="window.print();">Download PDF</button>
+        <button class="download-btn no-print" onclick="window.print();">Print to PDF</button>
     </div>
 
-    <h2>Examination timetable</h2>
+    <h2>Examination Timetable</h2>
 
     @if (Model == null || !Model.Any())
     {
-        <p>No timetable entries published.</p>
+        <p style="text-align:center;">No timetable entries published.</p>
     }
     else
     {
@@ -72,12 +128,12 @@
             <thead>
                 <tr>
                     @{ var sessions = Model.GroupBy(m => new { m.Exam_date, m.Exam_Starttime, m.Exam_Endtime })
-                                             .OrderBy(g => g.Key.Exam_date).ThenBy(g => g.Key.Exam_Starttime).ToList(); }
+                                            .OrderBy(g => g.Key.Exam_date).ThenBy(g => g.Key.Exam_Starttime).ToList(); }
                     @foreach (var s in sessions)
                     {
                         <th>
-                            @s.Key.Exam_date.ToString("yyyy-MM-dd")<br />
-                            @s.Key.Exam_Starttime @(" - ") @s.Key.Exam_Endtime
+                            <strong>@s.Key.Exam_date.ToString("dd MMM yyyy")</strong><br />
+                            <small>@s.Key.Exam_Starttime - @s.Key.Exam_Endtime</small>
                         </th>
                     }
                 </tr>
@@ -90,10 +146,11 @@
                             <div class="stack">
                                 @foreach (var item in s)
                                 {
-                                    <div><strong>Grade:</strong> @item.Grade</div>
-                                    <div><strong>Venue:</strong> @item.venue</div>
-                                    <div><strong>Exam:</strong> @item.Exam_name</div>
-                                    <hr />
+                                    <div class="exam-box">
+                                        <div><span class="label">GRADE:</span> @item.Grade</div>
+                                        <div><span class="label">SUBJECT:</span> @item.Exam_name</div>
+                                        <div><span class="label">VENUE:</span> @item.venue</div>
+                                    </div>
                                 }
                             </div>
                         </td>
